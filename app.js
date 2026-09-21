@@ -1,52 +1,26 @@
-/* =========================================================
-   IELTS READING PRACTICE WEBSITE
-   app.js
-========================================================= */
-
-
-/* =========================================================
-   CONFIGURATION
-========================================================= */
+/* IELTS Reading Practice - complete frontend */
 
 const CONFIG = {
-    API_URL:
-        "https://script.google.com/macros/s/AKfycbzkYktZQFtycRgG3K6Hi6MsvUtP8RsqOq6QxB598FVYefGmpe_oS3R518GZ0821bNbYtw/exec",
-
+    API_URL: "https://script.google.com/macros/s/AKfycbzkYktZQFtycRgG3K6Hi6MsvUtP8RsqOq6QxB598FVYefGmpe_oS3R518GZ0821bNbYtw/exec",
     TEST_FOLDER: "./tests/",
     VOCABULARY_FILE: "./data/vocabulary.json",
-
     TEST_COUNT: 20,
-
     DEFAULT_DURATION: 60
 };
 
-
-/* =========================================================
-   GLOBAL STATE
-========================================================= */
-
 let currentUser = null;
-
 let currentTest = null;
 let currentTestNumber = null;
-
 let vocabulary = {};
-
 let studentAnswers = {};
-
 let currentPartIndex = 0;
-
 let timerInterval = null;
 let remainingSeconds = 0;
-
 let testStarted = false;
 let testSubmitted = false;
-
 let testStartTime = null;
 let testElapsedSeconds = 0;
-
 let scoreData = null;
-
 let vocabularyPopupTimeout = null;
 
 
@@ -55,13 +29,9 @@ let vocabularyPopupTimeout = null;
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
-
     setupGlobalEvents();
-
     await loadVocabulary();
-
     restoreLogin();
-
 });
 
 
@@ -71,251 +41,54 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function setupGlobalEvents() {
 
-    /* Login */
-
-    const loginForm =
-        document.getElementById("loginForm");
-
-    if (loginForm) {
-
-        loginForm.addEventListener(
-            "submit",
-            handleLogin
-        );
-
-    }
-
-
-    /* Logout */
-
-    const logoutButton =
-        document.getElementById("logoutButton");
-
-    if (logoutButton) {
-
-        logoutButton.addEventListener(
-            "click",
-            logout
-        );
-
-    }
-
-
-    /* Start test */
-
-    const startTestButton =
-        document.getElementById("startTestButton");
-
-    if (startTestButton) {
-
-        startTestButton.addEventListener(
-            "click",
-            startTest
-        );
-
-    }
-
-
-    /* Back dashboard */
-
-    const backDashboard =
-        document.getElementById(
-            "backToDashboardButton"
-        );
-
-    if (backDashboard) {
-
-        backDashboard.addEventListener(
-            "click",
-            showDashboard
-        );
-
-    }
-
-
-    /* Exit test */
-
-    const exitTestButton =
-        document.getElementById(
-            "exitTestButton"
-        );
-
-    if (exitTestButton) {
-
-        exitTestButton.addEventListener(
-            "click",
-            confirmExitTest
-        );
-
-    }
-
-
-    /* Submit */
-
-    const submitTestButton =
-        document.getElementById(
-            "submitTestButton"
-        );
-
-    if (submitTestButton) {
-
-        submitTestButton.addEventListener(
-            "click",
-            confirmSubmitTest
-        );
-
-    }
-
-
-    /* Confirm cancel */
-
-    const confirmCancelButton =
-        document.getElementById(
-            "confirmCancelButton"
-        );
-
-    if (confirmCancelButton) {
-
-        confirmCancelButton.addEventListener(
-            "click",
-            closeConfirmModal
-        );
-
-    }
-
-
-    /* Confirm submit */
-
-    const confirmSubmitButton =
-        document.getElementById(
-            "confirmSubmitButton"
-        );
-
-    if (confirmSubmitButton) {
-
-        confirmSubmitButton.addEventListener(
-            "click",
-            () => {
-
-                closeConfirmModal();
-
-                submitTest();
-
-            }
-        );
-
-    }
-
-
-    /* Result dashboard */
-
-    const returnDashboardButton =
-        document.getElementById(
-            "returnDashboardButton"
-        );
-
-    if (returnDashboardButton) {
-
-        returnDashboardButton.addEventListener(
-            "click",
-            showDashboard
-        );
-
-    }
-
-
-    /* Previous */
-
-    const previousButton =
-        document.getElementById(
-            "previousPartButton"
-        );
-
-    if (previousButton) {
-
-        previousButton.addEventListener(
-            "click",
-            previousPart
-        );
-
-    }
-
-
-    /* Next */
-
-    const nextButton =
-        document.getElementById(
-            "nextPartButton"
-        );
-
-    if (nextButton) {
-
-        nextButton.addEventListener(
-            "click",
-            nextPart
-        );
-
-    }
-
-
-    /* Vocabulary close */
-
-    const closeVocabularyButton =
-        document.getElementById(
-            "closeVocabularyButton"
-        );
-
-    if (closeVocabularyButton) {
-
-        closeVocabularyButton.addEventListener(
-            "click",
-            closeVocabularyPopup
-        );
-
-    }
-
-
-    /* Click outside vocabulary */
-
-    document.addEventListener(
-        "click",
-        (event) => {
-
-            const popup =
-                document.getElementById(
-                    "vocabularyPopup"
-                );
-
-            if (!popup) return;
-
-            if (
-                !popup.classList.contains("hidden") &&
-                !popup.contains(event.target) &&
-                !event.target.classList.contains(
-                    "vocabulary-word"
-                )
-            ) {
-
-                closeVocabularyPopup();
-
-            }
-
+    const q = id => document.getElementById(id);
+
+    const on = (id, event, fn) => {
+        const element = q(id);
+        if (element) {
+            element.addEventListener(event, fn);
         }
-    );
+    };
 
+    on("loginForm", "submit", handleLogin);
+    on("logoutButton", "click", logout);
+    on("startTestButton", "click", startTest);
+    on("backToDashboardButton", "click", showDashboard);
+    on("testBackButton", "click", confirmExitTest);
+    on("submitTestButton", "click", confirmSubmitTest);
+    on("previousPartButton", "click", previousPart);
+    on("nextPartButton", "click", nextPart);
+    on("returnDashboardButton", "click", showDashboard);
 
-    /* Save answers whenever user changes an input */
+    on("retakeTestButton", "click", () => {
+        if (currentTest) {
+            startTest();
+        }
+    });
 
-    document.addEventListener(
-        "change",
-        handleAnswerChange
-    );
+    on("refreshHistoryButton", "click", loadHistory);
+    on("closeVocabularyPopup", "click", closeVocabularyPopup);
+    on("closeConfirmModal", "click", closeConfirmModal);
+    on("cancelSubmitButton", "click", closeConfirmModal);
+    on("confirmSubmitButton", "click", submitTest);
 
-    document.addEventListener(
-        "input",
-        handleAnswerChange
-    );
+    document.addEventListener("click", event => {
 
+        if (event.target.closest(".vocabulary-word")) {
+            return;
+        }
+
+        const popup =
+            document.getElementById("vocabularyPopup");
+
+        if (
+            popup &&
+            popup.style.display !== "none" &&
+            !popup.contains(event.target)
+        ) {
+            closeVocabularyPopup();
+        }
+    });
 }
 
 
@@ -327,25 +100,46 @@ async function handleLogin(event) {
 
     event.preventDefault();
 
+    const usernameInput =
+        document.getElementById("username");
+
+    const passwordInput =
+        document.getElementById("password");
+
     const username =
-        document.getElementById(
-            "username"
-        ).value.trim();
+        usernameInput
+            ? usernameInput.value.trim()
+            : "";
 
     const password =
-        document.getElementById(
-            "password"
-        ).value;
+        passwordInput
+            ? passwordInput.value
+            : "";
 
-    const message =
-        document.getElementById(
-            "loginMessage"
-        );
+    console.log(
+        "Login username:",
+        username
+    );
 
-    if (!username || !password) {
+    console.log(
+        "Login password entered:",
+        password ? "YES" : "NO"
+    );
+
+    if (!username) {
 
         showLoginMessage(
-            "Please enter your username and password.",
+            "Username is required.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!password) {
+
+        showLoginMessage(
+            "Password is required.",
             "error"
         );
 
@@ -359,14 +153,33 @@ async function handleLogin(event) {
 
     try {
 
+        /*
+         * IMPORTANT:
+         *
+         * Code.gs expects:
+         *
+         * {
+         *   action: "login",
+         *   data: {
+         *      username: "...",
+         *      password: "..."
+         *   }
+         * }
+         */
+
         const response =
             await apiRequest(
                 "login",
                 {
-                    username,
-                    password
+                    username: username,
+                    password: password
                 }
             );
+
+        console.log(
+            "Login API response:",
+            response
+        );
 
         if (
             !response ||
@@ -375,9 +188,8 @@ async function handleLogin(event) {
 
             throw new Error(
                 response?.message ||
-                "Login failed."
+                "Invalid username or password."
             );
-
         }
 
         currentUser =
@@ -388,9 +200,8 @@ async function handleLogin(event) {
         if (!currentUser) {
 
             currentUser = {
-                username
+                username: username
             };
-
         }
 
         localStorage.setItem(
@@ -407,7 +218,10 @@ async function handleLogin(event) {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Login error:",
+            error
+        );
 
         showLoginMessage(
             error.message ||
@@ -418,9 +232,7 @@ async function handleLogin(event) {
     } finally {
 
         setLoading(false);
-
     }
-
 }
 
 
@@ -430,38 +242,37 @@ async function handleLogin(event) {
 
 function restoreLogin() {
 
-    const savedUser =
-        localStorage.getItem(
-            "ieltsReadingUser"
-        );
-
-    if (!savedUser) {
-
-        showScreen("loginScreen");
-
-        return;
-
-    }
-
     try {
 
-        currentUser =
-            JSON.parse(savedUser);
+        const raw =
+            localStorage.getItem(
+                "ieltsReadingUser"
+            );
 
-        showDashboard();
+        if (raw) {
+
+            currentUser =
+                JSON.parse(raw);
+
+            if (
+                currentUser &&
+                currentUser.username
+            ) {
+
+                showDashboard();
+                return;
+            }
+        }
 
     } catch (error) {
 
-        console.error(error);
-
-        localStorage.removeItem(
-            "ieltsReadingUser"
+        console.warn(
+            "Could not restore login:",
+            error
         );
-
-        showScreen("loginScreen");
-
     }
 
+    showScreen("loginScreen");
 }
 
 
@@ -474,9 +285,7 @@ function logout() {
     stopTimer();
 
     currentUser = null;
-
     currentTest = null;
-
     currentTestNumber = null;
 
     studentAnswers = {};
@@ -485,12 +294,23 @@ function logout() {
         "ieltsReadingUser"
     );
 
-    localStorage.removeItem(
-        "ieltsReadingAnswers"
-    );
-
     showScreen("loginScreen");
 
+    const username =
+        document.getElementById("username");
+
+    const password =
+        document.getElementById("password");
+
+    if (username) {
+        username.value = "";
+    }
+
+    if (password) {
+        password.value = "";
+    }
+
+    showLoginMessage("", "");
 }
 
 
@@ -505,54 +325,44 @@ async function showDashboard() {
     testStarted = false;
     testSubmitted = false;
 
-    showScreen(
-        "dashboardScreen"
-    );
+    showScreen("dashboardScreen");
 
     updateDashboardUser();
 
     renderTestCards();
 
     await loadHistory();
-
 }
 
 
-/* =========================================================
-   DASHBOARD USER
-========================================================= */
-
 function updateDashboardUser() {
 
-    const usernameElement =
+    const element =
         document.getElementById(
             "dashboardUsername"
         );
 
-    if (!usernameElement) return;
+    if (element) {
 
-    usernameElement.textContent =
-        currentUser?.username ||
-        currentUser?.Username ||
-        "-";
-
+        element.textContent =
+            currentUser?.username ||
+            "Student";
+    }
 }
 
 
-/* =========================================================
-   TEST CARDS
-========================================================= */
-
 function renderTestCards() {
 
-    const container =
+    const box =
         document.getElementById(
-            "testList"
+            "testCards"
         );
 
-    if (!container) return;
+    if (!box) {
+        return;
+    }
 
-    container.innerHTML = "";
+    box.innerHTML = "";
 
     for (
         let i = 1;
@@ -561,44 +371,26 @@ function renderTestCards() {
     ) {
 
         const card =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         card.className =
             "test-card";
 
-        card.dataset.testNumber = i;
+        card.dataset.testNumber =
+            i;
 
         card.innerHTML = `
-            <div class="test-card-top">
-                <div class="test-number">
-                    ${i}
-                </div>
-
-                <span class="test-status">
-                    Reading
-                </span>
+            <div class="test-card-number">
+                Test ${i}
             </div>
 
-            <div>
-                <h3>
-                    IELTS Reading Test ${i}
-                </h3>
+            <h3>
+                IELTS Reading Test ${i}
+            </h3>
 
-                <p>
-                    Academic Reading Practice
-                </p>
-            </div>
-
-            <div class="test-card-footer">
-                <span>
-                    60 minutes
-                </span>
-
-                <span class="test-start">
-                    Start →
-                </span>
+            <div class="test-card-info">
+                <span>60 minutes</span>
+                <span>40 questions</span>
             </div>
         `;
 
@@ -607,45 +399,27 @@ function renderTestCards() {
             () => openTest(i)
         );
 
-        container.appendChild(card);
-
+        box.appendChild(card);
     }
-
-
-    const countLabel =
-        document.getElementById(
-            "testCountLabel"
-        );
-
-    if (countLabel) {
-
-        countLabel.textContent =
-            `${CONFIG.TEST_COUNT} Tests`;
-
-    }
-
 }
 
 
 /* =========================================================
-   LOAD TEST
+   OPEN TEST
 ========================================================= */
 
 async function openTest(testNumber) {
 
     setLoading(
         true,
-        `Loading Test ${testNumber}...`
+        "Loading test..."
     );
 
     try {
 
-        const url =
-            `${CONFIG.TEST_FOLDER}Test${testNumber}.json`;
-
         const response =
             await fetch(
-                `${url}?t=${Date.now()}`,
+                `${CONFIG.TEST_FOLDER}Test${testNumber}.json?${Date.now()}`,
                 {
                     cache: "no-store"
                 }
@@ -654,18 +428,17 @@ async function openTest(testNumber) {
         if (!response.ok) {
 
             throw new Error(
-                `Test${testNumber}.json could not be loaded.`
+                `Test${testNumber}.json could not be loaded (${response.status}).`
             );
-
         }
 
-        const testData =
+        const data =
             await response.json();
 
-        validateTest(testData);
+        validateTest(data);
 
         currentTest =
-            testData;
+            data;
 
         currentTestNumber =
             testNumber;
@@ -676,12 +449,6 @@ async function openTest(testNumber) {
 
         testSubmitted = false;
 
-        testStarted = false;
-
-        scoreData = null;
-
-        saveAnswersToStorage();
-
         showTestIntroduction();
 
     } catch (error) {
@@ -690,16 +457,13 @@ async function openTest(testNumber) {
 
         showToast(
             error.message ||
-            "Unable to load the test.",
-            "error"
+            "Could not load test."
         );
 
     } finally {
 
         setLoading(false);
-
     }
-
 }
 
 
@@ -709,36 +473,15 @@ async function openTest(testNumber) {
 
 function validateTest(test) {
 
-    if (!test) {
+    if (
+        !test ||
+        !Array.isArray(test.parts) ||
+        !test.parts.length
+    ) {
 
         throw new Error(
-            "Test JSON is empty."
+            "Invalid test JSON: parts are missing."
         );
-
-    }
-
-    if (!test.testId) {
-
-        throw new Error(
-            "Test JSON is missing testId."
-        );
-
-    }
-
-    if (!Array.isArray(test.parts)) {
-
-        throw new Error(
-            "Test JSON is missing parts."
-        );
-
-    }
-
-    if (test.parts.length === 0) {
-
-        throw new Error(
-            "Test has no parts."
-        );
-
     }
 
     test.parts.forEach(
@@ -747,21 +490,8 @@ function validateTest(test) {
             if (!part.passage) {
 
                 throw new Error(
-                    `Part ${index + 1} has no passage.`
+                    `Part ${index + 1} is missing passage.`
                 );
-
-            }
-
-            if (
-                !Array.isArray(
-                    part.passage.paragraphs
-                )
-            ) {
-
-                throw new Error(
-                    `Part ${index + 1} has no paragraphs.`
-                );
-
             }
 
             if (
@@ -770,15 +500,10 @@ function validateTest(test) {
                 )
             ) {
 
-                throw new Error(
-                    `Part ${index + 1} has no questionGroups.`
-                );
-
+                part.questionGroups = [];
             }
-
         }
     );
-
 }
 
 
@@ -788,71 +513,46 @@ function validateTest(test) {
 
 function showTestIntroduction() {
 
-    const title =
-        document.getElementById(
-            "introTestTitle"
-        );
-
-    const description =
-        document.getElementById(
-            "introTestDescription"
-        );
-
-    const duration =
-        document.getElementById(
-            "introDuration"
-        );
-
-    const questionCount =
-        document.getElementById(
-            "introQuestionCount"
-        );
-
-    const partCount =
-        document.getElementById(
-            "introPartCount"
-        );
-
-    if (title) {
-
-        title.textContent =
-            currentTest.title ||
-            `IELTS Reading Test ${currentTestNumber}`;
-
-    }
-
-    if (description) {
-
-        description.textContent =
-            "Complete the IELTS Reading practice test within the allocated time.";
-
-    }
-
-    if (duration) {
-
-        duration.textContent =
-            `${currentTest.duration || CONFIG.DEFAULT_DURATION} minutes`;
-
-    }
-
-    if (questionCount) {
-
-        questionCount.textContent =
-            countTotalQuestions();
-
-    }
-
-    if (partCount) {
-
-        partCount.textContent =
-            currentTest.parts.length;
-
-    }
-
     showScreen(
-        "testIntroScreen"
+        "introScreen"
     );
 
+    const set = (id, value) => {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+            element.textContent = value;
+        }
+    };
+
+    set(
+        "introTestNumber",
+        currentTest.testId ||
+        `Test ${currentTestNumber}`
+    );
+
+    set(
+        "introTitle",
+        currentTest.title ||
+        `IELTS Reading Test ${currentTestNumber}`
+    );
+
+    set(
+        "introDuration",
+        `${currentTest.duration || CONFIG.DEFAULT_DURATION} minutes`
+    );
+
+    set(
+        "introQuestions",
+        countTotalQuestions()
+    );
+
+    set(
+        "introParts",
+        currentTest.parts.length
+    );
 }
 
 
@@ -862,36 +562,37 @@ function showTestIntroduction() {
 
 function startTest() {
 
-    if (!currentTest) return;
+    if (!currentTest) {
+        return;
+    }
+
+    studentAnswers = {};
+
+    loadSavedAnswers();
+
+    currentPartIndex = 0;
 
     testStarted = true;
-
     testSubmitted = false;
 
     testStartTime =
         Date.now();
 
+    remainingSeconds =
+        (
+            Number(
+                currentTest.duration
+            ) ||
+            CONFIG.DEFAULT_DURATION
+        ) * 60;
+
     testElapsedSeconds = 0;
 
-    const duration =
-        Number(
-            currentTest.duration ||
-            CONFIG.DEFAULT_DURATION
-        );
-
-    remainingSeconds =
-        duration * 60;
-
-    showScreen(
-        "testScreen"
-    );
+    showScreen("testScreen");
 
     renderCurrentPart();
 
-    renderQuestionNavigator();
-
     startTimer();
-
 }
 
 
@@ -906,46 +607,26 @@ function startTimer() {
     updateTimerDisplay();
 
     timerInterval =
-        setInterval(
-            () => {
+        setInterval(() => {
 
-                if (
-                    testSubmitted ||
-                    !testStarted
-                ) {
+            remainingSeconds--;
 
-                    return;
+            updateTimerDisplay();
 
-                }
+            if (
+                remainingSeconds <= 0
+            ) {
 
-                remainingSeconds--;
+                remainingSeconds = 0;
 
-                testElapsedSeconds++;
+                stopTimer();
 
-                updateTimerDisplay();
+                autoSubmitTest();
+            }
 
-                if (
-                    remainingSeconds <= 0
-                ) {
-
-                    remainingSeconds = 0;
-
-                    updateTimerDisplay();
-
-                    autoSubmitTest();
-
-                }
-
-            },
-            1000
-        );
-
+        }, 1000);
 }
 
-
-/* =========================================================
-   STOP TIMER
-========================================================= */
 
 function stopTimer() {
 
@@ -956,59 +637,24 @@ function stopTimer() {
         );
 
         timerInterval = null;
-
     }
-
 }
 
 
-/* =========================================================
-   TIMER DISPLAY
-========================================================= */
-
 function updateTimerDisplay() {
 
-    const timer =
+    const element =
         document.getElementById(
             "timer"
         );
 
-    if (!timer) return;
+    if (element) {
 
-    const minutes =
-        Math.floor(
-            remainingSeconds / 60
-        );
-
-    const seconds =
-        remainingSeconds % 60;
-
-    timer.textContent =
-        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-
-    timer.classList.remove(
-        "warning",
-        "danger"
-    );
-
-    if (
-        remainingSeconds <= 300
-    ) {
-
-        timer.classList.add(
-            "danger"
-        );
-
-    } else if (
-        remainingSeconds <= 600
-    ) {
-
-        timer.classList.add(
-            "warning"
-        );
-
+        element.textContent =
+            formatTime(
+                remainingSeconds
+            );
     }
-
 }
 
 
@@ -1018,154 +664,170 @@ function updateTimerDisplay() {
 
 function renderCurrentPart() {
 
-    if (!currentTest) return;
+    if (!currentTest) {
+        return;
+    }
 
     const part =
         currentTest.parts[
             currentPartIndex
         ];
 
-    if (!part) return;
+    const set = (id, value) => {
 
-    renderPassage(part);
+        const element =
+            document.getElementById(id);
 
-    renderQuestions(part);
+        if (element) {
+            element.textContent = value;
+        }
+    };
+
+    set(
+        "testHeaderTitle",
+        currentTest.title ||
+        `IELTS Reading Test ${currentTestNumber}`
+    );
+
+    set(
+        "testHeaderPart",
+        `Part ${
+            part.partNumber ||
+            currentPartIndex + 1
+        }`
+    );
+
+    set(
+        "passagePartLabel",
+        `Part ${
+            part.partNumber ||
+            currentPartIndex + 1
+        }`
+    );
+
+    set(
+        "passageTitle",
+        part.passage.title || ""
+    );
+
+    set(
+        "questionsPartLabel",
+        `Questions ${questionRangeForPart(part)}`
+    );
+
+    set(
+        "partIndicator",
+        `Part ${
+            currentPartIndex + 1
+        } of ${
+            currentTest.parts.length
+        }`
+    );
+
+    renderPassage(
+        part.passage
+    );
+
+    renderQuestions(
+        part
+    );
+
+    renderQuestionNavigator();
 
     updatePartButtons();
 
-    restoreAnswers();
+    scrollTestPanelsToTop();
+}
 
-    updateQuestionNavigator();
 
+function questionRangeForPart(part) {
+
+    const numbers = [];
+
+    (
+        part.questionGroups || []
+    ).forEach(group => {
+
+        (
+            group.questions || []
+        ).forEach(question => {
+
+            numbers.push(
+                Number(question.number)
+            );
+        });
+    });
+
+    if (!numbers.length) {
+        return "";
+    }
+
+    return `${Math.min(...numbers)}-${Math.max(...numbers)}`;
 }
 
 
 /* =========================================================
-   RENDER PASSAGE
+   PASSAGE
 ========================================================= */
 
-function renderPassage(part) {
+function renderPassage(passage) {
 
-    const title =
-        document.getElementById(
-            "passageTitle"
-        );
-
-    const content =
+    const box =
         document.getElementById(
             "passageContent"
         );
 
-    if (!content) return;
-
-    if (title) {
-
-        title.textContent =
-            part.passage.title ||
-            part.title ||
-            "Reading Passage";
-
+    if (!box) {
+        return;
     }
 
-    content.innerHTML = "";
+    box.innerHTML =
+        (
+            passage.paragraphs || []
+        )
+        .map(
+            paragraph => `
+                <p class="passage-paragraph">
+                    <span class="paragraph-label">
+                        ${escapeHTML(
+                            paragraph.id || ""
+                        )}
+                    </span>
 
-    const paragraphs =
-        part.passage.paragraphs ||
-        [];
+                    ${highlightVocabulary(
+                        paragraph.text || ""
+                    )}
+                </p>
+            `
+        )
+        .join("");
 
-    paragraphs.forEach(
-        paragraph => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.className =
-                "passage-paragraph";
-
-            const label =
-                document.createElement(
-                    "span"
-                );
-
-            label.className =
-                "paragraph-label";
-
-            label.textContent =
-                paragraph.id;
-
-            div.appendChild(label);
-
-            const textContainer =
-                document.createElement(
-                    "span"
-                );
-
-            textContainer.innerHTML =
-                highlightVocabulary(
-                    escapeHTML(
-                        paragraph.text ||
-                        ""
-                    )
-                );
-
-            div.appendChild(
-                textContainer
-            );
-
-            content.appendChild(div);
-
-        }
-    );
-
-
-    /* Vocabulary clicks */
-
-    content
+    box
         .querySelectorAll(
             ".vocabulary-word"
         )
-        .forEach(
-            element => {
+        .forEach(element => {
 
-                element.addEventListener(
-                    "click",
-                    event => {
+            element.addEventListener(
+                "click",
+                event => {
 
-                        event.stopPropagation();
+                    event.stopPropagation();
 
-                        const word =
-                            element.dataset.word;
-
-                        showVocabularyPopup(
-                            word,
-                            event
-                        );
-
-                    }
-                );
-
-            }
-        );
-
+                    showVocabularyPopup(
+                        element.dataset.word,
+                        element
+                    );
+                }
+            );
+        });
 }
 
 
-/* =========================================================
-   VOCABULARY HIGHLIGHT
-========================================================= */
-
 function highlightVocabulary(text) {
 
-    if (
-        !vocabulary ||
-        Object.keys(vocabulary).length === 0
-    ) {
-
-        return text;
-
-    }
+    let result =
+        escapeHTML(text);
 
     const words =
         Object.keys(vocabulary)
@@ -1174,79 +836,58 @@ function highlightVocabulary(text) {
                     b.length - a.length
             );
 
-    if (words.length === 0) {
+    for (
+        const word of words
+    ) {
 
-        return text;
+        const regex =
+            new RegExp(
+                `(?<![A-Za-z])(${escapeRegExp(
+                    word
+                )})(?![A-Za-z])`,
+                "gi"
+            );
 
+        result =
+            result.replace(
+                regex,
+                match => `
+                    <span
+                        class="vocabulary-word"
+                        data-word="${escapeAttribute(
+                            match
+                        )}"
+                    >
+                        ${match}
+                    </span>
+                `
+            );
     }
 
-    const escapedWords =
-        words.map(
-            word =>
-                escapeRegExp(word)
-        );
-
-    const regex =
-        new RegExp(
-            `\\b(${escapedWords.join("|")})\\b`,
-            "gi"
-        );
-
-    return text.replace(
-        regex,
-        match => {
-
-            const key =
-                findVocabularyKey(
-                    match
-                );
-
-            if (!key) {
-
-                return match;
-
-            }
-
-            return `
-                <span
-                    class="vocabulary-word"
-                    data-word="${escapeAttribute(key)}"
-                >
-                    ${match}
-                </span>
-            `;
-
-        }
-    );
-
+    return result;
 }
 
 
 /* =========================================================
-   FIND VOCABULARY KEY
+   VOCABULARY
 ========================================================= */
 
 function findVocabularyKey(word) {
 
-    const lower =
-        String(word)
-            .toLowerCase();
+    const target =
+        String(word).toLowerCase();
 
-    const key =
+    return (
         Object.keys(vocabulary)
             .find(
-                item =>
-                    item.toLowerCase() === lower
-            );
-
-    return key || null;
-
+                key =>
+                    key.toLowerCase() ===
+                    target
+            ) ||
+        word
+    );
 }
 
-
-/* =========================================================
-   LOAD VOCABULARY
-========================================================= */
 
 async function loadVocabulary() {
 
@@ -1254,7 +895,7 @@ async function loadVocabulary() {
 
         const response =
             await fetch(
-                `${CONFIG.VOCABULARY_FILE}?t=${Date.now()}`,
+                `${CONFIG.VOCABULARY_FILE}?${Date.now()}`,
                 {
                     cache: "no-store"
                 }
@@ -1262,189 +903,123 @@ async function loadVocabulary() {
 
         if (!response.ok) {
 
-            console.warn(
-                "Vocabulary file could not be loaded."
+            throw new Error(
+                `Vocabulary file returned ${response.status}`
             );
-
-            vocabulary = {};
-
-            return;
-
         }
 
         const data =
             await response.json();
 
-        /*
-           Expected format:
-
-           {
-             "words": {
-               "cultivation": {
-                 "meaning": "...",
-                 "simpleMeaning": "..."
-               }
-             }
-           }
-        */
-
         vocabulary =
             data.words ||
+            data ||
             {};
 
     } catch (error) {
 
-        console.warn(
-            "Vocabulary loading failed:",
-            error
-        );
-
         vocabulary = {};
 
+        console.warn(
+            "Vocabulary file could not be loaded.",
+            error
+        );
     }
-
 }
 
 
-/* =========================================================
-   VOCABULARY POPUP
-========================================================= */
-
 function showVocabularyPopup(
     word,
-    event
+    target
 ) {
 
-    const entry =
-        vocabulary[word];
+    const key =
+        findVocabularyKey(word);
 
-    if (!entry) return;
+    const item =
+        vocabulary[key] || {};
 
     const popup =
         document.getElementById(
             "vocabularyPopup"
         );
 
+    if (!popup) {
+        return;
+    }
+
     const wordElement =
         document.getElementById(
             "vocabularyWord"
         );
 
-    const meaning =
+    const meaningElement =
         document.getElementById(
             "vocabularyMeaning"
         );
 
-    const simpleMeaning =
+    const simpleElement =
         document.getElementById(
             "vocabularySimpleMeaning"
         );
 
-    if (!popup) return;
-
     if (wordElement) {
-
         wordElement.textContent =
             word;
-
     }
 
-    if (meaning) {
+    if (meaningElement) {
 
-        meaning.textContent =
-            entry.meaning ||
+        meaningElement.textContent =
+            item.meaning ||
+            "Meaning not available.";
+    }
+
+    if (simpleElement) {
+
+        simpleElement.textContent =
+            item.simpleMeaning ||
             "";
-
     }
 
-    if (simpleMeaning) {
-
-        simpleMeaning.textContent =
-            entry.simpleMeaning ||
-            "";
-
-    }
-
-    popup.classList.remove(
-        "hidden"
-    );
+    popup.style.display =
+        "block";
 
     positionVocabularyPopup(
-        popup,
-        event
+        target
     );
 
+    clearTimeout(
+        vocabularyPopupTimeout
+    );
+
+    vocabularyPopupTimeout =
+        setTimeout(
+            closeVocabularyPopup,
+            7000
+        );
 }
 
-
-/* =========================================================
-   POSITION VOCABULARY POPUP
-========================================================= */
 
 function positionVocabularyPopup(
-    popup,
-    event
+    target
 ) {
 
-    const margin = 12;
-
-    let left =
-        event.clientX + margin;
-
-    let top =
-        event.clientY + margin;
-
-    const rect =
-        popup.getBoundingClientRect();
-
-    if (
-        left + rect.width >
-        window.innerWidth - margin
-    ) {
-
-        left =
-            event.clientX -
-            rect.width -
-            margin;
-
-    }
-
-    if (
-        top + rect.height >
-        window.innerHeight - margin
-    ) {
-
-        top =
-            event.clientY -
-            rect.height -
-            margin;
-
-    }
-
-    left =
-        Math.max(
-            margin,
-            left
+    const popup =
+        document.getElementById(
+            "vocabularyPopup"
         );
 
-    top =
-        Math.max(
-            margin,
-            top
-        );
+    if (!popup || !target) {
+        return;
+    }
 
-    popup.style.left =
-        `${left}px`;
-
-    popup.style.top =
-        `${top}px`;
-
+    popup.style.left = "50%";
+    popup.style.bottom = "30px";
+    popup.style.transform =
+        "translateX(-50%)";
 }
 
-
-/* =========================================================
-   CLOSE VOCABULARY
-========================================================= */
 
 function closeVocabularyPopup() {
 
@@ -1454,204 +1029,159 @@ function closeVocabularyPopup() {
         );
 
     if (popup) {
-
-        popup.classList.add(
-            "hidden"
-        );
-
+        popup.style.display =
+            "none";
     }
 
+    clearTimeout(
+        vocabularyPopupTimeout
+    );
 }
 
 
 /* =========================================================
-   RENDER QUESTIONS
+   QUESTIONS
 ========================================================= */
 
 function renderQuestions(part) {
 
-    const content =
+    const box =
         document.getElementById(
-            "questionContent"
+            "questionsContent"
         );
 
-    const partTitle =
-        document.getElementById(
-            "questionPartTitle"
-        );
-
-    if (!content) return;
-
-    content.innerHTML = "";
-
-    if (partTitle) {
-
-        partTitle.textContent =
-            `Part ${part.partNumber}: ${part.title}`;
-
+    if (!box) {
+        return;
     }
 
-    const groups =
-        part.questionGroups ||
-        [];
+    box.innerHTML = "";
 
-    groups.forEach(
-        (group, groupIndex) => {
+    (
+        part.questionGroups || []
+    )
+    .forEach(group => {
 
-            const groupElement =
-                document.createElement(
-                    "div"
-                );
+        const wrapper =
+            document.createElement(
+                "div"
+            );
 
-            groupElement.className =
-                "question-group";
+        wrapper.className =
+            "question-group";
 
-            groupElement.dataset.groupIndex =
-                groupIndex;
+        const title =
+            group.questionRange
+                ? `Questions ${escapeHTML(
+                    group.questionRange
+                )}`
+                : "";
 
-            const instruction =
-                document.createElement(
-                    "div"
-                );
+        wrapper.innerHTML = `
+            <h3 class="question-group-title">
+                ${title}
+            </h3>
 
-            instruction.className =
-                "question-instructions";
-
-            instruction.innerHTML = `
-                <strong>
-                    Questions ${escapeHTML(
-                        group.questionRange || ""
-                    )}
-                </strong>
-                <br>
+            <p class="question-instructions">
                 ${escapeHTML(
                     group.instructions || ""
                 )}
-            `;
+            </p>
+        `;
 
-            groupElement.appendChild(
-                instruction
+        const content =
+            document.createElement(
+                "div"
             );
 
+        wrapper.appendChild(
+            content
+        );
 
-            switch (group.type) {
+        switch (group.type) {
 
-                case "true_false_not_given":
+            case "true_false_not_given":
+                renderTrueFalseNotGiven(
+                    content,
+                    group
+                );
+                break;
 
-                    renderTrueFalseNotGiven(
-                        group,
-                        groupElement
-                    );
+            case "yes_no_not_given":
+                renderYesNoNotGiven(
+                    content,
+                    group
+                );
+                break;
 
-                    break;
+            case "fill_blank":
+                renderFillBlank(
+                    content,
+                    group
+                );
+                break;
 
+            case "summary_completion":
+                renderSummaryCompletion(
+                    content,
+                    group
+                );
+                break;
 
-                case "yes_no_not_given":
+            case "multiple_choice":
+                renderMultipleChoice(
+                    content,
+                    group
+                );
+                break;
 
-                    renderYesNoNotGiven(
-                        group,
-                        groupElement
-                    );
+            case "multiple_choice_multiple":
+                renderMultipleChoiceMultiple(
+                    content,
+                    group
+                );
+                break;
 
-                    break;
+            case "matching_headings":
+                renderMatchingHeadings(
+                    content,
+                    group
+                );
+                break;
 
+            case "matching_information":
+                renderMatchingInformation(
+                    content,
+                    group
+                );
+                break;
 
-                case "fill_blank":
+            case "matching_features":
+                renderMatchingFeatures(
+                    content,
+                    group
+                );
+                break;
 
-                    renderFillBlank(
-                        group,
-                        groupElement
-                    );
+            case "answer_box":
+                renderAnswerBox(
+                    content,
+                    group
+                );
+                break;
 
-                    break;
-
-
-                case "summary_completion":
-
-                    renderSummaryCompletion(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                case "multiple_choice":
-
-                    renderMultipleChoice(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                case "multiple_choice_multiple":
-
-                    renderMultipleChoiceMultiple(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                case "matching_headings":
-
-                    renderMatchingHeadings(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                case "matching_information":
-
-                    renderMatchingInformation(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                case "matching_features":
-
-                    renderMatchingFeatures(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                case "answer_box":
-
-                    renderAnswerBox(
-                        group,
-                        groupElement
-                    );
-
-                    break;
-
-
-                default:
-
-                    renderUnsupportedGroup(
-                        group,
-                        groupElement
-                    );
-
-            }
-
-            content.appendChild(
-                groupElement
-            );
-
+            default:
+                renderUnsupportedGroup(
+                    content,
+                    group
+                );
         }
-    );
 
+        box.appendChild(
+            wrapper
+        );
+    });
+
+    restoreAnswers();
 }
 
 
@@ -1660,43 +1190,26 @@ function renderQuestions(part) {
 ========================================================= */
 
 function renderTrueFalseNotGiven(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-            const select =
-                createSelect(
-                    question.number,
-                    [
-                        "",
-                        "TRUE",
-                        "FALSE",
-                        "NOT GIVEN"
-                    ]
-                );
-
-            item.appendChild(
-                select
-            );
-
-            container.appendChild(
-                item
-            );
-
-        }
-    );
-
+        box.appendChild(
+            createQuestionItem(
+                question,
+                [
+                    "TRUE",
+                    "FALSE",
+                    "NOT GIVEN"
+                ]
+            )
+        );
+    });
 }
 
 
@@ -1705,43 +1218,26 @@ function renderTrueFalseNotGiven(
 ========================================================= */
 
 function renderYesNoNotGiven(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-            const select =
-                createSelect(
-                    question.number,
-                    [
-                        "",
-                        "YES",
-                        "NO",
-                        "NOT GIVEN"
-                    ]
-                );
-
-            item.appendChild(
-                select
-            );
-
-            container.appendChild(
-                item
-            );
-
-        }
-    );
-
+        box.appendChild(
+            createQuestionItem(
+                question,
+                [
+                    "YES",
+                    "NO",
+                    "NOT GIVEN"
+                ]
+            )
+        );
+    });
 }
 
 
@@ -1750,52 +1246,34 @@ function renderYesNoNotGiven(
 ========================================================= */
 
 function renderFillBlank(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-            const input =
-                document.createElement(
-                    "input"
-                );
-
-            input.type =
-                "text";
-
-            input.className =
-                "answer-input";
-
-            input.dataset.questionNumber =
-                question.number;
-
-            input.autocomplete =
-                "off";
-
-            input.placeholder =
-                "Type your answer";
-
-            item.appendChild(
-                input
+        const element =
+            createQuestionItem(
+                question
             );
 
-            container.appendChild(
-                item
-            );
+        element.querySelector(
+            ".question-control"
+        ).innerHTML = `
+            <input
+                type="text"
+                data-question-number="${question.number}"
+                placeholder="Type your answer"
+            >
+        `;
 
-        }
-    );
-
+        box.appendChild(
+            element
+        );
+    });
 }
 
 
@@ -1804,152 +1282,58 @@ function renderFillBlank(
 ========================================================= */
 
 function renderSummaryCompletion(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const summary =
-        group.summary || "";
-
-    const summaryElement =
+    const wrapper =
         document.createElement(
             "div"
         );
 
-    summaryElement.className =
-        "question-item summary-question";
+    wrapper.className =
+        "summary-box";
 
-    let html =
-        escapeHTML(summary);
+    let text =
+        group.summary ||
+        group.text ||
+        group.instructions ||
+        "";
 
-    const blanks =
-        group.blanks || [];
+    let index = 0;
 
-    blanks.forEach(
-        blank => {
+    text =
+        escapeHTML(text)
+            .replace(
+                /_{2,}/g,
+                () => {
 
-            const number =
-                blank.number;
+                    const question =
+                        (
+                            group.questions ||
+                            []
+                        )[index++];
 
-            const placeholder =
-                `___Q${number}___`;
-
-            /*
-               If summary uses ________, replace
-               each blank in sequence.
-            */
-
-        }
-    );
-
-
-    /*
-       Replace underscores one by one.
-    */
-
-    let blankIndex = 0;
-
-    html =
-        html.replace(
-            /_{3,}|\[number\]|\{number\}|Qnumber/gi,
-            () => {
-
-                if (
-                    blankIndex >=
-                    blanks.length
-                ) {
-
-                    return "________";
-
+                    return `
+                        <input
+                            type="text"
+                            data-question-number="${
+                                question
+                                    ? question.number
+                                    : ""
+                            }"
+                            placeholder="Answer"
+                        >
+                    `;
                 }
-
-                const number =
-                    blanks[
-                        blankIndex
-                    ].number;
-
-                blankIndex++;
-
-                return `
-                    <input
-                        type="text"
-                        class="inline-answer-input"
-                        data-question-number="${number}"
-                        autocomplete="off"
-                        aria-label="Answer ${number}"
-                    >
-                `;
-
-            }
-        );
-
-
-    /*
-       If the summary contains normal underscores,
-       the regex above handles them.
-    */
-
-    summaryElement.innerHTML =
-        `<div class="question-text">${html}</div>`;
-
-
-    /*
-       If there are blanks but no placeholders were
-       found, show the blanks below the summary.
-    */
-
-    if (
-        blanks.length > 0 &&
-        !summaryElement.querySelector(
-            "[data-question-number]"
-        )
-    ) {
-
-        const fallback =
-            document.createElement(
-                "div"
             );
 
-        fallback.style.marginTop =
-            "15px";
+    wrapper.innerHTML =
+        text;
 
-        blanks.forEach(
-            blank => {
-
-                const input =
-                    document.createElement(
-                        "input"
-                    );
-
-                input.type =
-                    "text";
-
-                input.className =
-                    "inline-answer-input";
-
-                input.dataset.questionNumber =
-                    blank.number;
-
-                input.placeholder =
-                    `${blank.number}`;
-
-                fallback.appendChild(
-                    input
-                );
-
-            }
-        );
-
-        summaryElement.appendChild(
-            fallback
-        );
-
-    }
-
-    container.appendChild(
-        summaryElement
+    box.appendChild(
+        wrapper
     );
-
 }
 
 
@@ -1958,207 +1342,116 @@ function renderSummaryCompletion(
 ========================================================= */
 
 function renderMultipleChoice(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-            const options =
-                document.createElement(
-                    "div"
-                );
-
-            options.className =
-                "options-list";
-
-            (question.options ||
-                group.options ||
-                []
-            ).forEach(
-                option => {
-
-                    const label =
-                        document.createElement(
-                            "label"
-                        );
-
-                    label.className =
-                        "option-item";
-
-                    label.innerHTML = `
-                        <input
-                            type="radio"
-                            name="question_${question.number}"
-                            value="${escapeAttribute(
-                                option.letter
-                            )}"
-                            data-question-number="${question.number}"
-                        >
-
-                        <span class="option-letter">
-                            ${escapeHTML(
-                                option.letter
-                            )}
-                        </span>
-
-                        <span class="option-text">
-                            ${escapeHTML(
-                                option.text
-                            )}
-                        </span>
-                    `;
-
-                    options.appendChild(
-                        label
-                    );
-
-                }
+        const element =
+            createQuestionItem(
+                question
             );
 
-            item.appendChild(
-                options
+        const control =
+            element.querySelector(
+                ".question-control"
             );
 
-            container.appendChild(
-                item
+        control.innerHTML =
+            createSelectOptions(
+                question.options || []
             );
 
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MULTIPLE CHOICE - TWO ANSWERS
-=========================================================
-
-   IMPORTANT:
-
-   Your Test1.json has:
-
-   Question 27 = A
-   Question 28 = D
-
-   But the order should NOT matter.
-
-   Therefore:
-
-   27 A + 28 D = correct
-   27 D + 28 A = correct
-
-   The JSON structure stays unchanged.
-========================================================= */
-
-function renderMultipleChoiceMultiple(
-    group,
-    container
-) {
-
-    const questions =
-        group.questions || [];
-
-    const options =
-        group.options || [];
-
-    questions.forEach(
-        (question, index) => {
-
-            const item =
-                createQuestionItem(
-                    question,
-                    false
-                );
-
-            const label =
-                document.createElement(
-                    "div"
-                );
-
-            label.className =
-                "question-text";
-
-            label.innerHTML = `
-                <strong>
-                    Answer ${index + 1}
-                </strong>
-            `;
-
-            item.insertBefore(
-                label,
-                item.firstChild
+        const select =
+            control.querySelector(
+                "select"
             );
 
-
-            const select =
-                document.createElement(
-                    "select"
-                );
-
-            select.className =
-                "answer-select multiple-answer-select";
+        if (select) {
 
             select.dataset.questionNumber =
                 question.number;
 
-            const blankOption =
-                document.createElement(
-                    "option"
-                );
-
-            blankOption.value = "";
-
-            blankOption.textContent =
-                "Select an answer";
-
-            select.appendChild(
-                blankOption
+            select.addEventListener(
+                "change",
+                handleAnswerChange
             );
-
-
-            options.forEach(
-                option => {
-
-                    const optionElement =
-                        document.createElement(
-                            "option"
-                        );
-
-                    optionElement.value =
-                        option.letter;
-
-                    optionElement.textContent =
-                        `${option.letter}. ${option.text}`;
-
-                    select.appendChild(
-                        optionElement
-                    );
-
-                }
-            );
-
-
-            item.appendChild(
-                select
-            );
-
-            container.appendChild(
-                item
-            );
-
         }
-    );
 
+        box.appendChild(
+            element
+        );
+    });
+}
+
+
+/* =========================================================
+   MULTIPLE CHOICE - TWO SEPARATE QUESTIONS
+========================================================= */
+
+function renderMultipleChoiceMultiple(
+    box,
+    group
+) {
+
+    /*
+     * Example:
+     *
+     * Q27 -> A
+     * Q28 -> D
+     *
+     * Each question gets ONE select.
+     *
+     * Scoring later treats the answers
+     * as an unordered pair.
+     */
+
+    (
+        group.questions || []
+    )
+    .forEach(question => {
+
+        const element =
+            createQuestionItem(
+                question
+            );
+
+        const control =
+            element.querySelector(
+                ".question-control"
+            );
+
+        control.innerHTML =
+            createSelectOptions(
+                group.options ||
+                question.options ||
+                []
+            );
+
+        const select =
+            control.querySelector(
+                "select"
+            );
+
+        if (select) {
+
+            select.dataset.questionNumber =
+                question.number;
+
+            select.addEventListener(
+                "change",
+                handleAnswerChange
+            );
+        }
+
+        box.appendChild(
+            element
+        );
+    });
 }
 
 
@@ -2167,72 +1460,55 @@ function renderMultipleChoiceMultiple(
 ========================================================= */
 
 function renderMatchingHeadings(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const headings =
-        group.headings || [];
+    const options =
+        group.options ||
+        group.headings ||
+        [];
 
-    const questions =
-        group.questions || [];
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
+        const element =
+            createQuestionItem(
+                question
+            );
 
-            const item =
-                createQuestionItem(
-                    question
-                );
+        const control =
+            element.querySelector(
+                ".question-control"
+            );
 
-            const select =
-                document.createElement(
-                    "select"
-                );
+        control.innerHTML =
+            createSelectOptions(
+                options
+            );
 
-            select.className =
-                "answer-select";
+        const select =
+            control.querySelector(
+                "select"
+            );
+
+        if (select) {
 
             select.dataset.questionNumber =
                 question.number;
 
-            addEmptyOption(
-                select,
-                "Select a heading"
+            select.addEventListener(
+                "change",
+                handleAnswerChange
             );
-
-            headings.forEach(
-                heading => {
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-                    option.value =
-                        heading.id;
-
-                    option.textContent =
-                        `${heading.id}. ${heading.text}`;
-
-                    select.appendChild(
-                        option
-                    );
-
-                }
-            );
-
-            item.appendChild(
-                select
-            );
-
-            container.appendChild(
-                item
-            );
-
         }
-    );
 
+        box.appendChild(
+            element
+        );
+    });
 }
 
 
@@ -2241,72 +1517,54 @@ function renderMatchingHeadings(
 ========================================================= */
 
 function renderMatchingInformation(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
-
-    const letters =
+    const options =
+        group.options ||
         getParagraphLetters();
 
-    questions.forEach(
-        question => {
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-            const item =
-                createQuestionItem(
-                    question
-                );
+        const element =
+            createQuestionItem(
+                question
+            );
 
-            const select =
-                document.createElement(
-                    "select"
-                );
+        const control =
+            element.querySelector(
+                ".question-control"
+            );
 
-            select.className =
-                "answer-select";
+        control.innerHTML =
+            createSelectOptions(
+                options
+            );
+
+        const select =
+            control.querySelector(
+                "select"
+            );
+
+        if (select) {
 
             select.dataset.questionNumber =
                 question.number;
 
-            addEmptyOption(
-                select,
-                "Select paragraph"
+            select.addEventListener(
+                "change",
+                handleAnswerChange
             );
-
-            letters.forEach(
-                letter => {
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-                    option.value =
-                        letter;
-
-                    option.textContent =
-                        `Paragraph ${letter}`;
-
-                    select.appendChild(
-                        option
-                    );
-
-                }
-            );
-
-            item.appendChild(
-                select
-            );
-
-            container.appendChild(
-                item
-            );
-
         }
-    );
 
+        box.appendChild(
+            element
+        );
+    });
 }
 
 
@@ -2315,72 +1573,53 @@ function renderMatchingInformation(
 ========================================================= */
 
 function renderMatchingFeatures(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
+    const options =
+        group.options || [];
 
-    const letters =
-        getParagraphLetters();
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
+        const element =
+            createQuestionItem(
+                question
+            );
 
-            const item =
-                createQuestionItem(
-                    question
-                );
+        const control =
+            element.querySelector(
+                ".question-control"
+            );
 
-            const select =
-                document.createElement(
-                    "select"
-                );
+        control.innerHTML =
+            createSelectOptions(
+                options
+            );
 
-            select.className =
-                "answer-select";
+        const select =
+            control.querySelector(
+                "select"
+            );
+
+        if (select) {
 
             select.dataset.questionNumber =
                 question.number;
 
-            addEmptyOption(
-                select,
-                "Select paragraph"
+            select.addEventListener(
+                "change",
+                handleAnswerChange
             );
-
-            letters.forEach(
-                letter => {
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-                    option.value =
-                        letter;
-
-                    option.textContent =
-                        `Paragraph ${letter}`;
-
-                    select.appendChild(
-                        option
-                    );
-
-                }
-            );
-
-            item.appendChild(
-                select
-            );
-
-            container.appendChild(
-                item
-            );
-
         }
-    );
 
+        box.appendChild(
+            element
+        );
+    });
 }
 
 
@@ -2389,244 +1628,275 @@ function renderMatchingFeatures(
 ========================================================= */
 
 function renderAnswerBox(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const questions =
-        group.questions || [];
+    (
+        group.questions || []
+    )
+    .forEach(question => {
 
-    questions.forEach(
-        question => {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-            /*
-               IMPORTANT:
-               Only ONE input is created.
-
-               This fixes the duplicate-input problem
-               from the previous app.js.
-            */
-
-            const input =
-                document.createElement(
-                    "input"
-                );
-
-            input.type =
-                "text";
-
-            input.className =
-                "answer-input";
-
-            input.dataset.questionNumber =
-                question.number;
-
-            input.autocomplete =
-                "off";
-
-            input.placeholder =
-                "Enter your answer";
-
-            item.appendChild(
-                input
+        const element =
+            createQuestionItem(
+                question
             );
 
-            container.appendChild(
-                item
-            );
+        element.querySelector(
+            ".question-control"
+        ).innerHTML = `
+            <input
+                type="text"
+                data-question-number="${question.number}"
+                placeholder="Your answer"
+            >
+        `;
 
-        }
-    );
-
+        box.appendChild(
+            element
+        );
+    });
 }
 
 
 /* =========================================================
-   UNSUPPORTED QUESTION TYPE
+   UNSUPPORTED QUESTION
 ========================================================= */
 
 function renderUnsupportedGroup(
-    group,
-    container
+    box,
+    group
 ) {
 
-    const error =
-        document.createElement(
-            "div"
+    (
+        group.questions || []
+    )
+    .forEach(question => {
+
+        const element =
+            createQuestionItem(
+                question
+            );
+
+        element.querySelector(
+            ".question-control"
+        ).innerHTML = `
+            <input
+                type="text"
+                data-question-number="${question.number}"
+                placeholder="Your answer"
+            >
+        `;
+
+        box.appendChild(
+            element
         );
-
-    error.className =
-        "question-item";
-
-    error.innerHTML = `
-        <div class="question-text">
-            Unsupported question type:
-            <strong>
-                ${escapeHTML(
-                    group.type || "unknown"
-                )}
-            </strong>
-        </div>
-    `;
-
-    container.appendChild(
-        error
-    );
-
+    });
 }
 
 
 /* =========================================================
-   CREATE QUESTION ITEM
+   QUESTION ITEM
 ========================================================= */
 
 function createQuestionItem(
     question,
-    includeQuestionText = true
+    radioOptions = null
 ) {
 
-    const item =
+    const wrapper =
         document.createElement(
             "div"
         );
 
-    item.className =
-        "question-item";
+    wrapper.className =
+        "question";
 
-    item.id =
-        `question-${question.number}`;
-
-    item.dataset.questionNumber =
+    wrapper.dataset.questionNumber =
         question.number;
 
+    wrapper.innerHTML = `
+        <div class="question-text">
 
-    if (includeQuestionText) {
-
-        const text =
-            document.createElement(
-                "div"
-            );
-
-        text.className =
-            "question-text";
-
-        text.innerHTML = `
-            <span class="question-number-label">
+            <span class="question-number">
                 ${question.number}.
             </span>
+
             ${escapeHTML(
                 question.text || ""
             )}
-        `;
 
-        item.appendChild(
-            text
+        </div>
+
+        <div class="question-control">
+        </div>
+    `;
+
+    const control =
+        wrapper.querySelector(
+            ".question-control"
         );
 
+    if (radioOptions) {
+
+        control.innerHTML =
+            radioOptions
+                .map(
+                    option => `
+                        <label class="option-item">
+
+                            <input
+                                type="radio"
+                                name="q${question.number}"
+                                value="${escapeAttribute(
+                                    option
+                                )}"
+                                data-question-number="${question.number}"
+                            >
+
+                            <span>
+                                ${escapeHTML(
+                                    option
+                                )}
+                            </span>
+
+                        </label>
+                    `
+                )
+                .join("");
+
+        control
+            .querySelectorAll("input")
+            .forEach(
+                input => {
+
+                    input.addEventListener(
+                        "change",
+                        handleAnswerChange
+                    );
+                }
+            );
     }
 
-    return item;
-
+    return wrapper;
 }
 
 
 /* =========================================================
-   SELECT HELPERS
+   SELECT OPTIONS
 ========================================================= */
 
 function createSelect(
-    questionNumber,
-    values
+    options
 ) {
 
-    const select =
-        document.createElement(
-            "select"
-        );
-
-    select.className =
-        "answer-select";
-
-    select.dataset.questionNumber =
-        questionNumber;
-
-    values.forEach(
-        value => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                value;
-
-            option.textContent =
-                value ||
-                "Select an answer";
-
-            select.appendChild(
-                option
-            );
-
-        }
+    return createSelectOptions(
+        options
     );
+}
 
-    return select;
 
+function createSelectOptions(
+    options
+) {
+
+    const result = [
+        `<option value="">Select...</option>`
+    ];
+
+    (
+        options || []
+    )
+    .forEach(option => {
+
+        let value;
+        let text;
+
+        if (
+            typeof option ===
+            "object"
+        ) {
+
+            value =
+                option.letter ??
+                option.value ??
+                option.id ??
+                option.text;
+
+            text =
+                option.text ??
+                option.label ??
+                option.value ??
+                option.letter;
+
+        } else {
+
+            value = option;
+            text = option;
+        }
+
+        result.push(`
+            <option value="${escapeAttribute(
+                value
+            )}">
+                ${escapeHTML(
+                    text
+                )}
+            </option>
+        `);
+    });
+
+    return `
+        <select
+            class="question-control-select"
+            data-question-number=""
+        >
+            ${result.join("")}
+        </select>
+    `;
 }
 
 
 function addEmptyOption(
-    select,
-    text
+    select
 ) {
 
-    const option =
-        document.createElement(
-            "option"
+    if (
+        select &&
+        !select.querySelector(
+            'option[value=""]'
+        )
+    ) {
+
+        select.insertAdjacentHTML(
+            "afterbegin",
+            '<option value="">Select...</option>'
         );
-
-    option.value = "";
-
-    option.textContent =
-        text;
-
-    select.appendChild(
-        option
-    );
-
+    }
 }
 
 
 /* =========================================================
-   GET PARAGRAPH LETTERS
+   PARAGRAPH LETTERS
 ========================================================= */
 
 function getParagraphLetters() {
 
-    if (!currentTest) return [];
-
-    const part =
-        currentTest.parts[
-            currentPartIndex
-        ];
-
-    if (!part) return [];
-
     return (
-        part.passage?.paragraphs ||
+        currentTest
+            ?.parts
+            ?.[
+                currentPartIndex
+            ]
+            ?.passage
+            ?.paragraphs
+            ?.map(
+                paragraph =>
+                    paragraph.id
+            )
+            .filter(Boolean) ||
         []
-    ).map(
-        paragraph =>
-            paragraph.id
     );
-
 }
 
 
@@ -2634,92 +1904,64 @@ function getParagraphLetters() {
    ANSWER CHANGE
 ========================================================= */
 
-function handleAnswerChange(event) {
+function handleAnswerChange(
+    event
+) {
 
     const element =
         event.target;
-
-    if (
-        !element.matches(
-            "[data-question-number]"
-        )
-    ) {
-
-        return;
-
-    }
 
     const number =
         Number(
             element.dataset.questionNumber
         );
 
-    if (!number) return;
-
-    let value = "";
+    if (!number) {
+        return;
+    }
 
     if (
-        element.type ===
-        "radio"
+        element.type === "radio"
     ) {
 
-        if (!element.checked) {
+        if (element.checked) {
 
-            return;
-
+            studentAnswers[number] =
+                element.value;
         }
-
-        value =
-            element.value;
-
-    } else if (
-        element.type ===
-        "checkbox"
-    ) {
-
-        value =
-            element.checked
-                ? element.value
-                : "";
 
     } else {
 
-        value =
+        studentAnswers[number] =
             element.value;
-
     }
-
-    studentAnswers[number] =
-        value;
 
     saveAnswersToStorage();
 
     updateQuestionNavigator();
-
 }
 
 
 /* =========================================================
-   SAVE ALL VISIBLE ANSWERS
+   SAVE VISIBLE ANSWERS
 ========================================================= */
 
 function saveAllVisibleAnswers() {
 
-    const elements =
-        document.querySelectorAll(
+    document
+        .querySelectorAll(
             "[data-question-number]"
-        );
-
-    elements.forEach(
-        element => {
+        )
+        .forEach(element => {
 
             const number =
                 Number(
                     element.dataset.questionNumber
                 );
 
-            if (!number) return;
-
+            if (!number) {
+                return;
+            }
 
             if (
                 element.type ===
@@ -2732,41 +1974,26 @@ function saveAllVisibleAnswers() {
 
                     studentAnswers[number] =
                         element.value;
-
                 }
 
-                return;
-
-            }
-
-
-            if (
-                element.type ===
-                "checkbox"
+            } else if (
+                element.tagName ===
+                    "SELECT" ||
+                element.tagName ===
+                    "INPUT"
             ) {
 
                 if (
-                    element.checked
+                    element.value !== ""
                 ) {
 
                     studentAnswers[number] =
                         element.value;
-
                 }
-
-                return;
-
             }
-
-
-            studentAnswers[number] =
-                element.value;
-
-        }
-    );
+        });
 
     saveAnswersToStorage();
-
 }
 
 
@@ -2776,31 +2003,26 @@ function saveAllVisibleAnswers() {
 
 function restoreAnswers() {
 
-    const elements =
-        document.querySelectorAll(
+    document
+        .querySelectorAll(
             "[data-question-number]"
-        );
-
-    elements.forEach(
-        element => {
+        )
+        .forEach(element => {
 
             const number =
                 Number(
                     element.dataset.questionNumber
                 );
 
-            const saved =
+            const value =
                 studentAnswers[number];
 
             if (
-                saved === undefined ||
-                saved === null
+                value === undefined
             ) {
 
                 return;
-
             }
-
 
             if (
                 element.type ===
@@ -2809,447 +2031,287 @@ function restoreAnswers() {
 
                 element.checked =
                     element.value ===
-                    saved;
+                    value;
 
-                return;
+            } else {
 
+                element.value =
+                    value;
             }
-
-
-            if (
-                element.type ===
-                "checkbox"
-            ) {
-
-                element.checked =
-                    element.value ===
-                    saved;
-
-                return;
-
-            }
-
-
-            element.value =
-                saved;
-
-        }
-    );
+        });
 
     updateQuestionNavigator();
-
 }
 
 
 /* =========================================================
-   LOCAL STORAGE ANSWERS
+   ANSWERS STORAGE
 ========================================================= */
 
 function saveAnswersToStorage() {
 
-    if (
-        !currentTestNumber
-    ) {
-
+    if (!currentTestNumber) {
         return;
-
-    }
-
-    const storageKey =
-        `ieltsAnswers_${currentTestNumber}`;
-
-    localStorage.setItem(
-        storageKey,
-        JSON.stringify(
-            studentAnswers
-        )
-    );
-
-}
-
-
-/* =========================================================
-   LOAD SAVED ANSWERS
-========================================================= */
-
-function loadSavedAnswers() {
-
-    if (
-        !currentTestNumber
-    ) {
-
-        return {};
-
-    }
-
-    const storageKey =
-        `ieltsAnswers_${currentTestNumber}`;
-
-    const saved =
-        localStorage.getItem(
-            storageKey
-        );
-
-    if (!saved) {
-
-        return {};
-
     }
 
     try {
 
-        return JSON.parse(
-            saved
+        const key =
+            `ieltsAnswers_${
+                currentUser?.studentId ||
+                currentUser?.studentID ||
+                currentUser?.username ||
+                "student"
+            }_${currentTestNumber}`;
+
+        localStorage.setItem(
+            key,
+            JSON.stringify(
+                studentAnswers
+            )
         );
 
-    } catch {
+    } catch (error) {
 
-        return {};
-
+        console.warn(
+            "Could not save answers:",
+            error
+        );
     }
+}
 
+
+function loadSavedAnswers() {
+
+    try {
+
+        const key =
+            `ieltsAnswers_${
+                currentUser?.studentId ||
+                currentUser?.studentID ||
+                currentUser?.username ||
+                "student"
+            }_${currentTestNumber}`;
+
+        const raw =
+            localStorage.getItem(
+                key
+            );
+
+        if (raw) {
+
+            studentAnswers =
+                JSON.parse(raw) || {};
+        }
+
+    } catch (error) {
+
+        studentAnswers = {};
+    }
 }
 
 
 /* =========================================================
-   RENDER QUESTION NAVIGATOR
+   QUESTION NAVIGATOR
 ========================================================= */
 
 function renderQuestionNavigator() {
 
-    const container =
+    const nav =
         document.getElementById(
             "questionNavigator"
         );
 
-    if (!container) return;
+    if (!nav) {
+        return;
+    }
 
-    container.innerHTML = "";
+    nav.innerHTML =
+        getAllQuestionNumbers()
+            .map(
+                number => `
+                    <button
+                        class="question-nav-item"
+                        data-question-nav="${number}"
+                    >
+                        ${number}
+                    </button>
+                `
+            )
+            .join("");
 
-    const numbers =
-        getAllQuestionNumbers();
-
-    numbers.forEach(
-        number => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.type =
-                "button";
-
-            button.className =
-                "question-number";
-
-            button.dataset.questionNumber =
-                number;
-
-            button.textContent =
-                number;
+    nav
+        .querySelectorAll("button")
+        .forEach(button => {
 
             button.addEventListener(
                 "click",
                 () =>
                     jumpToQuestion(
-                        number
+                        Number(
+                            button.dataset.questionNav
+                        )
                     )
             );
-
-            container.appendChild(
-                button
-            );
-
-        }
-    );
+        });
 
     updateQuestionNavigator();
-
 }
 
-
-/* =========================================================
-   UPDATE QUESTION NAVIGATOR
-========================================================= */
 
 function updateQuestionNavigator() {
 
-    const buttons =
-        document.querySelectorAll(
-            ".question-number"
+    const nav =
+        document.getElementById(
+            "questionNavigator"
         );
 
-    buttons.forEach(
-        button => {
+    if (!nav) {
+        return;
+    }
+
+    nav
+        .querySelectorAll(
+            "[data-question-nav]"
+        )
+        .forEach(button => {
 
             const number =
                 Number(
-                    button.dataset.questionNumber
+                    button.dataset.questionNav
                 );
 
-            button.classList.remove(
-                "answered"
-            );
-
-            if (
+            button.classList.toggle(
+                "answered",
                 isQuestionAnswered(
                     number
                 )
-            ) {
-
-                button.classList.add(
-                    "answered"
-                );
-
-            }
-
-        }
-    );
-
+            );
+        });
 }
 
-
-/* =========================================================
-   QUESTION ANSWER CHECK
-========================================================= */
 
 function isQuestionAnswered(
     number
 ) {
 
-    const answer =
+    const value =
         studentAnswers[number];
 
-    if (
-        answer === undefined ||
-        answer === null
-    ) {
-
-        return false;
-
-    }
-
-    return String(
-        answer
-    ).trim() !== "";
-
+    return (
+        value !== undefined &&
+        String(value).trim() !== ""
+    );
 }
 
-
-/* =========================================================
-   JUMP TO QUESTION
-========================================================= */
 
 function jumpToQuestion(
     number
 ) {
 
-    const location =
-        findQuestionLocation(
-            number
+    const element =
+        document.querySelector(
+            `[data-question-number="${number}"]`
         );
 
-    if (!location) return;
+    if (element) {
 
-    if (
-        location.partIndex !==
-        currentPartIndex
-    ) {
-
-        currentPartIndex =
-            location.partIndex;
-
-        renderCurrentPart();
-
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
     }
-
-    setTimeout(
-        () => {
-
-            const element =
-                document.getElementById(
-                    `question-${number}`
-                );
-
-            if (!element) return;
-
-            element.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-
-            document
-                .querySelectorAll(
-                    ".question-item"
-                )
-                .forEach(
-                    item =>
-                        item.classList.remove(
-                            "active-question"
-                        )
-                );
-
-            element.classList.add(
-                "active-question"
-            );
-
-        },
-        50
-    );
-
 }
 
 
 /* =========================================================
-   FIND QUESTION LOCATION
+   QUESTION HELPERS
 ========================================================= */
 
 function findQuestionLocation(
     number
 ) {
 
-    if (!currentTest) return null;
-
     for (
-        let partIndex = 0;
-        partIndex <
-        currentTest.parts.length;
-        partIndex++
+        let i = 0;
+        i < (
+            currentTest?.parts ||
+            []
+        ).length;
+        i++
     ) {
-
-        const part =
-            currentTest.parts[
-                partIndex
-            ];
 
         for (
             const group of
-            part.questionGroups || []
+            currentTest.parts[i]
+                .questionGroups ||
+            []
         ) {
 
-            for (
-                const question of
-                group.questions || []
+            if (
+                (
+                    group.questions ||
+                    []
+                )
+                .some(
+                    question =>
+                        Number(
+                            question.number
+                        ) ===
+                        Number(number)
+                )
             ) {
 
-                if (
-                    Number(
-                        question.number
-                    ) === Number(number)
-                ) {
-
-                    return {
-                        partIndex,
-                        group,
-                        question
-                    };
-
-                }
-
+                return i;
             }
-
-            for (
-                const blank of
-                group.blanks || []
-            ) {
-
-                if (
-                    Number(
-                        blank.number
-                    ) === Number(number)
-                ) {
-
-                    return {
-                        partIndex,
-                        group,
-                        question: blank
-                    };
-
-                }
-
-            }
-
         }
-
     }
 
-    return null;
-
+    return -1;
 }
 
-
-/* =========================================================
-   ALL QUESTION NUMBERS
-========================================================= */
 
 function getAllQuestionNumbers() {
 
-    if (!currentTest) return [];
-
     const numbers = [];
 
-    currentTest.parts.forEach(
-        part => {
+    (
+        currentTest?.parts ||
+        []
+    )
+    .forEach(part => {
 
-            (part.questionGroups || [])
-                .forEach(
-                    group => {
-
-                        (group.questions || [])
-                            .forEach(
-                                question => {
-
-                                    numbers.push(
-                                        Number(
-                                            question.number
-                                        )
-                                    );
-
-                                }
-                            );
-
-
-                        (group.blanks || [])
-                            .forEach(
-                                blank => {
-
-                                    numbers.push(
-                                        Number(
-                                            blank.number
-                                        )
-                                    );
-
-                                }
-                            );
-
-                    }
-                );
-
-        }
-    );
-
-    return [
-        ...new Set(
-            numbers
+        (
+            part.questionGroups ||
+            []
         )
-    ].sort(
-        (a, b) =>
-            a - b
-    );
+        .forEach(group => {
 
+            (
+                group.questions ||
+                []
+            )
+            .forEach(question => {
+
+                numbers.push(
+                    Number(
+                        question.number
+                    )
+                );
+            });
+        });
+    });
+
+    return numbers.sort(
+        (a, b) => a - b
+    );
 }
 
-
-/* =========================================================
-   COUNT QUESTIONS
-========================================================= */
 
 function countTotalQuestions() {
 
     return getAllQuestionNumbers()
         .length;
-
 }
 
 
@@ -3261,8 +2323,6 @@ function nextPart() {
 
     saveAllVisibleAnswers();
 
-    if (!currentTest) return;
-
     if (
         currentPartIndex <
         currentTest.parts.length - 1
@@ -3272,22 +2332,16 @@ function nextPart() {
 
         renderCurrentPart();
 
-        scrollTestPanelsToTop();
-
     } else {
 
         confirmSubmitTest();
-
     }
-
 }
 
 
 function previousPart() {
 
     saveAllVisibleAnswers();
-
-    if (!currentTest) return;
 
     if (
         currentPartIndex > 0
@@ -3296,17 +2350,9 @@ function previousPart() {
         currentPartIndex--;
 
         renderCurrentPart();
-
-        scrollTestPanelsToTop();
-
     }
-
 }
 
-
-/* =========================================================
-   UPDATE PART BUTTONS
-========================================================= */
 
 function updatePartButtons() {
 
@@ -3324,190 +2370,75 @@ function updatePartButtons() {
 
         previous.disabled =
             currentPartIndex === 0;
-
     }
 
     if (next) {
 
-        const isLast =
-            currentPartIndex ===
-            currentTest.parts.length - 1;
-
         next.textContent =
-            isLast
-                ? "Submit Test"
-                : "Next →";
-
+            currentPartIndex ===
+            currentTest.parts.length - 1
+                ? "Submit Test →"
+                : "Next Part →";
     }
-
 }
 
-
-/* =========================================================
-   SCROLL PANELS TOP
-========================================================= */
 
 function scrollTestPanelsToTop() {
 
-    const passage =
-        document.getElementById(
-            "passagePanel"
-        );
+    [
+        "passagePanel",
+        "questionsPanel"
+    ]
+    .forEach(id => {
 
-    const questions =
-        document.getElementById(
-            "questionPanel"
-        );
+        const element =
+            document.getElementById(id);
 
-    if (passage) {
-
-        passage.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    }
-
-    if (questions) {
-
-        questions.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    }
-
+        if (element) {
+            element.scrollTop = 0;
+        }
+    });
 }
 
 
 /* =========================================================
-   CONFIRM SUBMIT
+   SUBMIT / EXIT
 ========================================================= */
 
 function confirmSubmitTest() {
 
-    if (
-        testSubmitted
-    ) {
-
+    if (testSubmitted) {
         return;
-
-    }
-
-    saveAllVisibleAnswers();
-
-    const title =
-        document.getElementById(
-            "confirmTitle"
-        );
-
-    const message =
-        document.getElementById(
-            "confirmMessage"
-        );
-
-    if (title) {
-
-        title.textContent =
-            "Submit Test?";
-
-    }
-
-    if (message) {
-
-        const answered =
-            Object.values(
-                studentAnswers
-            )
-                .filter(
-                    value =>
-                        String(value)
-                            .trim() !== ""
-                )
-                .length;
-
-        const total =
-            countTotalQuestions();
-
-        message.textContent =
-            `You have answered ${answered} of ${total} questions. Are you sure you want to submit?`;
-
     }
 
     openConfirmModal();
-
 }
 
 
-/* =========================================================
-   CONFIRM EXIT
-========================================================= */
-
 function confirmExitTest() {
 
-    if (!testStarted) {
+    if (
+        !testStarted ||
+        testSubmitted
+    ) {
 
         showDashboard();
 
         return;
-
     }
 
-    const title =
-        document.getElementById(
-            "confirmTitle"
-        );
+    if (
+        confirm(
+            "Leave this test? Your current test will not be submitted."
+        )
+    ) {
 
-    const message =
-        document.getElementById(
-            "confirmMessage"
-        );
+        stopTimer();
 
-    if (title) {
-
-        title.textContent =
-            "Exit Test?";
-
+        showDashboard();
     }
-
-    if (message) {
-
-        message.textContent =
-            "Your current test session will be left. Are you sure you want to exit?";
-
-    }
-
-    const submitButton =
-        document.getElementById(
-            "confirmSubmitButton"
-        );
-
-    if (submitButton) {
-
-        submitButton.textContent =
-            "Exit";
-
-        submitButton.onclick =
-            () => {
-
-                closeConfirmModal();
-
-                stopTimer();
-
-                showDashboard();
-
-            };
-
-    }
-
-    openConfirmModal();
-
 }
 
-
-/* =========================================================
-   MODAL
-========================================================= */
 
 function openConfirmModal() {
 
@@ -3517,13 +2448,9 @@ function openConfirmModal() {
         );
 
     if (modal) {
-
-        modal.classList.remove(
-            "hidden"
-        );
-
+        modal.style.display =
+            "flex";
     }
-
 }
 
 
@@ -3535,502 +2462,290 @@ function closeConfirmModal() {
         );
 
     if (modal) {
-
-        modal.classList.add(
-            "hidden"
-        );
-
+        modal.style.display =
+            "none";
     }
-
-    const submitButton =
-        document.getElementById(
-            "confirmSubmitButton"
-        );
-
-    if (submitButton) {
-
-        submitButton.textContent =
-            "Submit";
-
-        submitButton.onclick =
-            () => {
-
-                closeConfirmModal();
-
-                submitTest();
-
-            };
-
-    }
-
 }
 
-
-/* =========================================================
-   AUTO SUBMIT
-========================================================= */
 
 function autoSubmitTest() {
 
-    if (
-        testSubmitted
-    ) {
-
+    if (testSubmitted) {
         return;
-
     }
 
     showToast(
-        "Time is up. Your test is being submitted.",
-        "error"
+        "Time is up. Your test will be submitted automatically."
     );
 
     submitTest();
-
 }
 
 
-/* =========================================================
-   SUBMIT TEST
-========================================================= */
-
 async function submitTest() {
 
-    if (
-        testSubmitted
-    ) {
-
+    if (testSubmitted) {
         return;
-
     }
 
     saveAllVisibleAnswers();
 
-    testSubmitted = true;
-
-    testStarted = false;
+    closeConfirmModal();
 
     stopTimer();
+
+    testSubmitted = true;
 
     testElapsedSeconds =
         calculateTimeUsed();
 
-    setLoading(
-        true,
-        "Checking your answers..."
-    );
+    scoreData =
+        calculateScore();
 
-    try {
+    await saveResultToAPI();
 
-        scoreData =
-            calculateScore();
+    renderResult();
 
-        await saveResultToAPI(
-            scoreData
-        );
-
-        clearCurrentTestAnswers();
-
-        renderResult(
-            scoreData
-        );
-
-        showScreen(
-            "resultScreen"
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        /*
-           Even if saving to Google Sheets fails,
-           show the local result.
-        */
-
-        scoreData =
-            calculateScore();
-
-        renderResult(
-            scoreData
-        );
-
-        showScreen(
-            "resultScreen"
-        );
-
-        showToast(
-            "Result calculated, but saving to the server failed.",
-            "error"
-        );
-
-    } finally {
-
-        setLoading(false);
-
-    }
-
+    clearCurrentTestAnswers();
 }
 
 
 /* =========================================================
-   CALCULATE TIME USED
+   TIME
 ========================================================= */
 
 function calculateTimeUsed() {
 
     if (!testStartTime) {
-
-        return testElapsedSeconds;
-
+        return 0;
     }
 
-    const duration =
-        Number(
-            currentTest.duration ||
-            CONFIG.DEFAULT_DURATION
-        ) * 60;
-
-    const elapsed =
+    return Math.max(
+        0,
         Math.floor(
             (
                 Date.now() -
                 testStartTime
             ) / 1000
-        );
-
-    return Math.min(
-        duration,
-        Math.max(
-            0,
-            elapsed
         )
     );
-
 }
 
 
 /* =========================================================
-   SCORE CALCULATION
+   SCORING
 ========================================================= */
 
 function calculateScore() {
 
-    let totalScore = 0;
-
-    let totalQuestions =
-        countTotalQuestions();
+    let total = 0;
 
     const partScores = [];
 
-    currentTest.parts.forEach(
-        part => {
+    (
+        currentTest.parts ||
+        []
+    )
+    .forEach(part => {
 
-            let partScore = 0;
+        let partScore = 0;
+
+        (
+            part.questionGroups ||
+            []
+        )
+        .forEach(group => {
+
+            const questions =
+                group.questions || [];
 
             /*
-               Normal questions
-            */
+             * Q27-Q28:
+             *
+             * Q27 = A
+             * Q28 = D
+             *
+             * A/D and D/A are both accepted.
+             */
 
-            (part.questionGroups || [])
-                .forEach(
-                    group => {
+            if (
+                group.type ===
+                "multiple_choice_multiple"
+            ) {
 
-                        /*
-                           =====================================
-                           SPECIAL:
-                           multiple_choice_multiple
+                const correct =
+                    questions
+                        .map(
+                            question =>
+                                String(
+                                    question.answer ??
+                                    ""
+                                )
+                                .trim()
+                                .toUpperCase()
+                        )
+                        .filter(Boolean)
+                        .sort();
 
-                           Example:
+                const given =
+                    questions
+                        .map(
+                            question =>
+                                String(
+                                    studentAnswers[
+                                        question.number
+                                    ] ??
+                                    ""
+                                )
+                                .trim()
+                                .toUpperCase()
+                        )
+                        .filter(Boolean)
+                        .sort();
 
-                           Q27 correct = A
-                           Q28 correct = D
+                if (
+                    correct.length ===
+                        questions.length &&
+                    arraysEqual(
+                        correct,
+                        given
+                    )
+                ) {
 
-                           Student:
+                    partScore +=
+                        questions.length;
+                }
 
-                           Q27 = D
-                           Q28 = A
+            } else {
 
-                           should still receive 2/2.
-                           =====================================
-                        */
+                questions.forEach(
+                    question => {
 
                         if (
-                            group.type ===
-                            "multiple_choice_multiple"
+                            answersMatch(
+                                studentAnswers[
+                                    question.number
+                                ],
+                                question.answer
+                            )
                         ) {
 
-                            const questions =
-                                group.questions ||
-                                [];
-
-                            const correctAnswers =
-                                questions
-                                    .map(
-                                        question =>
-                                            normalizeAnswer(
-                                                question.answer
-                                            )
-                                    )
-                                    .filter(
-                                        answer =>
-                                            answer !== ""
-                                    )
-                                    .sort();
-
-                            const studentGroupAnswers =
-                                questions
-                                    .map(
-                                        question =>
-                                            normalizeAnswer(
-                                                studentAnswers[
-                                                    question.number
-                                                ]
-                                            )
-                                    )
-                                    .filter(
-                                        answer =>
-                                            answer !== ""
-                                    )
-                                    .sort();
-
-                            /*
-                               Compare the sets.
-
-                               A,D == D,A
-                            */
-
-                            if (
-                                correctAnswers.length ===
-                                studentGroupAnswers.length &&
-                                arraysEqual(
-                                    correctAnswers,
-                                    studentGroupAnswers
-                                )
-                            ) {
-
-                                partScore +=
-                                    questions.length;
-
-                            }
-
-                            return;
-
+                            partScore++;
                         }
-
-
-                        /*
-                           =====================================
-                           NORMAL QUESTIONS
-                           =====================================
-                        */
-
-                        (group.questions || [])
-                            .forEach(
-                                question => {
-
-                                    const correct =
-                                        question.answer;
-
-                                    const student =
-                                        studentAnswers[
-                                            question.number
-                                        ];
-
-                                    if (
-                                        answersMatch(
-                                            student,
-                                            correct
-                                        )
-                                    ) {
-
-                                        partScore++;
-
-                                    }
-
-                                }
-                            );
-
-
-                        /*
-                           =====================================
-                           SUMMARY BLANKS
-                           =====================================
-                        */
-
-                        (group.blanks || [])
-                            .forEach(
-                                blank => {
-
-                                    const correct =
-                                        blank.answer;
-
-                                    const student =
-                                        studentAnswers[
-                                            blank.number
-                                        ];
-
-                                    if (
-                                        answersMatch(
-                                            student,
-                                            correct
-                                        )
-                                    ) {
-
-                                        partScore++;
-
-                                    }
-
-                                }
-                            );
-
                     }
                 );
+            }
+        });
 
-
-            partScores.push(
-                partScore
-            );
-
-            totalScore +=
-                partScore;
-
-        }
-    );
-
-
-    const band =
-        calculateIELTSBand(
-            totalScore
+        partScores.push(
+            partScore
         );
 
+        total +=
+            partScore;
+    });
 
     return {
 
-        totalScore,
+        totalScore:
+            total,
 
-        totalQuestions,
+        totalQuestions:
+            countTotalQuestions(),
 
-        band,
+        partScores:
+            partScores,
 
-        partScores,
+        band:
+            calculateIELTSBand(
+                total
+            ),
 
         timeUsed:
-            testElapsedSeconds
-
+            formatTime(
+                testElapsedSeconds
+            )
     };
-
 }
 
 
-/* =========================================================
-   ANSWER MATCH
-========================================================= */
-
 function answersMatch(
-    student,
+    given,
     correct
 ) {
 
     if (
-        student === undefined ||
-        student === null ||
+        given === undefined ||
+        given === null ||
         correct === undefined ||
         correct === null
     ) {
 
         return false;
-
     }
 
-    const studentNormalized =
+    const givenNormalized =
         normalizeAnswer(
-            student
+            given
         );
 
-    const correctNormalized =
-        normalizeAnswer(
-            correct
+    if (
+        Array.isArray(correct)
+    ) {
+
+        return correct.some(
+            answer =>
+                normalizeAnswer(
+                    answer
+                ) ===
+                givenNormalized
         );
+    }
 
     return (
-        studentNormalized !== "" &&
-        studentNormalized ===
-        correctNormalized
+        givenNormalized ===
+        normalizeAnswer(
+            correct
+        )
     );
-
 }
 
-
-/* =========================================================
-   NORMALIZE ANSWER
-========================================================= */
 
 function normalizeAnswer(
     value
 ) {
 
-    if (
-        value === undefined ||
-        value === null
-    ) {
-
-        return "";
-
-    }
-
-    return String(value)
-        .trim()
-        .replace(
-            /\s+/g,
-            " "
-        )
-        .toLowerCase();
-
+    return String(
+        value ?? ""
+    )
+    .trim()
+    .replace(
+        /\s+/g,
+        " "
+    )
+    .toLowerCase();
 }
 
-
-/* =========================================================
-   ARRAY EQUAL
-========================================================= */
 
 function arraysEqual(
     a,
     b
 ) {
 
-    if (
-        a.length !==
-        b.length
-    ) {
-
-        return false;
-
-    }
-
-    for (
-        let i = 0;
-        i < a.length;
-        i++
-    ) {
-
-        if (
-            a[i] !== b[i]
-        ) {
-
-            return false;
-
-        }
-
-    }
-
-    return true;
-
+    return (
+        a.length ===
+        b.length &&
+        a.every(
+            (value, index) =>
+                value ===
+                b[index]
+        )
+    );
 }
 
 
 /* =========================================================
-   IELTS BAND
+   IELTS ACADEMIC READING BAND
 ========================================================= */
 
 function calculateIELTSBand(
@@ -4052,278 +2767,227 @@ function calculateIELTSBand(
     if (score >= 6) return 3.0;
     if (score >= 4) return 2.5;
     if (score >= 2) return 2.0;
-    if (score >= 1) return 1.0;
+    if (score === 1) return 1.0;
 
-    return 0.0;
-
+    return 0;
 }
 
 
 /* =========================================================
-   SAVE RESULT TO GOOGLE APPS SCRIPT
+   SAVE RESULT
 ========================================================= */
 
-async function saveResultToAPI(
-    result
-) {
+async function saveResultToAPI() {
 
     if (!currentUser) {
-
-        throw new Error(
-            "No logged-in student."
-        );
-
+        return;
     }
 
-    const username =
-        currentUser.username ||
-        currentUser.Username ||
-        "";
-
-    const studentID =
+    const studentId =
+        currentUser.studentId ||
         currentUser.studentID ||
         currentUser.StudentID ||
         currentUser.id ||
         currentUser.ID ||
         "";
 
-    const partScores =
-        result.partScores || [];
+    const resultData = {
 
-    const payload = {
+        studentId:
+            studentId,
 
-        studentID,
-
-        username,
+        username:
+            currentUser.username ||
+            "",
 
         testName:
-            currentTest.title ||
-            `IELTS Reading Test ${currentTestNumber}`,
+            currentTest?.title ||
+            `Test ${currentTestNumber}`,
 
         part1:
-            partScores[0] || 0,
+            scoreData?.partScores?.[0] ||
+            0,
 
         part2:
-            partScores[1] || 0,
+            scoreData?.partScores?.[1] ||
+            0,
 
         part3:
-            partScores[2] || 0,
+            scoreData?.partScores?.[2] ||
+            0,
 
         part4:
-            partScores[3] || 0,
+            scoreData?.partScores?.[3] ||
+            0,
 
         totalScore:
-            result.totalScore,
+            scoreData?.totalScore ||
+            0,
 
         totalQuestions:
-            result.totalQuestions,
+            scoreData?.totalQuestions ||
+            0,
 
         band:
-            result.band,
+            scoreData?.band ||
+            0,
 
         timeUsed:
-            formatTime(
-                result.timeUsed
-            ),
+            scoreData?.timeUsed ||
+            "",
 
         submittedAt:
             new Date().toISOString()
-
     };
 
+    try {
 
-    const response =
-        await apiRequest(
-            "saveResult",
-            payload
-        );
-
-    if (
-        !response ||
-        response.success !== true
-    ) {
-
-        throw new Error(
-            response?.message ||
-            "Could not save result."
-        );
-
-    }
-
-    return response;
-
-}
-
-
-/* =========================================================
-   RESULT SCREEN
-========================================================= */
-
-function renderResult(
-    result
-) {
-
-    const testName =
-        document.getElementById(
-            "resultTestName"
-        );
-
-    const score =
-        document.getElementById(
-            "resultScore"
-        );
-
-    const band =
-        document.getElementById(
-            "resultBand"
-        );
-
-    const totalQuestions =
-        document.getElementById(
-            "resultTotalQuestions"
-        );
-
-    const correct =
-        document.getElementById(
-            "resultCorrect"
-        );
-
-    const timeUsed =
-        document.getElementById(
-            "resultTimeUsed"
-        );
-
-    if (testName) {
-
-        testName.textContent =
-            currentTest.title ||
-            `IELTS Reading Test ${currentTestNumber}`;
-
-    }
-
-    if (score) {
-
-        score.textContent =
-            `${result.totalScore} / ${result.totalQuestions}`;
-
-    }
-
-    if (band) {
-
-        band.textContent =
-            Number(result.band)
-                .toFixed(1);
-
-    }
-
-    if (totalQuestions) {
-
-        totalQuestions.textContent =
-            result.totalQuestions;
-
-    }
-
-    if (correct) {
-
-        correct.textContent =
-            result.totalScore;
-
-    }
-
-    if (timeUsed) {
-
-        timeUsed.textContent =
-            formatTime(
-                result.timeUsed
+        const response =
+            await apiRequest(
+                "saveResult",
+                resultData
             );
 
+        if (
+            !response?.success
+        ) {
+
+            console.warn(
+                "Result save failed:",
+                response?.message
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Result save error:",
+            error
+        );
     }
-
-
-    renderPartScores(
-        result.partScores
-    );
-
 }
 
 
 /* =========================================================
-   PART SCORES
+   RESULT
 ========================================================= */
 
-function renderPartScores(
-    scores
-) {
+function renderResult() {
 
-    const container =
+    showScreen(
+        "resultScreen"
+    );
+
+    const set = (
+        id,
+        value
+    ) => {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+            element.textContent =
+                value;
+        }
+    };
+
+    set(
+        "resultTestTitle",
+        currentTest?.title ||
+        `Test ${currentTestNumber}`
+    );
+
+    set(
+        "resultScore",
+        scoreData.totalScore
+    );
+
+    set(
+        "resultTotal",
+        `/ ${scoreData.totalQuestions}`
+    );
+
+    set(
+        "resultBand",
+        Number(
+            scoreData.band
+        ).toFixed(1)
+    );
+
+    set(
+        "resultTime",
+        scoreData.timeUsed
+    );
+
+    renderPartScores();
+
+    const status =
+        document.getElementById(
+            "resultSaveStatus"
+        );
+
+    if (status) {
+
+        status.textContent =
+            "Result submitted.";
+    }
+}
+
+
+function renderPartScores() {
+
+    const box =
         document.getElementById(
             "partScores"
         );
 
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    const totalParts =
-        currentTest?.parts?.length ||
-        0;
-
-    for (
-        let i = 0;
-        i < Math.max(
-            4,
-            totalParts
-        );
-        i++
-    ) {
-
-        const score =
-            scores?.[i] || 0;
-
-        const part =
-            currentTest?.parts?.[i];
-
-        const div =
-            document.createElement(
-                "div"
-            );
-
-        div.className =
-            "part-score";
-
-        div.innerHTML = `
-            <span>
-                ${part
-                    ? `Part ${i + 1}`
-                    : `Part ${i + 1}`}
-            </span>
-
-            <strong>
-                ${score}
-            </strong>
-        `;
-
-        container.appendChild(
-            div
-        );
-
+    if (!box) {
+        return;
     }
 
+    box.innerHTML =
+        scoreData.partScores
+            .map(
+                (score, index) => `
+                    <div class="part-score">
+
+                        <span class="part-score-label">
+                            Part ${index + 1}
+                        </span>
+
+                        <span class="part-score-value">
+                            ${score}
+                        </span>
+
+                    </div>
+                `
+            )
+            .join("");
 }
 
 
-/* =========================================================
-   CLEAR ANSWERS
-========================================================= */
-
 function clearCurrentTestAnswers() {
 
-    if (!currentTestNumber) return;
+    try {
 
-    localStorage.removeItem(
-        `ieltsAnswers_${currentTestNumber}`
-    );
+        const key =
+            `ieltsAnswers_${
+                currentUser?.studentId ||
+                currentUser?.studentID ||
+                currentUser?.username ||
+                "student"
+            }_${currentTestNumber}`;
 
+        localStorage.removeItem(
+            key
+        );
+
+    } catch (error) {
+        console.warn(error);
+    }
+
+    studentAnswers = {};
 }
 
 
@@ -4333,208 +2997,157 @@ function clearCurrentTestAnswers() {
 
 async function loadHistory() {
 
-    const container =
+    const body =
         document.getElementById(
-            "historyContainer"
+            "historyTableBody"
         );
 
-    if (!container) return;
+    if (
+        !body ||
+        !currentUser
+    ) {
 
-    container.innerHTML = `
-        <div class="history-loading">
-            Loading score history...
-        </div>
-    `;
+        return;
+    }
 
     try {
 
-        const username =
-            currentUser?.username ||
-            currentUser?.Username ||
-            "";
-
-        const studentID =
-            currentUser?.studentID ||
-            currentUser?.StudentID ||
-            currentUser?.id ||
+        const studentId =
+            currentUser.studentId ||
+            currentUser.studentID ||
+            currentUser.StudentID ||
+            currentUser.id ||
             "";
 
         const response =
             await apiRequest(
                 "getHistory",
                 {
-                    username,
-                    studentID
+                    username:
+                        currentUser.username ||
+                        "",
+
+                    studentId:
+                        studentId
                 }
             );
 
         if (
-            !response ||
-            response.success !== true
+            !response?.success
         ) {
 
             throw new Error(
                 response?.message ||
                 "Could not load history."
             );
-
         }
 
-        const history =
-            response.results ||
-            response.history ||
-            response.data ||
-            [];
-
         renderHistory(
-            history
+            response.history ||
+            []
         );
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "History error:",
+            error
+        );
 
-        container.innerHTML = `
-            <div class="history-empty">
-                Unable to load score history.
-            </div>
-        `;
-
+        renderHistory([]);
     }
-
 }
 
-
-/* =========================================================
-   RENDER HISTORY
-========================================================= */
 
 function renderHistory(
     history
 ) {
 
-    const container =
+    const body =
         document.getElementById(
-            "historyContainer"
+            "historyTableBody"
         );
 
-    if (!container) return;
+    const empty =
+        document.getElementById(
+            "noHistoryMessage"
+        );
 
-    if (
-        !Array.isArray(history) ||
-        history.length === 0
-    ) {
-
-        container.innerHTML = `
-            <div class="history-empty">
-                No test results yet.
-            </div>
-        `;
-
+    if (!body) {
         return;
-
     }
 
+    if (!history.length) {
 
-    const rows =
-        history.map(
-            result => {
+        body.innerHTML = "";
 
-                const testName =
-                    result.TestName ||
-                    result.testName ||
-                    "-";
+        if (empty) {
+            empty.style.display =
+                "block";
+        }
 
-                const totalScore =
-                    result.TotalScore ??
-                    result.totalScore ??
-                    0;
+        return;
+    }
 
-                const totalQuestions =
-                    result.TotalQuestions ??
-                    result.totalQuestions ??
-                    0;
+    if (empty) {
+        empty.style.display =
+            "none";
+    }
 
-                const band =
-                    result.Band ??
-                    result.band ??
-                    0;
-
-                const timeUsed =
-                    result.TimeUsed ||
-                    result.timeUsed ||
-                    "-";
-
-                const timestamp =
-                    result.Timestamp ||
-                    result.timestamp ||
-                    result.SubmittedAt ||
-                    result.submittedAt ||
-                    "";
-
-                return `
+    body.innerHTML =
+        history
+            .map(
+                result => `
                     <tr>
+
                         <td>
                             ${escapeHTML(
-                                testName
+                                formatDate(
+                                    result.timestamp ||
+                                    result.submittedAt
+                                )
                             )}
-                        </td>
-
-                        <td>
-                            ${totalScore}
-                            /
-                            ${totalQuestions}
-                        </td>
-
-                        <td>
-                            <span class="history-band">
-                                ${Number(
-                                    band
-                                ).toFixed(1)}
-                            </span>
                         </td>
 
                         <td>
                             ${escapeHTML(
-                                timeUsed
+                                result.testName ||
+                                ""
                             )}
                         </td>
 
                         <td>
-                            ${formatDate(
-                                timestamp
+                            ${escapeHTML(
+                                result.totalScore ??
+                                0
                             )}
                         </td>
+
+                        <td>
+                            ${escapeHTML(
+                                result.totalQuestions ??
+                                0
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                result.band ??
+                                0
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                result.timeUsed ||
+                                ""
+                            )}
+                        </td>
+
                     </tr>
-                `;
-
-            }
-        )
-        .join("");
-
-
-    container.innerHTML = `
-        <div style="overflow-x:auto;">
-            <table class="history-table">
-
-                <thead>
-                    <tr>
-                        <th>Test</th>
-                        <th>Score</th>
-                        <th>Band</th>
-                        <th>Time</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    ${rows}
-                </tbody>
-
-            </table>
-        </div>
-    `;
-
+                `
+            )
+            .join("");
 }
 
 
@@ -4548,8 +3161,34 @@ async function apiRequest(
 ) {
 
     /*
-       First try POST.
-    */
+     * IMPORTANT:
+     *
+     * Code.gs expects:
+     *
+     * POST:
+     *
+     * {
+     *   action: "login",
+     *   data: {
+     *      username: "...",
+     *      password: "..."
+     *   }
+     * }
+     */
+
+    const requestBody = {
+
+        action:
+            action,
+
+        data:
+            data || {}
+    };
+
+
+    /* =====================================================
+       POST
+    ===================================================== */
 
     try {
 
@@ -4565,10 +3204,9 @@ async function apiRequest(
                     },
 
                     body:
-                        JSON.stringify({
-                            action,
-                            ...data
-                        })
+                        JSON.stringify(
+                            requestBody
+                        )
                 }
             );
 
@@ -4580,21 +3218,23 @@ async function apiRequest(
         try {
 
             json =
-                JSON.parse(text);
+                JSON.parse(
+                    text
+                );
 
-        } catch {
+        } catch (error) {
+
+            console.error(
+                "Invalid POST response:",
+                text
+            );
 
             throw new Error(
                 "The API returned an invalid response."
             );
-
         }
 
-        if (json) {
-
-            return json;
-
-        }
+        return json;
 
     } catch (postError) {
 
@@ -4602,13 +3242,12 @@ async function apiRequest(
             "POST API request failed. Trying GET...",
             postError
         );
-
     }
 
 
-    /*
-       GET fallback.
-    */
+    /* =====================================================
+       GET FALLBACK
+    ===================================================== */
 
     const params =
         new URLSearchParams();
@@ -4618,33 +3257,12 @@ async function apiRequest(
         action
     );
 
-    Object.keys(data)
-        .forEach(
-            key => {
-
-                const value =
-                    data[key];
-
-                if (
-                    value !== undefined &&
-                    value !== null
-                ) {
-
-                    params.set(
-                        key,
-                        typeof value ===
-                        "object"
-                            ? JSON.stringify(
-                                value
-                            )
-                            : String(value)
-                    );
-
-                }
-
-            }
-        );
-
+    params.set(
+        "data",
+        JSON.stringify(
+            data || {}
+        )
+    );
 
     const response =
         await fetch(
@@ -4664,14 +3282,17 @@ async function apiRequest(
             text
         );
 
-    } catch {
+    } catch (error) {
+
+        console.error(
+            "Invalid GET response:",
+            text
+        );
 
         throw new Error(
             "The API returned an invalid response."
         );
-
     }
-
 }
 
 
@@ -4680,37 +3301,40 @@ async function apiRequest(
 ========================================================= */
 
 function showScreen(
-    screenId
+    id
 ) {
 
-    const screens =
-        document.querySelectorAll(
+    document
+        .querySelectorAll(
             ".screen"
+        )
+        .forEach(
+            element => {
+
+                element.style.display =
+                    "none";
+            }
         );
 
-    screens.forEach(
-        screen => {
+    const element =
+        document.getElementById(id);
 
-            screen.classList.add(
-                "hidden"
-            );
-
-        }
-    );
-
-    const target =
-        document.getElementById(
-            screenId
-        );
-
-    if (target) {
-
-        target.classList.remove(
-            "hidden"
-        );
-
+    if (!element) {
+        return;
     }
 
+    if (
+        id === "loginScreen"
+    ) {
+
+        element.style.display =
+            "flex";
+
+    } else {
+
+        element.style.display =
+            "block";
+    }
 }
 
 
@@ -4719,8 +3343,8 @@ function showScreen(
 ========================================================= */
 
 function setLoading(
-    visible,
-    message = "Loading..."
+    show,
+    text = "Loading..."
 ) {
 
     const overlay =
@@ -4728,34 +3352,24 @@ function setLoading(
             "loadingOverlay"
         );
 
-    const text =
+    const loadingText =
         document.getElementById(
             "loadingText"
         );
 
-    if (!overlay) return;
+    if (loadingText) {
 
-    if (text) {
-
-        text.textContent =
-            message;
-
+        loadingText.textContent =
+            text;
     }
 
-    if (visible) {
+    if (overlay) {
 
-        overlay.classList.remove(
-            "hidden"
-        );
-
-    } else {
-
-        overlay.classList.add(
-            "hidden"
-        );
-
+        overlay.style.display =
+            show
+                ? "flex"
+                : "none";
     }
-
 }
 
 
@@ -4773,33 +3387,20 @@ function showLoginMessage(
             "loginMessage"
         );
 
-    if (!element) return;
-
-    element.textContent =
-        message || "";
-
-    element.className =
-        "message";
-
-    if (type === "error") {
-
-        element.style.color =
-            "#c62828";
-
-    } else if (
-        type === "success"
-    ) {
-
-        element.style.color =
-            "#16803c";
-
-    } else {
-
-        element.style.color =
-            "";
-
+    if (!element) {
+        return;
     }
 
+    element.textContent =
+        message;
+
+    element.className =
+        `form-message ${type}`;
+
+    element.style.display =
+        message
+            ? "block"
+            : "none";
 }
 
 
@@ -4809,42 +3410,23 @@ function showLoginMessage(
 
 function showToast(
     message,
-    type = ""
+    type = "info"
 ) {
 
-    const toast =
+    const element =
         document.getElementById(
             "toast"
         );
 
-    const text =
-        document.getElementById(
-            "toastMessage"
-        );
-
-    if (!toast) return;
-
-    if (text) {
-
-        text.textContent =
-            message;
-
+    if (!element) {
+        return;
     }
 
-    toast.className =
-        "toast";
+    element.textContent =
+        message;
 
-    if (type) {
-
-        toast.classList.add(
-            type
-        );
-
-    }
-
-    toast.classList.remove(
-        "hidden"
-    );
+    element.style.display =
+        "block";
 
     clearTimeout(
         vocabularyPopupTimeout
@@ -4854,14 +3436,12 @@ function showToast(
         setTimeout(
             () => {
 
-                toast.classList.add(
-                    "hidden"
-                );
+                element.style.display =
+                    "none";
 
             },
             3500
         );
-
 }
 
 
@@ -4879,22 +3459,34 @@ function formatTime(
             Number(seconds) || 0
         );
 
-    const minutes =
+    const hours =
         Math.floor(
-            seconds / 60
+            seconds / 3600
         );
 
-    const remaining =
-        seconds % 60;
+    const minutes =
+        Math.floor(
+            (seconds % 3600) / 60
+        );
 
-    return `
-        ${String(minutes).padStart(2, "0")}:
-        ${String(remaining).padStart(2, "0")}
-    `.replace(
-        /\s/g,
-        ""
+    const secs =
+        Math.floor(
+            seconds % 60
+        );
+
+    if (hours) {
+
+        return (
+            `${String(hours).padStart(2, "0")}:` +
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(secs).padStart(2, "0")}`
+        );
+    }
+
+    return (
+        `${String(minutes).padStart(2, "0")}:` +
+        `${String(secs).padStart(2, "0")}`
     );
-
 }
 
 
@@ -4906,7 +3498,9 @@ function formatDate(
     value
 ) {
 
-    if (!value) return "-";
+    if (!value) {
+        return "";
+    }
 
     const date =
         new Date(value);
@@ -4918,18 +3512,9 @@ function formatDate(
     ) {
 
         return String(value);
-
     }
 
-    return date.toLocaleDateString(
-        undefined,
-        {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
-        }
-    );
-
+    return date.toLocaleString();
 }
 
 
@@ -4941,28 +3526,29 @@ function escapeHTML(
     value
 ) {
 
-    return String(value ?? "")
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 }
 
 
@@ -4977,7 +3563,6 @@ function escapeAttribute(
     return escapeHTML(
         value
     );
-
 }
 
 
@@ -4994,12 +3579,11 @@ function escapeRegExp(
             /[.*+?^${}()|[\]\\]/g,
             "\\$&"
         );
-
 }
 
 
 /* =========================================================
-   EXPORT FOR DEBUGGING
+   DEBUG EXPORT
 ========================================================= */
 
 window.IELTSReading = {
@@ -5016,10 +3600,9 @@ window.IELTSReading = {
 
     logout,
 
-    getCurrentTest: () =>
-        currentTest,
+    getCurrentTest:
+        () => currentTest,
 
-    getAnswers: () =>
-        studentAnswers
-
+    getAnswers:
+        () => studentAnswers
 };

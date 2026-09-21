@@ -1,0 +1,540 @@
+{
+  "testId": "Test2",
+  "title": "IELTS Reading Test 2",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Hidden Life of Trees",
+      "passage": {
+        "passageId": "P1",
+        "title": "The Hidden Life of Trees",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "For centuries, forests were often described mainly in terms of the timber they could provide. Modern forest research has produced a more complex picture. Trees interact with other organisms, respond to changes in their surroundings, and can influence the conditions around them. These interactions occur above ground, but an important part of a forest's activity takes place beneath the surface, where roots, fungi, microorganisms, and soil form an interconnected environment."
+          },
+          {
+            "id": "B",
+            "text": "A particularly important relationship exists between tree roots and mycorrhizal fungi. The fungi attach themselves to or enter roots and extend through the surrounding soil. Their fine structures can reach resources that individual roots might otherwise struggle to access. In exchange, trees provide the fungi with sugars produced through photosynthesis. The relationship is not simply a one-way service: both organisms obtain resources that can improve their ability to survive."
+          },
+          {
+            "id": "C",
+            "text": "Researchers have also investigated whether substances can move between trees through underground fungal networks. Experiments have demonstrated the movement of carbon and other materials in some circumstances, although the amount and importance of such transfers vary. Scientists therefore avoid describing every forest as a single cooperative organism. Competition remains an important feature of forest life, and the relationships between trees can differ according to species, age, soil conditions, and environmental stress."
+          },
+          {
+            "id": "D",
+            "text": "Water availability is another factor that shapes forest interactions. During droughts, trees may reduce water loss by closing small openings in their leaves, but this also limits photosynthesis. Some plants respond by changing root growth or by forming closer relationships with fungi. Forest managers are increasingly interested in these natural processes because prolonged droughts can weaken trees and make them more vulnerable to insects and disease."
+          },
+          {
+            "id": "E",
+            "text": "The practical implications of this research are significant. Traditional forestry sometimes focused heavily on the number of trees harvested or planted. New approaches may pay greater attention to soil health, fungal communities, species diversity, and the age structure of forests. A forest containing several species and different age groups may respond differently to disturbance from fire, pests, or drought than a plantation consisting mainly of one species of similar age."
+          },
+          {
+            "id": "F",
+            "text": "However, researchers caution against turning scientific findings into overly simple stories. Popular accounts sometimes describe forests as if trees deliberately communicate or cooperate in the same way that humans do. The underlying biological processes are real, but their interpretation requires careful experimentation. Understanding the hidden life of forests does not make them less mysterious; instead, it reveals a system in which competition, cooperation, adaptation, and environmental change operate simultaneously."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "1-5",
+          "instructions": "Choose the correct heading for paragraphs A-E from the list of headings below.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "The importance of underground relationships"
+            },
+            {
+              "id": "ii",
+              "text": "Changing ideas about forest management"
+            },
+            {
+              "id": "iii",
+              "text": "The effects of drought on forest life"
+            },
+            {
+              "id": "iv",
+              "text": "A partnership between trees and fungi"
+            },
+            {
+              "id": "v",
+              "text": "Evidence for movement between trees"
+            },
+            {
+              "id": "vi",
+              "text": "Why forests were once valued mainly for timber"
+            },
+            {
+              "id": "vii",
+              "text": "The economic value of forest tourism"
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "paragraph": "A",
+              "answer": "i"
+            },
+            {
+              "number": 2,
+              "paragraph": "B",
+              "answer": "iv"
+            },
+            {
+              "number": 3,
+              "paragraph": "C",
+              "answer": "v"
+            },
+            {
+              "number": 4,
+              "paragraph": "D",
+              "answer": "iii"
+            },
+            {
+              "number": 5,
+              "paragraph": "E",
+              "answer": "ii"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "6-8",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 6,
+              "text": "Mycorrhizal fungi can extend through soil beyond the immediate area of tree roots.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 7,
+              "text": "Scientists believe that all trees in a forest cooperate with each other.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 8,
+              "text": "The first forests studied by researchers were located in Europe.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "9-10",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 9,
+              "text": "Trees provide fungi with ________ produced through photosynthesis.",
+              "answer": "sugars"
+            },
+            {
+              "number": 10,
+              "text": "Prolonged drought can make trees more vulnerable to insects and ________.",
+              "answer": "disease"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "11-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 11,
+              "text": "What does the passage say about transfers between trees?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "They occur in every forest at the same rate."
+                },
+                {
+                  "letter": "B",
+                  "text": "They have been observed, but their importance varies."
+                },
+                {
+                  "letter": "C",
+                  "text": "They only occur between trees of the same age."
+                },
+                {
+                  "letter": "D",
+                  "text": "They have been completely rejected by scientists."
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 12,
+              "text": "Why may forests with several species be more resilient?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "They contain only young trees."
+                },
+                {
+                  "letter": "B",
+                  "text": "They are never affected by drought."
+                },
+                {
+                  "letter": "C",
+                  "text": "Different species and ages can respond differently to disturbances."
+                },
+                {
+                  "letter": "D",
+                  "text": "They do not require soil microorganisms."
+                }
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 13,
+              "text": "What is the main purpose of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "To explain recent understanding of interactions within forests"
+                },
+                {
+                  "letter": "B",
+                  "text": "To argue that forests should never be commercially managed"
+                },
+                {
+                  "letter": "C",
+                  "text": "To describe the history of timber production"
+                },
+                {
+                  "letter": "D",
+                  "text": "To compare tropical and temperate forests"
+                }
+              ],
+              "answer": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "The Rise of Public Libraries",
+      "passage": {
+        "passageId": "P2",
+        "title": "The Rise of Public Libraries",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Libraries have existed in many forms for thousands of years, but the modern public library developed from a mixture of older traditions and new social ideas. Earlier collections were often restricted to religious institutions, universities, wealthy individuals, or government officials. Books were expensive to produce, and access could therefore depend heavily on a person's social position. The expansion of printing gradually changed the economics of books, although affordability remained a problem for many communities."
+          },
+          {
+            "id": "B",
+            "text": "During the nineteenth century, campaigns for public education helped strengthen support for libraries open to wider sections of society. Reformers argued that access to books could encourage literacy and provide workers with opportunities for self-education. Some supporters also viewed libraries as a way of encouraging orderly recreation. Not everyone agreed about what libraries should contain, however. Debates arose over whether collections should emphasize practical information, literature, moral instruction, or popular entertainment."
+          },
+          {
+            "id": "C",
+            "text": "Funding was another important issue. Public libraries required buildings, staff, catalogues, and continuing purchases of books. In some places, local governments provided financial support; elsewhere, private donors played a major role. The balance between public and private funding differed considerably. Where libraries depended heavily on donations, wealthy individuals could sometimes influence the character of collections, while public funding created its own debates about taxation and community priorities."
+          },
+          {
+            "id": "D",
+            "text": "The organization of libraries also changed. Instead of keeping books in closed rooms where readers needed assistance from staff, some institutions introduced open shelves. Classification systems and standardized catalogues made it easier to locate material. Library cards and lending rules allowed books to circulate beyond the building. These changes transformed the library from a place where books were stored into a service designed around the needs of readers."
+          },
+          {
+            "id": "E",
+            "text": "In the twentieth century, libraries expanded beyond traditional printed books. Newspapers, magazines, recordings, films, and later electronic resources became part of many collections. Librarians increasingly helped visitors locate and evaluate information rather than simply retrieve a particular volume. This role became especially important as the amount of available information grew rapidly and new technologies changed how people searched for it."
+          },
+          {
+            "id": "F",
+            "text": "The arrival of the internet led some observers to predict that public libraries would become unnecessary. Instead, many libraries adapted by providing internet access, digital collections, computer facilities, and assistance with online information. In communities where reliable internet access is not equally available to everyone, these services can be particularly important. Libraries have therefore continued to change their role while retaining the broader goal of providing public access to knowledge."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_information",
+          "questionRange": "14-18",
+          "instructions": "The passage has six paragraphs, A-F. Which paragraph contains the following information? You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 14,
+              "text": "a change that allowed readers to find books more easily",
+              "answer": "D"
+            },
+            {
+              "number": 15,
+              "text": "different opinions about what books should be provided",
+              "answer": "B"
+            },
+            {
+              "number": 16,
+              "text": "a prediction that libraries would no longer be needed",
+              "answer": "F"
+            },
+            {
+              "number": 17,
+              "text": "the possibility that donors could influence collections",
+              "answer": "C"
+            },
+            {
+              "number": 18,
+              "text": "the expansion of library materials beyond books",
+              "answer": "E"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "19-22",
+          "instructions": "Do the following statements agree with the claims of the writer?",
+          "questions": [
+            {
+              "number": 19,
+              "text": "Libraries in earlier periods were always freely available to everyone.",
+              "answer": "NO"
+            },
+            {
+              "number": 20,
+              "text": "All nineteenth-century reformers agreed about what libraries should contain.",
+              "answer": "NO"
+            },
+            {
+              "number": 21,
+              "text": "Public funding completely eliminated disagreements about library budgets.",
+              "answer": "NO"
+            },
+            {
+              "number": 22,
+              "text": "Some modern libraries provide assistance with online information.",
+              "answer": "YES"
+            }
+          ]
+        },
+        {
+          "type": "answer_box",
+          "questionRange": "23-25",
+          "instructions": "Choose the correct answer from the box.",
+          "options": [
+            "literacy",
+            "taxation",
+            "catalogues",
+            "internet access",
+            "entertainment",
+            "donations"
+          ],
+          "questions": [
+            {
+              "number": 23,
+              "text": "Public education campaigns helped strengthen support for ________.",
+              "answer": "literacy"
+            },
+            {
+              "number": 24,
+              "text": "Standardized ________ made it easier to locate library material.",
+              "answer": "catalogues"
+            },
+            {
+              "number": 25,
+              "text": "Modern libraries may provide ________ in communities where it is not equally available.",
+              "answer": "internet access"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice_multiple",
+          "questionRange": "26-27",
+          "instructions": "Choose TWO letters, A-F. Which TWO changes are described as developments in library services?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Libraries introduced open shelves in some institutions."
+            },
+            {
+              "letter": "B",
+              "text": "Libraries stopped purchasing printed books completely."
+            },
+            {
+              "letter": "C",
+              "text": "Libraries began helping visitors evaluate information."
+            },
+            {
+              "letter": "D",
+              "text": "Libraries became exclusively private organizations."
+            },
+            {
+              "letter": "E",
+              "text": "Libraries removed all lending rules."
+            },
+            {
+              "letter": "F",
+              "text": "Libraries stopped providing access to electronic resources."
+            }
+          ],
+          "questions": [
+            {
+              "number": 26,
+              "text": "First correct answer",
+              "answer": "A"
+            },
+            {
+              "number": 27,
+              "text": "Second correct answer",
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "Designing Cities for Walking",
+      "passage": {
+        "passageId": "P3",
+        "title": "Designing Cities for Walking",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Walking is one of the simplest forms of transport, yet whether people choose it depends heavily on the environment around them. A journey that is easy on a map may feel unpleasant if a street is noisy, unsafe, poorly shaded, or difficult to cross. Urban designers have consequently become increasingly interested in the conditions that make walking practical rather than treating pedestrian movement as a secondary result of road design."
+          },
+          {
+            "id": "B",
+            "text": "Street connectivity is one factor that affects walking. In areas with a dense network of relatively short streets, pedestrians may have several routes between two destinations. By contrast, neighborhoods built around long blocks, dead ends, or major roads may force people to take indirect paths. Connectivity does not guarantee that residents will walk, but it can reduce unnecessary distance and increase the number of destinations that can be reached conveniently."
+          },
+          {
+            "id": "C",
+            "text": "The quality of the walking environment matters as well. Wide sidewalks can be useful, but width alone does not create a comfortable street. Shade, seating, lighting, crossings, drainage, and protection from traffic can influence how people experience a route. The importance of each feature can vary with climate and local habits. In a hot city, for example, shade may affect walking behavior more strongly than it does in a cool climate."
+          },
+          {
+            "id": "D",
+            "text": "Public transport and walking are also closely linked. Many passengers walk to and from stations, so the area surrounding a station can affect the usefulness of the entire transport network. A station may be technically close to a neighborhood but difficult to reach if pedestrians must cross a busy road without a safe crossing. Improving the route to a station can therefore increase access to public transport without changing the railway or bus service itself."
+          },
+          {
+            "id": "E",
+            "text": "Economic activity can benefit from pedestrian movement, but the relationship is not straightforward. Shops may gain from streets where people spend time walking, stopping, and browsing. On the other hand, changes that make a street more attractive can increase rents and operating costs. Small businesses may therefore experience both opportunities and pressures when pedestrian-oriented improvements are introduced."
+          },
+          {
+            "id": "F",
+            "text": "Technology is increasingly used to study pedestrian movement. Sensors, anonymized mobile-device data, cameras, and digital maps can help researchers estimate where people walk and where journeys become difficult. Such tools can reveal patterns that are hard to observe through occasional surveys. Nevertheless, data do not automatically explain why people behave as they do. Researchers still need local knowledge and direct observation to interpret the patterns correctly."
+          },
+          {
+            "id": "G",
+            "text": "There is consequently no single design formula that will make every city walkable. Successful strategies depend on climate, street structure, transport systems, population density, and local preferences. The most effective projects often combine physical changes with policies concerning traffic, land use, and public transport. Walking is therefore best understood not as an isolated activity but as one component of a wider urban system."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_features",
+          "questionRange": "28-32",
+          "instructions": "Match each statement with the correct paragraph, A-G. You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 28,
+              "text": "a factor that can reduce the distance pedestrians need to travel",
+              "answer": "B"
+            },
+            {
+              "number": 29,
+              "text": "a reason why improving pedestrian routes can affect public transport",
+              "answer": "D"
+            },
+            {
+              "number": 30,
+              "text": "an example of a feature whose importance can depend on climate",
+              "answer": "C"
+            },
+            {
+              "number": 31,
+              "text": "a possible negative economic consequence of pedestrian improvements",
+              "answer": "E"
+            },
+            {
+              "number": 32,
+              "text": "a warning about interpreting information collected by technology",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "33-35",
+          "instructions": "Complete the summary below. Write NO MORE THAN TWO WORDS from the passage.",
+          "summary": "The design of streets can influence whether people choose to walk. A dense network of streets may improve ________, while features such as shade and lighting can affect the quality of the ________. Walking is also important for public transport because many passengers travel on foot to and from ________.",
+          "blanks": [
+            {
+              "number": 33,
+              "text": "________",
+              "answer": "connectivity"
+            },
+            {
+              "number": 34,
+              "text": "________",
+              "answer": "walking environment"
+            },
+            {
+              "number": 35,
+              "text": "________",
+              "answer": "stations"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "36-39",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 36,
+              "text": "A wide sidewalk by itself guarantees that people will enjoy walking.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 37,
+              "text": "The passage states that mobile-device data are collected without any privacy concerns.",
+              "answer": "NOT GIVEN"
+            },
+            {
+              "number": 38,
+              "text": "All cities with dense street networks have high rates of walking.",
+              "answer": "NOT GIVEN"
+            },
+            {
+              "number": 39,
+              "text": "Improving a route to a station can increase access to public transport without changing the transport service itself.",
+              "answer": "TRUE"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "40-40",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 40,
+              "text": "What is the main conclusion of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Every city should use the same street design."
+                },
+                {
+                  "letter": "B",
+                  "text": "Walking depends on a combination of environmental and urban-system factors."
+                },
+                {
+                  "letter": "C",
+                  "text": "Technology has made traditional urban planning unnecessary."
+                },
+                {
+                  "letter": "D",
+                  "text": "Pedestrian improvements always benefit small businesses."
+                }
+              ],
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

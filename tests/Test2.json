@@ -1,7 +1,7 @@
 {
   "testId": "Test2",
   "title": "IELTS Reading Test 2",
-  "duration": 60,
+  "duration": 60, 
   "parts": [
     {
       "partNumber": 1,

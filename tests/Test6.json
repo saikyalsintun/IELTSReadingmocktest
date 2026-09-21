@@ -1,0 +1,510 @@
+{
+  "testId": "Test6",
+  "title": "IELTS Academic Reading Practice Test 6",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Secret Life of Seeds",
+      "passage": {
+        "passageId": "T6P1",
+        "title": "The Secret Life of Seeds",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Seeds appear to be remarkably inactive objects. A dry seed may sit in the soil for months or even years without producing a visible change. Yet inside it is a living structure capable of developing into a complete plant. To achieve this, a seed must respond to temperature, moisture, light and, in some species, signals from surrounding plants or microorganisms."
+          },
+          {
+            "id": "B",
+            "text": "The first stage of germination is the absorption of water. This process, known as imbibition, causes the seed to swell. Water activates enzymes that have been inactive during the dry period. These enzymes begin breaking down stored food, providing energy for the embryo. The seed's outer covering may then split, allowing the first root to emerge."
+          },
+          {
+            "id": "C",
+            "text": "Not all seeds germinate immediately after receiving water. Some have a form of dormancy that prevents growth until particular conditions are met. This can be an advantage in unpredictable environments. A seed that germinated immediately after a brief rainfall in a desert, for example, might die before its young roots could obtain enough water."
+          },
+          {
+            "id": "D",
+            "text": "Temperature is another important signal. Each species has a range within which germination is most successful. Some alpine plants require exposure to cold before they can germinate, while certain desert plants respond to large differences between daytime and nighttime temperatures. Such mechanisms help seeds avoid beginning growth during unsuitable seasons."
+          },
+          {
+            "id": "E",
+            "text": "Light also influences the behaviour of many seeds. Some need light before germination, whereas others germinate more successfully in darkness. This difference can help determine where a seed will grow. A seed buried deeply beneath soil may encounter little or no light, while a seed close to the surface may receive enough to trigger a response."
+          },
+          {
+            "id": "F",
+            "text": "Seeds can also travel surprisingly far from their parent plants. Wind carries the light seeds of many trees and grasses, while animals transport others after eating their fruits. Some seeds have hooks that attach themselves to animal fur. Others float on water and may cross rivers or travel along coastlines."
+          },
+          {
+            "id": "G",
+            "text": "Researchers are increasingly interested in seeds because they may help agriculture cope with changing environmental conditions. Collections of seeds can preserve genetic characteristics from older plant populations. These characteristics may include resistance to drought, disease or extreme temperatures. Such genetic diversity could become valuable when farmers need crops suited to new climates."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "true_false_not_given",
+          "questionRange": "1-5",
+          "instructions": "Do the following statements agree with the information given in the passage? Write TRUE, FALSE or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 1,
+              "text": "A dry seed can remain unchanged visibly for a long period.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 2,
+              "text": "All seeds begin germination as soon as they absorb water.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 3,
+              "text": "Imbibition causes a seed to lose most of its stored food.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 4,
+              "text": "Some seeds require exposure to cold before germination.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 5,
+              "text": "Scientists have discovered that all seeds require light to germinate.",
+              "answer": "FALSE"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "6-9",
+          "instructions": "Complete the sentences. Write NO MORE THAN TWO WORDS from the passage for each answer.",
+          "questions": [
+            {
+              "number": 6,
+              "text": "Water activates ______ inside a seed during the beginning of germination.",
+              "answer": "enzymes"
+            },
+            {
+              "number": 7,
+              "text": "The first root may emerge when the seed's outer ______ splits.",
+              "answer": "covering"
+            },
+            {
+              "number": 8,
+              "text": "Some seeds remain dormant because immediate growth could be dangerous in ______ environments.",
+              "answer": "unpredictable"
+            },
+            {
+              "number": 9,
+              "text": "Seeds can be carried by animals after the animals eat their ______.",
+              "answer": "fruits"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "10-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 10,
+              "text": "What is the main purpose of seed dormancy?",
+              "options": [
+                "A. To make seeds larger",
+                "B. To prevent growth during unsuitable conditions",
+                "C. To increase the amount of water in the soil",
+                "D. To attract animals to the parent plant"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 11,
+              "text": "Why can differences in temperature between day and night be important to some desert plants?",
+              "options": [
+                "A. They provide a signal about suitable conditions for growth",
+                "B. They increase the number of seeds produced",
+                "C. They prevent animals from eating the seeds",
+                "D. They make the seeds travel further"
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 12,
+              "text": "What does the passage suggest about light and seed germination?",
+              "options": [
+                "A. Every seed responds to light in exactly the same way",
+                "B. Light is only important for seeds transported by wind",
+                "C. Different species may respond differently to light",
+                "D. Seeds buried deeply always germinate faster"
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 13,
+              "text": "Why are seed collections potentially useful for agriculture?",
+              "options": [
+                "A. They can provide older genetic characteristics that may help crops adapt",
+                "B. They guarantee that crops will never become diseased",
+                "C. They eliminate the need for farmers to use water",
+                "D. They allow all plants to grow without sunlight"
+              ],
+              "answer": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "The Evolution of the Bicycle",
+      "passage": {
+        "passageId": "T6P2",
+        "title": "The Evolution of the Bicycle",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "The modern bicycle is the result of more than two centuries of experimentation. Early versions were quite different from the lightweight machines used today. Designers gradually changed the position of the rider, the size of the wheels and the method by which movement was transferred to the wheels."
+          },
+          {
+            "id": "B",
+            "text": "One important early design appeared in Europe in the early nineteenth century. It consisted of two wheels connected by a frame, but it had no pedals. The rider sat on a seat and pushed the machine forward with their feet. Although relatively simple, this design introduced the basic two-wheeled arrangement that later bicycles would retain."
+          },
+          {
+            "id": "C",
+            "text": "Later inventors added pedals and developed mechanisms that allowed riders to turn the wheels more efficiently. Some nineteenth-century bicycles had extremely large front wheels. These machines could travel considerable distances with one rotation of the pedals, but they were difficult to mount and could be dangerous when the rider lost balance."
+          },
+          {
+            "id": "D",
+            "text": "A major change came with the development of bicycles with two wheels of similar size. Instead of depending on a very large front wheel, these designs used a chain mechanism to transfer power from the pedals to the rear wheel. The arrangement made bicycles easier to control and contributed to the shape that became familiar in the twentieth century."
+          },
+          {
+            "id": "E",
+            "text": "The spread of bicycles was not simply a result of engineering. Manufacturing techniques also mattered. As factories became capable of producing metal components in larger quantities, bicycles became more standardized. Improvements in rubber tyres and braking systems further increased their practicality."
+          },
+          {
+            "id": "F",
+            "text": "Bicycles also changed social life. In many places, they gave people a relatively inexpensive means of travelling beyond their immediate neighbourhoods. Women in particular benefited from increased personal mobility in the late nineteenth and early twentieth centuries. Historians have linked bicycle ownership with changes in clothing, recreation and patterns of social interaction."
+          },
+          {
+            "id": "G",
+            "text": "Today, bicycle design continues to develop. Materials such as carbon fibre can reduce weight, while electronic systems can assist with shifting gears or monitoring performance. At the same time, many urban cycling programmes rely on relatively simple bicycles because durability, ease of repair and low operating costs can be more important than advanced technology."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "14-18",
+          "instructions": "Choose the correct heading for paragraphs B-F from the list of headings below.",
+          "headings": [
+            {
+              "value": "i",
+              "text": "The social effects of bicycle ownership"
+            },
+            {
+              "value": "ii",
+              "text": "An early design without pedals"
+            },
+            {
+              "value": "iii",
+              "text": "The importance of manufacturing improvements"
+            },
+            {
+              "value": "iv",
+              "text": "A dangerous but fast machine"
+            },
+            {
+              "value": "v",
+              "text": "The development of a familiar bicycle structure"
+            },
+            {
+              "value": "vi",
+              "text": "Modern technology and practical simplicity"
+            },
+            {
+              "value": "vii",
+              "text": "Why bicycles disappeared from cities"
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "text": "Paragraph B",
+              "answer": "ii"
+            },
+            {
+              "number": 15,
+              "text": "Paragraph C",
+              "answer": "iv"
+            },
+            {
+              "number": 16,
+              "text": "Paragraph D",
+              "answer": "v"
+            },
+            {
+              "number": 17,
+              "text": "Paragraph E",
+              "answer": "iii"
+            },
+            {
+              "number": 18,
+              "text": "Paragraph F",
+              "answer": "i"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "19-22",
+          "instructions": "Complete the summary. Choose NO MORE THAN TWO WORDS from the box for each answer.",
+          "options": [
+            "pedals",
+            "two-wheeled",
+            "chain",
+            "factories",
+            "clothing",
+            "carbon fibre",
+            "rubber"
+          ],
+          "summary": "Early bicycles already used a basic ______ arrangement, although riders initially moved them with their feet. Later models introduced ______, while another important development was the use of a ______ to transfer power to the rear wheel. The growth of bicycle manufacturing was supported by improved production in ______.",
+          "blanks": [
+            {
+              "number": 19,
+              "answer": "two-wheeled"
+            },
+            {
+              "number": 20,
+              "answer": "pedals"
+            },
+            {
+              "number": 21,
+              "answer": "chain"
+            },
+            {
+              "number": 22,
+              "answer": "factories"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "23-27",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 23,
+              "text": "What was a disadvantage of bicycles with very large front wheels?",
+              "options": [
+                "A. They could not travel long distances",
+                "B. They were difficult to mount and could be dangerous",
+                "C. They required electric motors",
+                "D. They had no steering mechanism"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 24,
+              "text": "What helped bicycles become more practical?",
+              "options": [
+                "A. Improvements in tyres and braking systems",
+                "B. The removal of metal components",
+                "C. The introduction of wooden wheels",
+                "D. The disappearance of factories"
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 25,
+              "text": "According to the passage, bicycles gave many people",
+              "options": [
+                "A. free access to public transport",
+                "B. a relatively inexpensive way to travel further",
+                "C. employment in bicycle factories",
+                "D. access to international travel"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 26,
+              "text": "What social change is mentioned in connection with women and bicycles?",
+              "options": [
+                "A. Increased personal mobility",
+                "B. Reduced interest in recreation",
+                "C. Greater dependence on public transport",
+                "D. The end of bicycle manufacturing"
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 27,
+              "text": "Why might simple bicycles be preferred in some urban programmes?",
+              "options": [
+                "A. They are always faster than advanced bicycles",
+                "B. They require no maintenance",
+                "C. They can be durable and easy to repair",
+                "D. They contain more electronic systems"
+              ],
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "Why Some Languages Disappear",
+      "passage": {
+        "passageId": "T6P3",
+        "title": "Why Some Languages Disappear",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Thousands of languages are spoken around the world, but their distribution is uneven. A small number of major languages are used by very large populations, while many other languages are spoken by relatively small communities. When a language loses speakers across several generations, it may eventually cease to be used in everyday communication."
+          },
+          {
+            "id": "B",
+            "text": "Language change is not unusual. Languages have always borrowed words, changed pronunciation and developed new grammatical patterns. The disappearance of a language, however, usually involves a shift in which language people choose to use. If children stop learning their parents' language and instead adopt another language for school, work and public life, the older language may become increasingly restricted."
+          },
+          {
+            "id": "C",
+            "text": "Economic factors can accelerate this process. A language associated with employment or higher education may become particularly attractive to younger speakers. Families may encourage children to learn a dominant language because they believe it will provide greater access to opportunities. This does not necessarily mean that families reject their heritage; they may simply be responding to practical circumstances."
+          },
+          {
+            "id": "D",
+            "text": "Education is another important factor. When schools operate almost entirely in a dominant language, children may have fewer opportunities to develop literacy in their community language. Over time, the community language can become associated mainly with informal conversation at home, while the dominant language is used for writing and formal communication."
+          },
+          {
+            "id": "E",
+            "text": "Technology can have mixed effects. Digital communication often favours languages with large numbers of users, because software, online services and media are more likely to be available in those languages. However, technology can also support smaller languages. Communities can create digital dictionaries, record stories, develop educational materials and communicate with speakers who live far away."
+          },
+          {
+            "id": "F",
+            "text": "Efforts to maintain endangered languages therefore take many forms. Some communities establish bilingual education, while others create language classes for adults or produce radio and online content. Recording a language is also valuable because it preserves evidence of vocabulary, grammar and pronunciation for future researchers and community members."
+          },
+          {
+            "id": "G",
+            "text": "Language preservation does not necessarily mean preventing languages from changing. A living language naturally adapts as its speakers encounter new ideas and technologies. The central concern for many communities is whether younger generations continue to use the language and whether it remains available in enough areas of daily life to function as a normal means of communication."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_features",
+          "questionRange": "28-32",
+          "instructions": "Match each statement with the correct paragraph, A-G. You may use any letter more than once.",
+          "options": [
+            {
+              "value": "A",
+              "text": "A"
+            },
+            {
+              "value": "B",
+              "text": "B"
+            },
+            {
+              "value": "C",
+              "text": "C"
+            },
+            {
+              "value": "D",
+              "text": "D"
+            },
+            {
+              "value": "E",
+              "text": "E"
+            },
+            {
+              "value": "F",
+              "text": "F"
+            },
+            {
+              "value": "G",
+              "text": "G"
+            }
+          ],
+          "questions": [
+            {
+              "number": 28,
+              "text": "an explanation of why families may encourage children to learn a dominant language",
+              "answer": "C"
+            },
+            {
+              "number": 29,
+              "text": "examples of ways technology can be used to support a smaller language",
+              "answer": "E"
+            },
+            {
+              "number": 30,
+              "text": "a description of how schools can affect language use",
+              "answer": "D"
+            },
+            {
+              "number": 31,
+              "text": "a discussion of methods used to preserve endangered languages",
+              "answer": "F"
+            },
+            {
+              "number": 32,
+              "text": "an explanation of why language change itself is not necessarily a problem",
+              "answer": "G"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "33-36",
+          "instructions": "Do the following statements agree with the views of the writer? Write YES, NO or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 33,
+              "text": "Languages have always changed over time.",
+              "answer": "YES"
+            },
+            {
+              "number": 34,
+              "text": "Families who choose a dominant language for their children necessarily dislike their traditional language.",
+              "answer": "NO"
+            },
+            {
+              "number": 35,
+              "text": "Most endangered languages are used mainly for scientific research.",
+              "answer": "NOT GIVEN"
+            },
+            {
+              "number": 36,
+              "text": "Technology can sometimes help communities maintain smaller languages.",
+              "answer": "YES"
+            }
+          ]
+        },
+        {
+          "type": "matching_information",
+          "questionRange": "37-40",
+          "instructions": "Which paragraph contains the following information? Choose the correct letter, A-G.",
+          "questions": [
+            {
+              "number": 37,
+              "text": "a reason why a language may become limited mainly to communication within the home",
+              "answer": "D"
+            },
+            {
+              "number": 38,
+              "text": "a statement that language loss often occurs when children no longer learn a language",
+              "answer": "B"
+            },
+            {
+              "number": 39,
+              "text": "a reference to preserving recordings for future users and researchers",
+              "answer": "F"
+            },
+            {
+              "number": 40,
+              "text": "an observation that access to employment can influence language choices",
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

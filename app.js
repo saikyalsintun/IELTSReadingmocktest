@@ -1,6 +1,7 @@
 /* =========================================================
    IELTS READING PRACTICE WEBSITE
    COMPLETE app.js
+   Compatible with Test1.json - Test5.json
    ========================================================= */
 
 
@@ -87,12 +88,14 @@ function setupGlobalEvents() {
         document.querySelector('form[action*="login"]') ||
         document.querySelector("form");
 
+
     if (loginForm) {
 
         loginForm.addEventListener(
             "submit",
             handleLogin
         );
+
     }
 
 
@@ -141,7 +144,9 @@ function setupGlobalEvents() {
         function () {
 
             if (currentTest) {
+
                 startTest();
+
             }
 
         }
@@ -182,13 +187,17 @@ function setupGlobalEvents() {
                     ".vocabulary-word"
                 )
             ) {
+
                 return;
+
             }
+
 
             const popup =
                 document.getElementById(
                     "vocabularyPopup"
                 );
+
 
             if (
                 popup &&
@@ -202,11 +211,12 @@ function setupGlobalEvents() {
 
         }
     );
+
 }
 
 
 /* =========================================================
-   ADD CLICK HELPER
+   ADD CLICK
    ========================================================= */
 
 function addClick(
@@ -217,18 +227,21 @@ function addClick(
     const element =
         document.getElementById(id);
 
+
     if (element) {
 
         element.addEventListener(
             "click",
             handler
         );
+
     }
+
 }
 
 
 /* =========================================================
-   FIND USERNAME INPUT
+   LOGIN INPUTS
    ========================================================= */
 
 function findUsernameInput() {
@@ -236,23 +249,15 @@ function findUsernameInput() {
     const selectors = [
 
         "#username",
-
         "#Username",
-
         "#userName",
-
         "#loginUsername",
-
         "#loginUser",
-
         "#studentUsername",
 
         'input[name="username"]',
-
         'input[name="Username"]',
-
         'input[name="user"]',
-
         'input[name="userName"]',
 
         'input[autocomplete="username"]',
@@ -271,35 +276,31 @@ function findUsernameInput() {
                 selector
             );
 
+
         if (element) {
+
             return element;
+
         }
+
     }
+
 
     return null;
 }
 
-
-/* =========================================================
-   FIND PASSWORD INPUT
-   ========================================================= */
 
 function findPasswordInput() {
 
     const selectors = [
 
         "#password",
-
         "#Password",
-
         "#loginPassword",
-
         "#studentPassword",
 
         'input[name="password"]',
-
         'input[name="Password"]',
-
         'input[name="pass"]',
 
         'input[type="password"]',
@@ -318,10 +319,15 @@ function findPasswordInput() {
                 selector
             );
 
+
         if (element) {
+
             return element;
+
         }
+
     }
+
 
     return null;
 }
@@ -338,11 +344,13 @@ async function handleLogin(event) {
         event.preventDefault();
 
         event.stopPropagation();
+
     }
 
 
     const usernameInput =
         findUsernameInput();
+
 
     const passwordInput =
         findPasswordInput();
@@ -372,6 +380,7 @@ async function handleLogin(event) {
         );
 
         return;
+
     }
 
 
@@ -383,6 +392,7 @@ async function handleLogin(event) {
         );
 
         return;
+
     }
 
 
@@ -416,6 +426,7 @@ async function handleLogin(event) {
                 response?.message ||
                 "Invalid username or password."
             );
+
         }
 
 
@@ -429,9 +440,12 @@ async function handleLogin(event) {
         if (!currentUser) {
 
             currentUser = {
+
                 username:
                     username
+
             };
+
         }
 
 
@@ -439,6 +453,7 @@ async function handleLogin(event) {
 
             currentUser.username =
                 username;
+
         }
 
 
@@ -479,6 +494,7 @@ async function handleLogin(event) {
         setLoading(false);
 
     }
+
 }
 
 
@@ -512,7 +528,9 @@ function restoreLogin() {
                 showDashboard();
 
                 return;
+
             }
+
         }
 
     } catch (error) {
@@ -521,12 +539,14 @@ function restoreLogin() {
             "Could not restore login:",
             error
         );
+
     }
 
 
     showScreen(
         "loginScreen"
     );
+
 }
 
 
@@ -538,6 +558,7 @@ function logout() {
 
     stopTimer();
 
+
     currentUser = null;
 
     currentTest = null;
@@ -545,6 +566,7 @@ function logout() {
     currentTestNumber = null;
 
     studentAnswers = {};
+
 
     localStorage.removeItem(
         "ieltsReadingUser"
@@ -559,16 +581,22 @@ function logout() {
     const username =
         findUsernameInput();
 
+
     const password =
         findPasswordInput();
 
 
     if (username) {
+
         username.value = "";
+
     }
 
+
     if (password) {
+
         password.value = "";
+
     }
 
 
@@ -576,6 +604,7 @@ function logout() {
         "",
         ""
     );
+
 }
 
 
@@ -586,6 +615,7 @@ function logout() {
 async function showDashboard() {
 
     stopTimer();
+
 
     testStarted = false;
 
@@ -602,46 +632,47 @@ async function showDashboard() {
     renderTestCards();
 
     await loadHistory();
+
 }
 
 
 /* =========================================================
-   UPDATE DASHBOARD USER
+   UPDATE USERNAME
    ========================================================= */
 
 function updateDashboardUser() {
 
-    const possibleIds = [
+    const ids = [
 
         "dashboardUsername",
-
         "studentName",
-
         "loggedInUsername",
-
         "welcomeUsername",
-
         "currentUsername"
 
     ];
 
 
-    for (
-        const id of possibleIds
-    ) {
+    ids.forEach(
+        function (id) {
 
-        const element =
-            document.getElementById(
-                id
-            );
+            const element =
+                document.getElementById(
+                    id
+                );
 
-        if (element) {
 
-            element.textContent =
-                currentUser?.username ||
-                "Student";
+            if (element) {
+
+                element.textContent =
+                    currentUser?.username ||
+                    "Student";
+
+            }
+
         }
-    }
+    );
+
 }
 
 
@@ -658,7 +689,9 @@ function renderTestCards() {
 
 
     if (!box) {
+
         return;
+
     }
 
 
@@ -723,7 +756,9 @@ function renderTestCards() {
         box.appendChild(
             card
         );
+
     }
+
 }
 
 
@@ -762,6 +797,7 @@ async function openTest(
             throw new Error(
                 `Test${testNumber}.json could not be loaded. HTTP ${response.status}`
             );
+
         }
 
 
@@ -769,7 +805,9 @@ async function openTest(
             await response.json();
 
 
-        validateTest(data);
+        validateTest(
+            data
+        );
 
 
         currentTest =
@@ -813,6 +851,7 @@ async function openTest(
         setLoading(false);
 
     }
+
 }
 
 
@@ -831,17 +870,19 @@ function validateTest(test) {
         throw new Error(
             "Invalid test JSON."
         );
+
     }
 
 
     test.parts.forEach(
-        function(part, index) {
+        function (part, index) {
 
             if (!part.passage) {
 
                 throw new Error(
                     `Part ${index + 1} is missing passage.`
                 );
+
             }
 
 
@@ -851,13 +892,17 @@ function validateTest(test) {
                 )
             ) {
 
-                part.questionGroups =
-                    [];
+                part.questionGroups = [];
+
             }
 
 
             part.questionGroups.forEach(
-                function(group) {
+                function (group) {
+
+                    /*
+                     * Normal question groups.
+                     */
 
                     if (
                         !Array.isArray(
@@ -865,8 +910,26 @@ function validateTest(test) {
                         )
                     ) {
 
-                        group.questions =
-                            [];
+                        group.questions = [];
+
+                    }
+
+
+                    /*
+                     * Summary completion uses
+                     * "blanks" in your JSON.
+                     *
+                     * DO NOT delete them.
+                     */
+
+                    if (
+                        !Array.isArray(
+                            group.blanks
+                        )
+                    ) {
+
+                        group.blanks = [];
+
                     }
 
                 }
@@ -874,11 +937,12 @@ function validateTest(test) {
 
         }
     );
+
 }
 
 
 /* =========================================================
-   INTRODUCTION
+   TEST INTRO
    ========================================================= */
 
 function showTestIntroduction() {
@@ -918,6 +982,7 @@ function showTestIntroduction() {
         "introParts",
         currentTest.parts.length
     );
+
 }
 
 
@@ -928,17 +993,22 @@ function showTestIntroduction() {
 function startTest() {
 
     if (!currentTest) {
+
         return;
+
     }
 
 
     /*
-     * IMPORTANT:
-     * Clear current in-memory answers,
-     * then restore saved answers for this test.
+     * Clear current memory.
      */
 
     studentAnswers = {};
+
+
+    /*
+     * Restore saved answers for this test.
+     */
 
     loadSavedAnswers();
 
@@ -973,6 +1043,7 @@ function startTest() {
     renderCurrentPart();
 
     startTimer();
+
 }
 
 
@@ -984,14 +1055,16 @@ function startTimer() {
 
     stopTimer();
 
+
     updateTimerDisplay();
 
 
     timerInterval =
         setInterval(
-            function() {
+            function () {
 
                 remainingSeconds--;
+
 
                 updateTimerDisplay();
 
@@ -1002,7 +1075,9 @@ function startTimer() {
 
                     remainingSeconds = 0;
 
+
                     stopTimer();
+
 
                     autoSubmitTest();
 
@@ -1011,6 +1086,7 @@ function startTimer() {
             },
             1000
         );
+
 }
 
 
@@ -1022,26 +1098,27 @@ function stopTimer() {
             timerInterval
         );
 
+
         timerInterval = null;
+
     }
+
 }
 
 
 function updateTimerDisplay() {
 
-    const possibleIds = [
+    const ids = [
 
         "timer",
-
         "timerDisplay",
-
         "testTimer"
 
     ];
 
 
     for (
-        const id of possibleIds
+        const id of ids
     ) {
 
         const element =
@@ -1057,20 +1134,26 @@ function updateTimerDisplay() {
                     remainingSeconds
                 );
 
+
             break;
+
         }
+
     }
+
 }
 
 
 /* =========================================================
-   CURRENT PART
+   RENDER CURRENT PART
    ========================================================= */
 
 function renderCurrentPart() {
 
     if (!currentTest) {
+
         return;
+
     }
 
 
@@ -1081,7 +1164,9 @@ function renderCurrentPart() {
 
 
     if (!part) {
+
         return;
+
     }
 
 
@@ -1145,9 +1230,12 @@ function renderCurrentPart() {
 
     renderQuestionNavigator();
 
+
     updatePartButtons();
 
+
     scrollTestPanelsToTop();
+
 }
 
 
@@ -1155,7 +1243,9 @@ function renderCurrentPart() {
    QUESTION RANGE
    ========================================================= */
 
-function questionRangeForPart(part) {
+function questionRangeForPart(
+    part
+) {
 
     const numbers = [];
 
@@ -1164,18 +1254,19 @@ function questionRangeForPart(part) {
         part.questionGroups ||
         []
     ).forEach(
-        function(group) {
+        function (group) {
 
             (
                 group.questions ||
                 []
             ).forEach(
-                function(question) {
+                function (question) {
 
                     const number =
                         Number(
                             question.number
                         );
+
 
                     if (
                         Number.isFinite(
@@ -1186,6 +1277,40 @@ function questionRangeForPart(part) {
                         numbers.push(
                             number
                         );
+
+                    }
+
+                }
+            );
+
+
+            /*
+             * VERY IMPORTANT:
+             * Summary Completion uses blanks.
+             */
+
+            (
+                group.blanks ||
+                []
+            ).forEach(
+                function (blank) {
+
+                    const number =
+                        Number(
+                            blank.number
+                        );
+
+
+                    if (
+                        Number.isFinite(
+                            number
+                        )
+                    ) {
+
+                        numbers.push(
+                            number
+                        );
+
                     }
 
                 }
@@ -1196,21 +1321,24 @@ function questionRangeForPart(part) {
 
 
     if (!numbers.length) {
+
         return "";
+
     }
 
 
-    return (
-        `${Math.min(...numbers)}-${Math.max(...numbers)}`
-    );
+    return `${Math.min(...numbers)}-${Math.max(...numbers)}`;
+
 }
 
 
 /* =========================================================
-   PASSAGE
+   RENDER PASSAGE
    ========================================================= */
 
-function renderPassage(passage) {
+function renderPassage(
+    passage
+) {
 
     const box =
         document.getElementById(
@@ -1219,7 +1347,9 @@ function renderPassage(passage) {
 
 
     if (!box) {
+
         return;
+
     }
 
 
@@ -1229,7 +1359,7 @@ function renderPassage(passage) {
             []
         )
         .map(
-            function(paragraph) {
+            function (paragraph) {
 
                 return `
 
@@ -1261,13 +1391,14 @@ function renderPassage(passage) {
             ".vocabulary-word"
         )
         .forEach(
-            function(element) {
+            function (element) {
 
                 element.addEventListener(
                     "click",
-                    function(event) {
+                    function (event) {
 
                         event.stopPropagation();
+
 
                         showVocabularyPopup(
                             element.dataset.word,
@@ -1279,80 +1410,12 @@ function renderPassage(passage) {
 
             }
         );
+
 }
 
 
 /* =========================================================
-   VOCABULARY HIGHLIGHT
-   ========================================================= */
-
-function highlightVocabulary(text) {
-
-    if (
-        !vocabulary ||
-        !Object.keys(vocabulary).length
-    ) {
-
-        return escapeHTML(text);
-    }
-
-
-    let result =
-        escapeHTML(text);
-
-
-    const words =
-        Object.keys(vocabulary)
-            .sort(
-                function(a, b) {
-
-                    return (
-                        b.length -
-                        a.length
-                    );
-
-                }
-            );
-
-
-    for (
-        const word of words
-    ) {
-
-        const regex =
-            new RegExp(
-                `(?<![A-Za-z])(${escapeRegExp(word)})(?![A-Za-z])`,
-                "gi"
-            );
-
-
-        result =
-            result.replace(
-                regex,
-                function(match) {
-
-                    return `
-
-                        <span
-                            class="vocabulary-word"
-                            data-word="${escapeAttribute(match)}"
-                        >
-                            ${match}
-                        </span>
-
-                    `;
-
-                }
-            );
-    }
-
-
-    return result;
-}
-
-
-/* =========================================================
-   LOAD VOCABULARY
+   VOCABULARY
    ========================================================= */
 
 async function loadVocabulary() {
@@ -1375,6 +1438,7 @@ async function loadVocabulary() {
         if (!response.ok) {
 
             return;
+
         }
 
 
@@ -1390,48 +1454,125 @@ async function loadVocabulary() {
 
     } catch (error) {
 
-        console.info(
-            "Vocabulary unavailable."
-        );
-
         vocabulary = {};
+
     }
+
 }
 
 
-/* =========================================================
-   VOCABULARY POPUP
-   ========================================================= */
-
-function showVocabularyPopup(
-    word,
-    target
+function highlightVocabulary(
+    text
 ) {
 
     if (
         !vocabulary ||
         !Object.keys(vocabulary).length
     ) {
-        return;
+
+        return escapeHTML(
+            text
+        );
+
     }
 
 
-    const key =
-        Object.keys(vocabulary)
-            .find(
-                function(item) {
+    let result =
+        escapeHTML(
+            text
+        );
 
-                    return (
-                        item.toLowerCase() ===
-                        String(word).toLowerCase()
-                    );
+
+    const words =
+        Object.keys(
+            vocabulary
+        )
+        .sort(
+            function (a, b) {
+
+                return (
+                    b.length -
+                    a.length
+                );
+
+            }
+        );
+
+
+    for (
+        const word of words
+    ) {
+
+        const regex =
+            new RegExp(
+                `(?<![A-Za-z])(${escapeRegExp(word)})(?![A-Za-z])`,
+                "gi"
+            );
+
+
+        result =
+            result.replace(
+                regex,
+                function (match) {
+
+                    return `
+
+                        <span
+                            class="vocabulary-word"
+                            data-word="${escapeAttribute(match)}"
+                        >
+                            ${match}
+                        </span>
+
+                    `;
 
                 }
             );
 
+    }
+
+
+    return result;
+
+}
+
+
+function showVocabularyPopup(
+    word
+) {
+
+    if (
+        !vocabulary ||
+        !Object.keys(vocabulary).length
+    ) {
+
+        return;
+
+    }
+
+
+    const key =
+        Object.keys(
+            vocabulary
+        )
+        .find(
+            function (item) {
+
+                return (
+                    item.toLowerCase() ===
+                    String(
+                        word
+                    ).toLowerCase()
+                );
+
+            }
+        );
+
 
     if (!key) {
+
         return;
+
     }
 
 
@@ -1447,7 +1588,9 @@ function showVocabularyPopup(
 
 
     if (!popup) {
+
         return;
+
     }
 
 
@@ -1474,15 +1617,6 @@ function showVocabularyPopup(
     popup.style.display =
         "block";
 
-
-    popup.style.left =
-        "50%";
-
-    popup.style.bottom =
-        "30px";
-
-    popup.style.transform =
-        "translateX(-50%)";
 }
 
 
@@ -1498,7 +1632,9 @@ function closeVocabularyPopup() {
 
         popup.style.display =
             "none";
+
     }
+
 }
 
 
@@ -1506,7 +1642,9 @@ function closeVocabularyPopup() {
    RENDER QUESTIONS
    ========================================================= */
 
-function renderQuestions(part) {
+function renderQuestions(
+    part
+) {
 
     const box =
         document.getElementById(
@@ -1515,7 +1653,9 @@ function renderQuestions(part) {
 
 
     if (!box) {
+
         return;
+
     }
 
 
@@ -1526,7 +1666,7 @@ function renderQuestions(part) {
         part.questionGroups ||
         []
     ).forEach(
-        function(group) {
+        function (group) {
 
             const wrapper =
                 document.createElement(
@@ -1578,11 +1718,13 @@ function renderQuestions(part) {
             );
 
 
-            switch (
+            const type =
                 normalizeQuestionType(
                     group.type
-                )
-            ) {
+                );
+
+
+            switch (type) {
 
                 case "true_false_not_given":
 
@@ -1703,14 +1845,17 @@ function renderQuestions(part) {
 
 
     restoreAnswers();
+
 }
 
 
 /* =========================================================
-   NORMALIZE QUESTION TYPE
+   NORMALIZE TYPE
    ========================================================= */
 
-function normalizeQuestionType(type) {
+function normalizeQuestionType(
+    type
+) {
 
     return String(
         type || ""
@@ -1725,6 +1870,7 @@ function normalizeQuestionType(type) {
         /\s+/g,
         "_"
     );
+
 }
 
 
@@ -1741,7 +1887,7 @@ function renderTrueFalseNotGiven(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             box.appendChild(
                 createQuestionItem(
@@ -1756,6 +1902,7 @@ function renderTrueFalseNotGiven(
 
         }
     );
+
 }
 
 
@@ -1772,7 +1919,7 @@ function renderYesNoNotGiven(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             box.appendChild(
                 createQuestionItem(
@@ -1787,6 +1934,7 @@ function renderYesNoNotGiven(
 
         }
     );
+
 }
 
 
@@ -1803,7 +1951,7 @@ function renderFillBlank(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             const item =
                 createQuestionItem(
@@ -1842,6 +1990,7 @@ function renderFillBlank(
 
         }
     );
+
 }
 
 
@@ -1864,8 +2013,17 @@ function renderSummaryCompletion(
         "summary-box";
 
 
+    /*
+     * YOUR JSON USES:
+     *
+     * "blanks": [...]
+     *
+     * not "questions".
+     */
+
     const questions =
         group.questions ||
+        group.blanks ||
         [];
 
 
@@ -1877,22 +2035,23 @@ function renderSummaryCompletion(
 
 
     let html =
-        escapeHTML(text);
+        escapeHTML(
+            text
+        );
 
 
     /*
-     * -------------------------------------------------------
-     * FORMAT 1
+     * Support:
+     *
      * {{23}}
      * {23}
      * [23]
-     * -------------------------------------------------------
      */
 
     html =
         html.replace(
             /\{\{(\d+)\}\}|\{(\d+)\}|\[(\d+)\]/g,
-            function(
+            function (
                 match,
                 a,
                 b,
@@ -1909,7 +2068,7 @@ function renderSummaryCompletion(
 
                 const question =
                     questions.find(
-                        function(q) {
+                        function (q) {
 
                             return (
                                 Number(
@@ -1923,7 +2082,9 @@ function renderSummaryCompletion(
 
 
                 if (!question) {
+
                     return match;
+
                 }
 
 
@@ -1936,11 +2097,9 @@ function renderSummaryCompletion(
 
 
     /*
-     * -------------------------------------------------------
-     * FORMAT 2
-     * ______
+     * YOUR JSON USES:
+     *
      * ________
-     * -------------------------------------------------------
      */
 
     let blankIndex = 0;
@@ -1949,7 +2108,7 @@ function renderSummaryCompletion(
     html =
         html.replace(
             /_{2,}/g,
-            function() {
+            function () {
 
                 const question =
                     questions[
@@ -1963,6 +2122,7 @@ function renderSummaryCompletion(
                 if (!question) {
 
                     return "________";
+
                 }
 
 
@@ -1979,12 +2139,8 @@ function renderSummaryCompletion(
 
 
     /*
-     * -------------------------------------------------------
-     * FALLBACK
-     *
-     * If there were no placeholders at all,
-     * create answer boxes below the summary.
-     * -------------------------------------------------------
+     * If no input was created,
+     * create the boxes below the summary.
      */
 
     const existingInputs =
@@ -2009,7 +2165,7 @@ function renderSummaryCompletion(
 
 
         questions.forEach(
-            function(question) {
+            function (question) {
 
                 const row =
                     document.createElement(
@@ -2035,6 +2191,7 @@ function renderSummaryCompletion(
                             data-question-number="${question.number}"
                             autocomplete="off"
                             spellcheck="false"
+                            placeholder="Type your answer"
                         >
 
                     </label>
@@ -2053,6 +2210,7 @@ function renderSummaryCompletion(
         summary.appendChild(
             answerArea
         );
+
     }
 
 
@@ -2064,11 +2222,12 @@ function renderSummaryCompletion(
     box.appendChild(
         summary
     );
+
 }
 
 
 /* =========================================================
-   CREATE SUMMARY INPUT
+   SUMMARY INPUT
    ========================================================= */
 
 function createSummaryInput(
@@ -2083,10 +2242,12 @@ function createSummaryInput(
             data-question-number="${questionNumber}"
             autocomplete="off"
             spellcheck="false"
+            placeholder="Answer"
             aria-label="Answer for question ${questionNumber}"
         >
 
     `;
+
 }
 
 
@@ -2103,7 +2264,7 @@ function renderMultipleChoice(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             const item =
                 createQuestionItem(
@@ -2151,6 +2312,7 @@ function renderMultipleChoice(
                     "change",
                     handleAnswerChange
                 );
+
             }
 
 
@@ -2160,6 +2322,7 @@ function renderMultipleChoice(
 
         }
     );
+
 }
 
 
@@ -2172,11 +2335,23 @@ function renderMultipleChoiceMultiple(
     group
 ) {
 
+    const options =
+        getQuestionOptions(
+            null,
+            group,
+            [
+                "options",
+                "choices",
+                "answerOptions"
+            ]
+        );
+
+
     (
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             const item =
                 createQuestionItem(
@@ -2187,18 +2362,6 @@ function renderMultipleChoiceMultiple(
             const control =
                 item.querySelector(
                     ".question-control"
-                );
-
-
-            const options =
-                getQuestionOptions(
-                    question,
-                    group,
-                    [
-                        "options",
-                        "choices",
-                        "answerOptions"
-                    ]
                 );
 
 
@@ -2224,6 +2387,7 @@ function renderMultipleChoiceMultiple(
                     "change",
                     handleAnswerChange
                 );
+
             }
 
 
@@ -2233,6 +2397,7 @@ function renderMultipleChoiceMultiple(
 
         }
     );
+
 }
 
 
@@ -2245,7 +2410,7 @@ function renderMatchingHeadings(
     group
 ) {
 
-    const options =
+    let options =
         getQuestionOptions(
             null,
             group,
@@ -2258,11 +2423,31 @@ function renderMatchingHeadings(
         );
 
 
+    /*
+     * If options are not directly in JSON,
+     * try group.items.
+     */
+
+    if (!options.length) {
+
+        options =
+            getQuestionOptions(
+                null,
+                group,
+                [
+                    "items"
+                ]
+            );
+
+    }
+
+
     renderMatchingSelects(
         box,
         group,
         options
     );
+
 }
 
 
@@ -2290,14 +2475,15 @@ function renderMatchingInformation(
 
 
     /*
-     * If JSON does not contain options,
-     * use paragraph IDs automatically.
+     * If no options are supplied,
+     * use current passage paragraph IDs.
      */
 
     if (!options.length) {
 
         options =
-            getParagraphLetters();
+            getCurrentPassageOptions();
+
     }
 
 
@@ -2306,6 +2492,7 @@ function renderMatchingInformation(
         group,
         options
     );
+
 }
 
 
@@ -2318,7 +2505,11 @@ function renderMatchingFeatures(
     group
 ) {
 
-    const options =
+    /*
+     * First try explicit options.
+     */
+
+    let options =
         getQuestionOptions(
             null,
             group,
@@ -2332,16 +2523,125 @@ function renderMatchingFeatures(
         );
 
 
+    /*
+     * YOUR TEST1 JSON DOES NOT HAVE
+     * group.options for Q29-32.
+     *
+     * It says:
+     *
+     * Match each statement with
+     * paragraph A-G.
+     *
+     * Therefore automatically get
+     * A-G from the passage.
+     */
+
+    if (!options.length) {
+
+        options =
+            getCurrentPassageOptions();
+
+    }
+
+
     renderMatchingSelects(
         box,
         group,
         options
     );
+
 }
 
 
 /* =========================================================
-   GENERIC MATCHING SELECTS
+   GET CURRENT PASSAGE OPTIONS
+   ========================================================= */
+
+function getCurrentPassageOptions() {
+
+    if (!currentTest) {
+
+        return [];
+
+    }
+
+
+    const part =
+        currentTest.parts[
+            currentPartIndex
+        ];
+
+
+    if (!part) {
+
+        return [];
+
+    }
+
+
+    const paragraphs =
+        part.passage?.paragraphs ||
+        [];
+
+
+    const options = [];
+
+
+    paragraphs.forEach(
+        function (paragraph) {
+
+            const id =
+                String(
+                    paragraph.id ||
+                    ""
+                ).trim();
+
+
+            if (!id) {
+
+                return;
+
+            }
+
+
+            options.push({
+
+                letter:
+                    id,
+
+                text:
+                    id
+
+            });
+
+        }
+    );
+
+
+    /*
+     * Remove duplicate paragraph IDs.
+     */
+
+    return [
+        ...new Map(
+            options.map(
+                function (option) {
+
+                    return [
+                        option.letter,
+                        option
+                    ];
+
+                }
+            )
+        ).values()
+    ];
+
+}
+
+
+/* =========================================================
+   MATCHING SELECTS
    ========================================================= */
 
 function renderMatchingSelects(
@@ -2354,7 +2654,7 @@ function renderMatchingSelects(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             const item =
                 createQuestionItem(
@@ -2369,8 +2669,7 @@ function renderMatchingSelects(
 
 
             /*
-             * Question-specific options
-             * have priority.
+             * Question-level options first.
              */
 
             const questionOptions =
@@ -2416,6 +2715,7 @@ function renderMatchingSelects(
                     "change",
                     handleAnswerChange
                 );
+
             }
 
 
@@ -2425,6 +2725,7 @@ function renderMatchingSelects(
 
         }
     );
+
 }
 
 
@@ -2441,7 +2742,7 @@ function renderAnswerBox(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             const item =
                 createQuestionItem(
@@ -2479,11 +2780,12 @@ function renderAnswerBox(
 
         }
     );
+
 }
 
 
 /* =========================================================
-   UNSUPPORTED GROUP
+   UNSUPPORTED
    ========================================================= */
 
 function renderUnsupportedGroup(
@@ -2501,7 +2803,7 @@ function renderUnsupportedGroup(
         group.questions ||
         []
     ).forEach(
-        function(question) {
+        function (question) {
 
             const item =
                 createQuestionItem(
@@ -2539,6 +2841,7 @@ function renderUnsupportedGroup(
 
         }
     );
+
 }
 
 
@@ -2548,7 +2851,7 @@ function renderUnsupportedGroup(
 
 function createQuestionItem(
     question,
-    options = null
+    radioOptions = null
 ) {
 
     const wrapper =
@@ -2594,14 +2897,16 @@ function createQuestionItem(
 
 
     if (
-        Array.isArray(options) &&
-        options.length
+        Array.isArray(
+            radioOptions
+        ) &&
+        radioOptions.length
     ) {
 
         control.innerHTML =
-            options
+            radioOptions
                 .map(
-                    function(option) {
+                    function (option) {
 
                         const normalized =
                             normalizeOption(
@@ -2642,7 +2947,7 @@ function createQuestionItem(
                 "input"
             )
             .forEach(
-                function(input) {
+                function (input) {
 
                     input.addEventListener(
                         "change",
@@ -2651,10 +2956,12 @@ function createQuestionItem(
 
                 }
             );
+
     }
 
 
     return wrapper;
+
 }
 
 
@@ -2668,13 +2975,8 @@ function getQuestionOptions(
     keys = []
 ) {
 
-    const found = [];
-
-
     /*
-     * -------------------------------------------------------
-     * Question-level options
-     * -------------------------------------------------------
+     * QUESTION LEVEL
      */
 
     if (question) {
@@ -2691,18 +2993,17 @@ function getQuestionOptions(
             ) {
 
                 return question[key];
+
             }
+
         }
 
 
         const questionFallbacks = [
 
             "optionList",
-
             "answerChoices",
-
             "items",
-
             "choicesList"
 
         ];
@@ -2720,16 +3021,16 @@ function getQuestionOptions(
             ) {
 
                 return question[key];
+
             }
+
         }
 
     }
 
 
     /*
-     * -------------------------------------------------------
-     * Group-level options
-     * -------------------------------------------------------
+     * GROUP LEVEL
      */
 
     if (group) {
@@ -2746,18 +3047,17 @@ function getQuestionOptions(
             ) {
 
                 return group[key];
+
             }
+
         }
 
 
         const groupFallbacks = [
 
             "optionList",
-
             "answerChoices",
-
             "items",
-
             "choicesList"
 
         ];
@@ -2775,38 +3075,45 @@ function getQuestionOptions(
             ) {
 
                 return group[key];
+
             }
+
         }
 
     }
 
 
     /*
-     * -------------------------------------------------------
-     * Collect options from questions.
-     * -------------------------------------------------------
+     * COLLECT OPTIONS FROM QUESTIONS
      */
 
-    if (group?.questions) {
+    if (
+        group &&
+        Array.isArray(
+            group.questions
+        )
+    ) {
+
+        const found = [];
+
 
         group.questions.forEach(
-            function(q) {
+            function (q) {
 
                 const allKeys = [
+
                     ...keys,
 
                     "optionList",
-
                     "answerChoices",
-
                     "items",
-
                     "choicesList"
+
                 ];
 
 
                 allKeys.forEach(
-                    function(key) {
+                    function (key) {
 
                         if (
                             Array.isArray(
@@ -2815,27 +3122,31 @@ function getQuestionOptions(
                         ) {
 
                             q[key].forEach(
-                                function(option) {
+                                function (option) {
 
-                                    const alreadyExists =
+                                    const exists =
                                         found.some(
-                                            existing =>
-                                                JSON.stringify(
-                                                    existing
-                                                ) ===
-                                                JSON.stringify(
-                                                    option
-                                                )
+                                            function (existing) {
+
+                                                return (
+                                                    JSON.stringify(
+                                                        existing
+                                                    ) ===
+                                                    JSON.stringify(
+                                                        option
+                                                    )
+                                                );
+
+                                            }
                                         );
 
 
-                                    if (
-                                        !alreadyExists
-                                    ) {
+                                    if (!exists) {
 
                                         found.push(
                                             option
                                         );
+
                                     }
 
                                 }
@@ -2848,10 +3159,15 @@ function getQuestionOptions(
 
             }
         );
+
+
+        return found;
+
     }
 
 
-    return found;
+    return [];
+
 }
 
 
@@ -2869,17 +3185,18 @@ function normalizeOption(
     ) {
 
         return {
+
             value: "",
             text: ""
+
         };
+
     }
 
 
     if (
-        typeof option ===
-        "string" ||
-        typeof option ===
-        "number"
+        typeof option === "string" ||
+        typeof option === "number"
     ) {
 
         return {
@@ -2891,12 +3208,12 @@ function normalizeOption(
                 String(option)
 
         };
+
     }
 
 
     if (
-        typeof option ===
-        "object"
+        typeof option === "object"
     ) {
 
         const value =
@@ -2933,16 +3250,17 @@ function normalizeOption(
                 String(text)
 
         };
+
     }
 
 
     return {
 
         value: "",
-
         text: ""
 
     };
+
 }
 
 
@@ -2961,22 +3279,25 @@ function createSelectOptions(
         >
 
             <option value="">
-                - Select -
+                Select...
             </option>
 
     `;
 
 
     if (
-        !Array.isArray(options)
+        !Array.isArray(
+            options
+        )
     ) {
 
         options = [];
+
     }
 
 
     options.forEach(
-        function(option) {
+        function (option) {
 
             const normalized =
                 normalizeOption(
@@ -2990,6 +3311,7 @@ function createSelectOptions(
             ) {
 
                 return;
+
             }
 
 
@@ -3019,6 +3341,7 @@ function createSelectOptions(
 
 
     return html;
+
 }
 
 
@@ -3035,12 +3358,13 @@ function attachInputListener(
             "input"
         )
         .forEach(
-            function(input) {
+            function (input) {
 
                 input.addEventListener(
                     "input",
                     handleAnswerChange
                 );
+
 
                 input.addEventListener(
                     "change",
@@ -3049,6 +3373,7 @@ function attachInputListener(
 
             }
         );
+
 }
 
 
@@ -3071,34 +3396,35 @@ function handleAnswerChange(
 
 
     if (!number) {
+
         return;
+
     }
 
 
     if (
-        element.type ===
-        "radio"
+        element.type === "radio"
     ) {
 
-        if (
-            element.checked
-        ) {
+        if (element.checked) {
 
             studentAnswers[number] =
                 element.value;
-        }
 
+        }
 
     } else {
 
         studentAnswers[number] =
             element.value;
+
     }
 
 
     saveAnswersToStorage();
 
     updateQuestionNavigator();
+
 }
 
 
@@ -3113,7 +3439,7 @@ function saveAllVisibleAnswers() {
             "[data-question-number]"
         )
         .forEach(
-            function(element) {
+            function (element) {
 
                 const number =
                     Number(
@@ -3122,13 +3448,14 @@ function saveAllVisibleAnswers() {
 
 
                 if (!number) {
+
                     return;
+
                 }
 
 
                 if (
-                    element.type ===
-                    "radio"
+                    element.type === "radio"
                 ) {
 
                     if (
@@ -3137,14 +3464,12 @@ function saveAllVisibleAnswers() {
 
                         studentAnswers[number] =
                             element.value;
+
                     }
 
-
                 } else if (
-                    element.tagName ===
-                    "SELECT" ||
-                    element.tagName ===
-                    "INPUT"
+                    element.tagName === "SELECT" ||
+                    element.tagName === "INPUT"
                 ) {
 
                     studentAnswers[number] =
@@ -3157,6 +3482,7 @@ function saveAllVisibleAnswers() {
 
 
     saveAnswersToStorage();
+
 }
 
 
@@ -3171,7 +3497,7 @@ function restoreAnswers() {
             "[data-question-number]"
         )
         .forEach(
-            function(element) {
+            function (element) {
 
                 const number =
                     Number(
@@ -3188,12 +3514,12 @@ function restoreAnswers() {
                 ) {
 
                     return;
+
                 }
 
 
                 if (
-                    element.type ===
-                    "radio"
+                    element.type === "radio"
                 ) {
 
                     element.checked =
@@ -3203,7 +3529,6 @@ function restoreAnswers() {
                         normalizeAnswer(
                             value
                         );
-
 
                 } else {
 
@@ -3217,85 +3542,13 @@ function restoreAnswers() {
 
 
     updateQuestionNavigator();
+
 }
 
 
 /* =========================================================
-   LOCAL ANSWER STORAGE
+   LOCAL STORAGE
    ========================================================= */
-
-function saveAnswersToStorage() {
-
-    if (!currentTestNumber) {
-        return;
-    }
-
-
-    try {
-
-        localStorage.setItem(
-            getAnswerStorageKey(),
-
-            JSON.stringify(
-                studentAnswers
-            )
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "Could not save answers:",
-            error
-        );
-    }
-}
-
-
-function loadSavedAnswers() {
-
-    try {
-
-        const key =
-            getAnswerStorageKey();
-
-
-        const raw =
-            localStorage.getItem(
-                key
-            );
-
-
-        if (raw) {
-
-            const saved =
-                JSON.parse(
-                    raw
-                );
-
-
-            if (
-                saved &&
-                typeof saved ===
-                "object"
-            ) {
-
-                studentAnswers =
-                    saved;
-            }
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "Could not load saved answers:",
-            error
-        );
-
-        studentAnswers = {};
-    }
-}
-
 
 function getAnswerStorageKey() {
 
@@ -3312,6 +3565,82 @@ function getAnswerStorageKey() {
     return (
         `ieltsAnswers_${student}_${currentTestNumber}`
     );
+
+}
+
+
+function saveAnswersToStorage() {
+
+    if (!currentTestNumber) {
+
+        return;
+
+    }
+
+
+    try {
+
+        localStorage.setItem(
+            getAnswerStorageKey(),
+            JSON.stringify(
+                studentAnswers
+            )
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Could not save answers:",
+            error
+        );
+
+    }
+
+}
+
+
+function loadSavedAnswers() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(
+                getAnswerStorageKey()
+            );
+
+
+        if (raw) {
+
+            const saved =
+                JSON.parse(
+                    raw
+                );
+
+
+            if (
+                saved &&
+                typeof saved === "object"
+            ) {
+
+                studentAnswers =
+                    saved;
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Could not load saved answers:",
+            error
+        );
+
+
+        studentAnswers = {};
+
+    }
+
 }
 
 
@@ -3328,14 +3657,16 @@ function renderQuestionNavigator() {
 
 
     if (!nav) {
+
         return;
+
     }
 
 
     nav.innerHTML =
         getAllQuestionNumbers()
             .map(
-                function(number) {
+                function (number) {
 
                     return `
 
@@ -3359,11 +3690,11 @@ function renderQuestionNavigator() {
             "button"
         )
         .forEach(
-            function(button) {
+            function (button) {
 
                 button.addEventListener(
                     "click",
-                    function() {
+                    function () {
 
                         jumpToQuestion(
                             Number(
@@ -3379,8 +3710,123 @@ function renderQuestionNavigator() {
 
 
     updateQuestionNavigator();
+
 }
 
+
+/* =========================================================
+   GET ALL QUESTION NUMBERS
+   ========================================================= */
+
+function getAllQuestionNumbers() {
+
+    const numbers = [];
+
+
+    (
+        currentTest?.parts ||
+        []
+    ).forEach(
+        function (part) {
+
+            (
+                part.questionGroups ||
+                []
+            ).forEach(
+                function (group) {
+
+                    /*
+                     * NORMAL QUESTIONS
+                     */
+
+                    (
+                        group.questions ||
+                        []
+                    ).forEach(
+                        function (question) {
+
+                            const number =
+                                Number(
+                                    question.number
+                                );
+
+
+                            if (
+                                Number.isFinite(
+                                    number
+                                )
+                            ) {
+
+                                numbers.push(
+                                    number
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    /*
+                     * SUMMARY COMPLETION
+                     *
+                     * Q23-26 are stored in:
+                     *
+                     * group.blanks
+                     */
+
+                    (
+                        group.blanks ||
+                        []
+                    ).forEach(
+                        function (blank) {
+
+                            const number =
+                                Number(
+                                    blank.number
+                                );
+
+
+                            if (
+                                Number.isFinite(
+                                    number
+                                )
+                            ) {
+
+                                numbers.push(
+                                    number
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    return [
+        ...new Set(
+            numbers
+        )
+    ].sort(
+        function (a, b) {
+
+            return a - b;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE NAVIGATOR
+   ========================================================= */
 
 function updateQuestionNavigator() {
 
@@ -3391,7 +3837,9 @@ function updateQuestionNavigator() {
 
 
     if (!nav) {
+
         return;
+
     }
 
 
@@ -3400,7 +3848,7 @@ function updateQuestionNavigator() {
             "[data-question-nav]"
         )
         .forEach(
-            function(button) {
+            function (button) {
 
                 const number =
                     Number(
@@ -3417,8 +3865,13 @@ function updateQuestionNavigator() {
 
             }
         );
+
 }
 
+
+/* =========================================================
+   IS ANSWERED
+   ========================================================= */
 
 function isQuestionAnswered(
     number
@@ -3431,10 +3884,17 @@ function isQuestionAnswered(
     return (
         value !== undefined &&
         value !== null &&
-        String(value).trim() !== ""
+        String(
+            value
+        ).trim() !== ""
     );
+
 }
 
+
+/* =========================================================
+   JUMP TO QUESTION
+   ========================================================= */
 
 function jumpToQuestion(
     number
@@ -3447,7 +3907,9 @@ function jumpToQuestion(
 
 
     if (!element) {
+
         return;
+
     }
 
 
@@ -3469,81 +3931,7 @@ function jumpToQuestion(
             "center"
 
     });
-}
 
-
-/* =========================================================
-   GET ALL QUESTION NUMBERS
-   ========================================================= */
-
-function getAllQuestionNumbers() {
-
-    const numbers = [];
-
-
-    (
-        currentTest?.parts ||
-        []
-    ).forEach(
-        function(part) {
-
-            (
-                part.questionGroups ||
-                []
-            ).forEach(
-                function(group) {
-
-                    (
-                        group.questions ||
-                        []
-                    ).forEach(
-                        function(question) {
-
-                            const number =
-                                Number(
-                                    question.number
-                                );
-
-
-                            if (
-                                Number.isFinite(
-                                    number
-                                )
-                            ) {
-
-                                numbers.push(
-                                    number
-                                );
-                            }
-
-                        }
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-    return [
-        ...new Set(
-            numbers
-        )
-    ].sort(
-        function(a, b) {
-
-            return a - b;
-
-        }
-    );
-}
-
-
-function countTotalQuestions() {
-
-    return getAllQuestionNumbers()
-        .length;
 }
 
 
@@ -3565,12 +3953,12 @@ function nextPart() {
 
         renderCurrentPart();
 
-
     } else {
 
         confirmSubmitTest();
 
     }
+
 }
 
 
@@ -3586,7 +3974,9 @@ function previousPart() {
         currentPartIndex--;
 
         renderCurrentPart();
+
     }
+
 }
 
 
@@ -3608,19 +3998,29 @@ function updatePartButtons() {
 
         previous.disabled =
             currentPartIndex === 0;
+
     }
 
 
     if (next) {
 
-        next.textContent =
+        if (
             currentPartIndex ===
             currentTest.parts.length - 1
+        ) {
 
-                ? "Submit Test →"
+            next.textContent =
+                "Submit Test →";
 
-                : "Next Part →";
+        } else {
+
+            next.textContent =
+                "Next Part →";
+
+        }
+
     }
+
 }
 
 
@@ -3635,7 +4035,7 @@ function scrollTestPanelsToTop() {
         "questionsPanel"
     ]
     .forEach(
-        function(id) {
+        function (id) {
 
             const element =
                 document.getElementById(
@@ -3646,25 +4046,30 @@ function scrollTestPanelsToTop() {
             if (element) {
 
                 element.scrollTop = 0;
+
             }
 
         }
     );
+
 }
 
 
 /* =========================================================
-   SUBMIT CONFIRMATION
+   SUBMIT CONFIRM
    ========================================================= */
 
 function confirmSubmitTest() {
 
     if (testSubmitted) {
+
         return;
+
     }
 
 
     openConfirmModal();
+
 }
 
 
@@ -3678,6 +4083,7 @@ function confirmExitTest() {
         showDashboard();
 
         return;
+
     }
 
 
@@ -3692,12 +4098,14 @@ function confirmExitTest() {
         stopTimer();
 
         showDashboard();
+
     }
+
 }
 
 
 /* =========================================================
-   CONFIRM MODAL
+   MODAL
    ========================================================= */
 
 function openConfirmModal() {
@@ -3712,7 +4120,9 @@ function openConfirmModal() {
 
         modal.style.display =
             "flex";
+
     }
+
 }
 
 
@@ -3728,7 +4138,9 @@ function closeConfirmModal() {
 
         modal.style.display =
             "none";
+
     }
+
 }
 
 
@@ -3739,7 +4151,9 @@ function closeConfirmModal() {
 function autoSubmitTest() {
 
     if (testSubmitted) {
+
         return;
+
     }
 
 
@@ -3749,6 +4163,7 @@ function autoSubmitTest() {
 
 
     submitTest();
+
 }
 
 
@@ -3759,7 +4174,9 @@ function autoSubmitTest() {
 async function submitTest() {
 
     if (testSubmitted) {
+
         return;
+
     }
 
 
@@ -3768,6 +4185,7 @@ async function submitTest() {
     closeConfirmModal();
 
     stopTimer();
+
 
     testSubmitted = true;
 
@@ -3785,18 +4203,22 @@ async function submitTest() {
 
     renderResult();
 
+
     clearCurrentTestAnswers();
+
 }
 
 
 /* =========================================================
-   CALCULATE TIME
+   TIME USED
    ========================================================= */
 
 function calculateTimeUsed() {
 
     if (!testStartTime) {
+
         return 0;
+
     }
 
 
@@ -3809,11 +4231,12 @@ function calculateTimeUsed() {
             ) / 1000
         )
     );
+
 }
 
 
 /* =========================================================
-   CALCULATE SCORE
+   SCORE
    ========================================================= */
 
 function calculateScore() {
@@ -3827,7 +4250,7 @@ function calculateScore() {
         currentTest.parts ||
         []
     ).forEach(
-        function(part) {
+        function (part) {
 
             let partScore = 0;
 
@@ -3836,19 +4259,26 @@ function calculateScore() {
                 part.questionGroups ||
                 []
             ).forEach(
-                function(group) {
+                function (group) {
+
+                    /*
+                     * IMPORTANT:
+                     *
+                     * Normal questions:
+                     * group.questions
+                     *
+                     * Summary completion:
+                     * group.blanks
+                     */
 
                     const questions =
                         group.questions ||
+                        group.blanks ||
                         [];
 
 
-                    /*
-                     * Normal scoring.
-                     */
-
                     questions.forEach(
-                        function(question) {
+                        function (question) {
 
                             const given =
                                 studentAnswers[
@@ -3908,6 +4338,19 @@ function calculateScore() {
             )
 
     };
+
+}
+
+
+/* =========================================================
+   COUNT TOTAL QUESTIONS
+   ========================================================= */
+
+function countTotalQuestions() {
+
+    return getAllQuestionNumbers()
+        .length;
+
 }
 
 
@@ -3928,12 +4371,12 @@ function answersMatch(
     ) {
 
         return false;
+
     }
 
 
     /*
-     * If the correct answer is an array,
-     * accept any listed valid answer.
+     * Multiple accepted answers.
      */
 
     if (
@@ -3943,7 +4386,7 @@ function answersMatch(
     ) {
 
         return correct.some(
-            function(answer) {
+            function (answer) {
 
                 return (
                     normalizeAnswer(
@@ -3956,19 +4399,8 @@ function answersMatch(
 
             }
         );
+
     }
-
-
-    /*
-     * Some JSON may use:
-     *
-     * {
-     *   answer: "A",
-     *   acceptedAnswers: [...]
-     * }
-     *
-     * handled elsewhere if needed.
-     */
 
 
     return (
@@ -3979,6 +4411,7 @@ function answersMatch(
             correct
         )
     );
+
 }
 
 
@@ -3999,6 +4432,7 @@ function normalizeAnswer(
         " "
     )
     .toLowerCase();
+
 }
 
 
@@ -4010,66 +4444,53 @@ function calculateIELTSBand(
     score
 ) {
 
-    if (score >= 39)
-        return 9.0;
+    if (score >= 39) return 9.0;
 
-    if (score >= 37)
-        return 8.5;
+    if (score >= 37) return 8.5;
 
-    if (score >= 35)
-        return 8.0;
+    if (score >= 35) return 8.0;
 
-    if (score >= 33)
-        return 7.5;
+    if (score >= 33) return 7.5;
 
-    if (score >= 30)
-        return 7.0;
+    if (score >= 30) return 7.0;
 
-    if (score >= 27)
-        return 6.5;
+    if (score >= 27) return 6.5;
 
-    if (score >= 23)
-        return 6.0;
+    if (score >= 23) return 6.0;
 
-    if (score >= 19)
-        return 5.5;
+    if (score >= 19) return 5.5;
 
-    if (score >= 15)
-        return 5.0;
+    if (score >= 15) return 5.0;
 
-    if (score >= 13)
-        return 4.5;
+    if (score >= 13) return 4.5;
 
-    if (score >= 10)
-        return 4.0;
+    if (score >= 10) return 4.0;
 
-    if (score >= 8)
-        return 3.5;
+    if (score >= 8) return 3.5;
 
-    if (score >= 6)
-        return 3.0;
+    if (score >= 6) return 3.0;
 
-    if (score >= 4)
-        return 2.5;
+    if (score >= 4) return 2.5;
 
-    if (score >= 2)
-        return 2.0;
+    if (score >= 2) return 2.0;
 
-    if (score === 1)
-        return 1.0;
+    if (score === 1) return 1.0;
 
     return 0;
+
 }
 
 
 /* =========================================================
-   SAVE RESULT TO API
+   SAVE RESULT
    ========================================================= */
 
 async function saveResultToAPI() {
 
     if (!currentUser) {
+
         return;
+
     }
 
 
@@ -4107,10 +4528,6 @@ async function saveResultToAPI() {
             scoreData?.partScores?.[2] ||
             0,
 
-        part4:
-            scoreData?.partScores?.[3] ||
-            0,
-
         totalScore:
             scoreData?.totalScore ||
             0,
@@ -4143,20 +4560,9 @@ async function saveResultToAPI() {
 
 
         console.log(
-            "SAVE RESULT RESPONSE:",
+            "SAVE RESULT:",
             response
         );
-
-
-        if (
-            !response?.success
-        ) {
-
-            console.warn(
-                "Result save failed:",
-                response?.message
-            );
-        }
 
 
     } catch (error) {
@@ -4165,7 +4571,9 @@ async function saveResultToAPI() {
             "Result save error:",
             error
         );
+
     }
+
 }
 
 
@@ -4214,6 +4622,7 @@ function renderResult() {
 
 
     renderPartScores();
+
 }
 
 
@@ -4230,14 +4639,16 @@ function renderPartScores() {
 
 
     if (!box) {
+
         return;
+
     }
 
 
     box.innerHTML =
         scoreData.partScores
             .map(
-                function(
+                function (
                     score,
                     index
                 ) {
@@ -4261,11 +4672,12 @@ function renderPartScores() {
                 }
             )
             .join("");
+
 }
 
 
 /* =========================================================
-   CLEAR ANSWERS
+   CLEAR CURRENT ANSWERS
    ========================================================= */
 
 function clearCurrentTestAnswers() {
@@ -4279,13 +4691,15 @@ function clearCurrentTestAnswers() {
     } catch (error) {
 
         console.warn(
-            "Could not clear saved answers:",
+            "Could not clear answers:",
             error
         );
+
     }
 
 
     studentAnswers = {};
+
 }
 
 
@@ -4296,7 +4710,9 @@ function clearCurrentTestAnswers() {
 async function loadHistory() {
 
     if (!currentUser) {
+
         return;
+
     }
 
 
@@ -4307,7 +4723,9 @@ async function loadHistory() {
 
 
     if (!body) {
+
         return;
+
     }
 
 
@@ -4346,6 +4764,7 @@ async function loadHistory() {
                 response?.message ||
                 "Could not load history."
             );
+
         }
 
 
@@ -4358,7 +4777,7 @@ async function loadHistory() {
     } catch (error) {
 
         console.warn(
-            "History could not be loaded:",
+            "History error:",
             error
         );
 
@@ -4366,7 +4785,9 @@ async function loadHistory() {
         renderHistory(
             []
         );
+
     }
+
 }
 
 
@@ -4391,7 +4812,9 @@ function renderHistory(
 
 
     if (!body) {
+
         return;
+
     }
 
 
@@ -4407,10 +4830,12 @@ function renderHistory(
 
             empty.style.display =
                 "block";
+
         }
 
 
         return;
+
     }
 
 
@@ -4418,13 +4843,14 @@ function renderHistory(
 
         empty.style.display =
             "none";
+
     }
 
 
     body.innerHTML =
         history
             .map(
-                function(result) {
+                function (result) {
 
                     return `
 
@@ -4481,6 +4907,7 @@ function renderHistory(
                 }
             )
             .join("");
+
 }
 
 
@@ -4493,17 +4920,8 @@ async function apiRequest(
     data = {}
 ) {
 
-    console.log(
-        "API REQUEST:",
-        action,
-        data
-    );
-
-
     /*
-     * =====================================================
-     * GET REQUEST
-     * =====================================================
+     * GET
      */
 
     try {
@@ -4526,13 +4944,9 @@ async function apiRequest(
         );
 
 
-        const getUrl =
-            `${CONFIG.API_URL}?${params.toString()}`;
-
-
         const response =
             await fetch(
-                getUrl,
+                `${CONFIG.API_URL}?${params.toString()}`,
                 {
                     method:
                         "GET",
@@ -4562,12 +4976,9 @@ async function apiRequest(
             throw new Error(
                 "The API returned invalid JSON."
             );
+
         }
 
-
-        /*
-         * Return normal API response.
-         */
 
         if (
             json &&
@@ -4576,36 +4987,25 @@ async function apiRequest(
         ) {
 
             return json;
+
         }
 
 
-    } catch (getError) {
+    } catch (error) {
 
         console.warn(
-            "GET API request failed:",
-            getError
+            "GET API failed:",
+            error
         );
+
     }
 
 
     /*
-     * =====================================================
-     * POST FALLBACK
-     * =====================================================
+     * POST fallback
      */
 
     try {
-
-        const body = {
-
-            action:
-                action,
-
-            data:
-                data || {}
-
-        };
-
 
         const response =
             await fetch(
@@ -4623,9 +5023,15 @@ async function apiRequest(
                     },
 
                     body:
-                        JSON.stringify(
-                            body
-                        )
+                        JSON.stringify({
+
+                            action:
+                                action,
+
+                            data:
+                                data || {}
+
+                        })
 
                 }
             );
@@ -4650,22 +5056,25 @@ async function apiRequest(
             throw new Error(
                 "The API returned invalid JSON."
             );
+
         }
 
 
         return json;
 
 
-    } catch (postError) {
+    } catch (error) {
 
         console.error(
-            "POST API request failed:",
-            postError
+            "POST API failed:",
+            error
         );
 
 
-        throw postError;
+        throw error;
+
     }
+
 }
 
 
@@ -4682,7 +5091,7 @@ function showScreen(
             ".screen"
         )
         .forEach(
-            function(element) {
+            function (element) {
 
                 element.style.display =
                     "none";
@@ -4704,12 +5113,12 @@ function showScreen(
         );
 
         return;
+
     }
 
 
     if (
-        id ===
-        "loginScreen"
+        id === "loginScreen"
     ) {
 
         element.style.display =
@@ -4719,7 +5128,9 @@ function showScreen(
 
         element.style.display =
             "block";
+
     }
+
 }
 
 
@@ -4748,6 +5159,7 @@ function setLoading(
 
         loadingText.textContent =
             text;
+
     }
 
 
@@ -4757,7 +5169,9 @@ function setLoading(
             show
                 ? "flex"
                 : "none";
+
     }
+
 }
 
 
@@ -4770,12 +5184,10 @@ function showLoginMessage(
     type = ""
 ) {
 
-    const possibleIds = [
+    const ids = [
 
         "loginMessage",
-
         "loginError",
-
         "errorMessage"
 
     ];
@@ -4785,7 +5197,7 @@ function showLoginMessage(
 
 
     for (
-        const id of possibleIds
+        const id of ids
     ) {
 
         const found =
@@ -4799,12 +5211,16 @@ function showLoginMessage(
             element = found;
 
             break;
+
         }
+
     }
 
 
     if (!element) {
+
         return;
+
     }
 
 
@@ -4820,6 +5236,7 @@ function showLoginMessage(
         message
             ? "block"
             : "none";
+
 }
 
 
@@ -4838,7 +5255,17 @@ function showToast(
 
 
     if (!element) {
+
+        /*
+         * Fallback if HTML has no toast.
+         */
+
+        console.log(
+            message
+        );
+
         return;
+
     }
 
 
@@ -4851,7 +5278,7 @@ function showToast(
 
 
     setTimeout(
-        function() {
+        function () {
 
             element.style.display =
                 "none";
@@ -4859,6 +5286,7 @@ function showToast(
         },
         3500
     );
+
 }
 
 
@@ -4925,6 +5353,7 @@ function formatTime(
             )}`
 
         );
+
     }
 
 
@@ -4945,6 +5374,7 @@ function formatTime(
         )}`
 
     );
+
 }
 
 
@@ -4957,7 +5387,9 @@ function formatDate(
 ) {
 
     if (!value) {
+
         return "";
+
     }
 
 
@@ -4976,56 +5408,12 @@ function formatDate(
         return String(
             value
         );
+
     }
 
 
     return date.toLocaleString();
-}
 
-
-/* =========================================================
-   GET PARAGRAPH LETTERS
-   ========================================================= */
-
-function getParagraphLetters() {
-
-    const part =
-        currentTest?.parts?.[
-            currentPartIndex
-        ];
-
-
-    const paragraphs =
-        part?.passage?.paragraphs ||
-        [];
-
-
-    const letters =
-        paragraphs
-            .map(
-                function(paragraph) {
-
-                    return (
-                        paragraph.id ||
-                        ""
-                    ).trim();
-
-                }
-            )
-            .filter(
-                Boolean
-            );
-
-
-    /*
-     * Return unique paragraph IDs.
-     */
-
-    return [
-        ...new Set(
-            letters
-        )
-    ];
 }
 
 
@@ -5048,7 +5436,9 @@ function setText(
 
         element.textContent =
             value ?? "";
+
     }
+
 }
 
 
@@ -5083,6 +5473,7 @@ function escapeHTML(
         /'/g,
         "&#039;"
     );
+
 }
 
 
@@ -5097,6 +5488,7 @@ function escapeAttribute(
     return escapeHTML(
         value
     );
+
 }
 
 
@@ -5115,11 +5507,12 @@ function escapeRegExp(
         /[.*+?^${}()|[\]\\]/g,
         "\\$&"
     );
+
 }
 
 
 /* =========================================================
-   DEBUG EXPORT
+   DEBUG / PUBLIC API
    ========================================================= */
 
 window.IELTSReading = {
@@ -5143,23 +5536,30 @@ window.IELTSReading = {
         logout,
 
     getCurrentTest:
-        function() {
+        function () {
 
             return currentTest;
 
         },
 
     getAnswers:
-        function() {
+        function () {
 
             return studentAnswers;
 
         },
 
     getCurrentUser:
-        function() {
+        function () {
 
             return currentUser;
+
+        },
+
+    getQuestionNumbers:
+        function () {
+
+            return getAllQuestionNumbers();
 
         }
 
@@ -5167,5 +5567,5 @@ window.IELTSReading = {
 
 
 /* =========================================================
-   END OF app.js
+   END
    ========================================================= */

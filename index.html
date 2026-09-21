@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>IELTS Reading Practice</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         APP CONTAINER
+    ====================================================== -->
+
+    <div id="app">
+
+        <!-- =================================================
+             LOGIN SCREEN
+        ================================================== -->
+
+        <section id="loginScreen" class="screen">
+
+            <div class="login-wrapper">
+
+                <div class="login-card">
+
+                    <div class="logo-area">
+                        <div class="logo-icon">
+                            IELTS
+                        </div>
+
+                        <h1>IELTS Reading</h1>
+
+                        <p>
+                            Reading Practice Platform
+                        </p>
+                    </div>
+
+                    <form id="loginForm">
+
+                        <div class="form-group">
+
+                            <label for="username">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            id="loginButton"
+                            class="primary-button"
+                        >
+                            Login
+                        </button>
+
+                    </form>
+
+
+                    <div
+                        id="loginMessage"
+                        class="message"
+                    ></div>
+
+
+                    <div class="login-info">
+
+                        <p>
+                            IELTS Academic Reading Practice
+                        </p>
+
+                        <span>
+                            60 minutes · 40 questions
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             DASHBOARD
+        ================================================== -->
+
+        <section
+            id="dashboardScreen"
+            class="screen hidden"
+        >
+
+            <header class="dashboard-header">
+
+                <div class="header-left">
+
+                    <div class="small-logo">
+                        IELTS
+                    </div>
+
+                    <div>
+                        <h1>IELTS Reading</h1>
+
+                        <p>
+                            Practice Dashboard
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="header-right">
+
+                    <div class="student-info">
+
+                        <span class="student-label">
+                            Student
+                        </span>
+
+                        <strong id="dashboardUsername">
+                            -
+                        </strong>
+
+                    </div>
+
+                    <button
+                        id="logoutButton"
+                        class="secondary-button"
+                    >
+                        Logout
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <main class="dashboard-content">
+
+                <!-- Welcome -->
+
+                <section class="welcome-card">
+
+                    <div>
+
+                        <span class="section-label">
+                            WELCOME BACK
+                        </span>
+
+                        <h2>
+                            IELTS Reading Practice
+                        </h2>
+
+                        <p>
+                            Choose a test below to begin your reading practice.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Test Selection -->
+
+                <section class="dashboard-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                PRACTICE TESTS
+                            </span>
+
+                            <h2>
+                                Choose a Test
+                            </h2>
+
+                        </div>
+
+                        <span
+                            id="testCountLabel"
+                            class="test-count"
+                        >
+                            20 Tests
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="testList"
+                        class="test-grid"
+                    >
+
+                        <!-- Test cards are generated by app.js -->
+
+                    </div>
+
+                </section>
+
+
+                <!-- Score History -->
+
+                <section class="dashboard-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                PERFORMANCE
+                            </span>
+
+                            <h2>
+                                Score History
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="historyContainer"
+                        class="history-container"
+                    >
+
+                        <div class="history-loading">
+                            Loading score history...
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </section>
+
+
+        <!-- =================================================
+             TEST INTRO SCREEN
+        ================================================== -->
+
+        <section
+            id="testIntroScreen"
+            class="screen hidden"
+        >
+
+            <div class="intro-wrapper">
+
+                <div class="intro-card">
+
+                    <button
+                        id="backToDashboardButton"
+                        class="back-button"
+                        type="button"
+                    >
+                        ← Back to Dashboard
+                    </button>
+
+
+                    <div class="intro-icon">
+                        📖
+                    </div>
+
+
+                    <span class="section-label">
+                        IELTS READING
+                    </span>
+
+
+                    <h1 id="introTestTitle">
+                        IELTS Reading Test
+                    </h1>
+
+
+                    <p
+                        id="introTestDescription"
+                        class="intro-description"
+                    >
+                        Complete the reading test within the allocated time.
+                    </p>
+
+
+                    <div class="test-information">
+
+                        <div class="info-box">
+
+                            <span class="info-icon">
+                                ⏱
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Duration
+                                </span>
+
+                                <strong id="introDuration">
+                                    60 minutes
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <span class="info-icon">
+                                📝
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Questions
+                                </span>
+
+                                <strong id="introQuestionCount">
+                                    40
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <span class="info-icon">
+                                📚
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Parts
+                                </span>
+
+                                <strong id="introPartCount">
+                                    3
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="instructions-box">
+
+                        <h3>
+                            Before you begin
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                You have a limited amount of time to complete the test.
+                            </li>
+
+                            <li>
+                                Read each passage carefully before answering.
+                            </li>
+
+                            <li>
+                                Your answers will be automatically saved during the test.
+                            </li>
+
+                            <li>
+                                The test will be submitted automatically when the timer reaches zero.
+                            </li>
+
+                            <li>
+                                You can move between questions using the question navigator.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <button
+                        id="startTestButton"
+                        class="primary-button large-button"
+                        type="button"
+                    >
+                        Start Test
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TEST SCREEN
+        ================================================== -->
+
+        <section
+            id="testScreen"
+            class="screen hidden"
+        >
+
+            <!-- Test Header -->
+
+            <header class="test-header">
+
+                <div class="test-header-left">
+
+                    <button
+                        id="exitTestButton"
+                        class="header-button"
+                        type="button"
+                    >
+                        ← Exit
+                    </button>
+
+
+                    <div class="test-title-wrapper">
+
+                        <span>
+                            IELTS Reading
+                        </span>
+
+                        <strong id="testTitle">
+                            Test 1
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="test-header-center">
+
+                    <div class="timer-wrapper">
+
+                        <span class="timer-label">
+                            TIME REMAINING
+                        </span>
+
+                        <strong
+                            id="timer"
+                            class="timer"
+                        >
+                            60:00
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="test-header-right">
+
+                    <button
+                        id="submitTestButton"
+                        class="submit-header-button"
+                        type="button"
+                    >
+                        Submit Test
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- Question Navigator -->
+
+            <div class="question-navigation">
+
+                <div class="navigator-label">
+                    Questions
+                </div>
+
+                <div
+                    id="questionNavigator"
+                    class="question-navigator"
+                >
+
+                    <!-- Question numbers generated by app.js -->
+
+                </div>
+
+            </div>
+
+
+            <!-- Main Split Screen -->
+
+            <main class="test-main">
+
+                <!-- ==============================
+                     PASSAGE
+                =============================== -->
+
+                <section
+                    id="passagePanel"
+                    class="passage-panel"
+                >
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-label">
+                                READING PASSAGE
+                            </span>
+
+                            <h2 id="passageTitle">
+                                Passage
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="passageContent"
+                        class="passage-content"
+                    >
+
+                        <!-- Passage generated by app.js -->
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==============================
+                     QUESTIONS
+                =============================== -->
+
+                <section
+                    id="questionPanel"
+                    class="question-panel"
+                >
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-label">
+                                QUESTIONS
+                            </span>
+
+                            <h2 id="questionPartTitle">
+                                Questions
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="questionContent"
+                        class="question-content"
+                    >
+
+                        <!-- Questions generated by app.js -->
+
+                    </div>
+
+
+                    <div class="question-footer">
+
+                        <button
+                            id="previousPartButton"
+                            class="secondary-button"
+                            type="button"
+                        >
+                            ← Previous
+                        </button>
+
+
+                        <button
+                            id="nextPartButton"
+                            class="primary-button"
+                            type="button"
+                        >
+                            Next →
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </section>
+
+
+        <!-- =================================================
+             RESULT SCREEN
+        ================================================== -->
+
+        <section
+            id="resultScreen"
+            class="screen hidden"
+        >
+
+            <div class="result-wrapper">
+
+                <div class="result-card">
+
+                    <div class="result-icon">
+                        ✓
+                    </div>
+
+
+                    <span class="section-label">
+                        TEST COMPLETED
+                    </span>
+
+
+                    <h1>
+                        Test Result
+                    </h1>
+
+
+                    <p id="resultTestName">
+                        IELTS Reading Test
+                    </p>
+
+
+                    <!-- Main Score -->
+
+                    <div class="score-summary">
+
+                        <div class="score-main">
+
+                            <span>
+                                Your Score
+                            </span>
+
+                            <strong id="resultScore">
+                                0 / 40
+                            </strong>
+
+                        </div>
+
+
+                        <div class="band-main">
+
+                            <span>
+                                IELTS Band
+                            </span>
+
+                            <strong id="resultBand">
+                                0.0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Part Scores -->
+
+                    <div class="result-section">
+
+                        <h3>
+                            Part Scores
+                        </h3>
+
+
+                        <div
+                            id="partScores"
+                            class="part-score-grid"
+                        >
+
+                            <!-- Generated by app.js -->
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Test Information -->
+
+                    <div class="result-section">
+
+                        <h3>
+                            Test Information
+                        </h3>
+
+
+                        <div class="result-info-grid">
+
+                            <div class="result-info">
+
+                                <span>
+                                    Total Questions
+                                </span>
+
+                                <strong id="resultTotalQuestions">
+                                    40
+                                </strong>
+
+                            </div>
+
+
+                            <div class="result-info">
+
+                                <span>
+                                    Correct Answers
+                                </span>
+
+                                <strong id="resultCorrect">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="result-info">
+
+                                <span>
+                                    Time Used
+                                </span>
+
+                                <strong id="resultTimeUsed">
+                                    00:00
+                                </strong>
+
+                            </div>
+
+
+                            <div class="result-info">
+
+                                <span>
+                                    Status
+                                </span>
+
+                                <strong>
+                                    Submitted
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Result Message -->
+
+                    <div
+                        id="resultMessage"
+                        class="result-message"
+                    ></div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="result-actions">
+
+                        <button
+                            id="returnDashboardButton"
+                            class="primary-button"
+                            type="button"
+                        >
+                            Back to Dashboard
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             VOCABULARY POPUP
+        ================================================== -->
+
+        <div
+            id="vocabularyPopup"
+            class="vocabulary-popup hidden"
+        >
+
+            <button
+                id="closeVocabularyButton"
+                class="vocabulary-close"
+                type="button"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div class="vocabulary-word">
+                <span id="vocabularyWord">
+                    Word
+                </span>
+            </div>
+
+
+            <div class="vocabulary-meaning">
+
+                <span class="vocabulary-label">
+                    Meaning
+                </span>
+
+                <p id="vocabularyMeaning">
+                    Meaning
+                </p>
+
+            </div>
+
+
+            <div class="vocabulary-simple">
+
+                <span class="vocabulary-label">
+                    Simple meaning
+                </span>
+
+                <p id="vocabularySimpleMeaning">
+                    Simple meaning
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CONFIRM MODAL
+        ================================================== -->
+
+        <div
+            id="confirmModal"
+            class="modal-overlay hidden"
+        >
+
+            <div class="modal-card">
+
+                <div class="modal-icon">
+                    ?
+                </div>
+
+
+                <h2 id="confirmTitle">
+                    Submit Test?
+                </h2>
+
+
+                <p id="confirmMessage">
+                    Are you sure you want to submit your test?
+                </p>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        id="confirmCancelButton"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        id="confirmSubmitButton"
+                        class="danger-button"
+                        type="button"
+                    >
+                        Submit
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             LOADING OVERLAY
+        ================================================== -->
+
+        <div
+            id="loadingOverlay"
+            class="loading-overlay hidden"
+        >
+
+            <div class="loading-card">
+
+                <div class="spinner"></div>
+
+                <p id="loadingText">
+                    Loading...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TOAST
+        ================================================== -->
+
+        <div
+            id="toast"
+            class="toast hidden"
+        >
+            <span id="toastMessage">
+                Message
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="app.js"></script>
+
+</body>
+</html>

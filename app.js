@@ -527,6 +527,7 @@ async function handleLogin(
         await showDashboard();
 
 
+      
     } catch (error) {
 
         console.error(
@@ -680,18 +681,15 @@ async function showDashboard() {
 
     testSubmitted = false;
 
-
     showScreen(
         "dashboardScreen"
     );
 
-
     updateDashboardUser();
 
-    renderTestCards();
+    await renderTestCards();
 
     await loadHistory();
-
 }
 
 
@@ -743,7 +741,7 @@ function updateDashboardUser() {
    TEST CARDS
 ========================================================= */
 
-function renderTestCards() {
+async function renderTestCards() {
 
     const box =
         document.getElementById(
@@ -754,11 +752,20 @@ function renderTestCards() {
     if (!box) {
 
         return;
-
     }
 
 
     box.innerHTML = "";
+
+
+    /*
+     * Check which TestN.json files actually exist.
+     *
+     * Only tests with an existing JSON file
+     * will be displayed.
+     */
+
+    const testChecks = [];
 
 
     for (
@@ -767,58 +774,148 @@ function renderTestCards() {
         i++
     ) {
 
-        const card =
-            document.createElement(
-                "div"
+        testChecks.push(
+
+            fetch(
+                `${CONFIG.TEST_FOLDER}Test${i}.json?${Date.now()}`,
+                {
+                    method: "HEAD",
+                    cache: "no-store"
+                }
+            )
+            .then(
+                function (response) {
+
+                    return {
+                        number: i,
+                        exists: response.ok
+                    };
+
+                }
+            )
+            .catch(
+                function () {
+
+                    return {
+                        number: i,
+                        exists: false
+                    };
+
+                }
+            )
+
+        );
+
+    }
+
+
+    const results =
+        await Promise.all(
+            testChecks
+        );
+
+
+    /*
+     * Create cards only for JSON files
+     * that actually exist.
+     */
+
+    results.forEach(
+        function (result) {
+
+            if (!result.exists) {
+
+                return;
+            }
+
+
+            const i =
+                result.number;
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "test-card";
+
+
+            card.dataset.testNumber =
+                i;
+
+
+            card.innerHTML = `
+
+                <div class="test-card-number">
+                    Test ${i}
+                </div>
+
+                <h3>
+                    IELTS Reading Test ${i}
+                </h3>
+
+                <div class="test-card-info">
+
+                    <span>
+                        60 minutes
+                    </span>
+
+                    <span>
+                        40 questions
+                    </span>
+
+                </div>
+
+            `;
+
+
+            card.addEventListener(
+                "click",
+                function () {
+
+                    openTest(i);
+
+                }
             );
 
 
-        card.className =
-            "test-card";
+            box.appendChild(
+                card
+            );
+
+        }
+    );
 
 
-        card.dataset.testNumber =
-            i;
+    /*
+     * If no JSON files are found,
+     * show a message instead of an empty dashboard.
+     */
 
+    if (
+        results.every(
+            function (result) {
+                return !result.exists;
+            }
+        )
+    ) {
 
-        card.innerHTML = `
+        box.innerHTML = `
 
-            <div class="test-card-number">
-                Test ${i}
-            </div>
-
-            <h3>
-                IELTS Reading Test ${i}
-            </h3>
-
-            <div class="test-card-info">
-
-                <span>
-                    60 minutes
-                </span>
-
-                <span>
-                    40 questions
-                </span>
-
+            <div
+                style="
+                    padding:20px;
+                    text-align:center;
+                    color:#777;
+                "
+            >
+                No IELTS tests are available yet.
             </div>
 
         `;
-
-
-        card.addEventListener(
-            "click",
-            function () {
-
-                openTest(i);
-
-            }
-        );
-
-
-        box.appendChild(
-            card
-        );
 
     }
 

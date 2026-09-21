@@ -1,0 +1,550 @@
+{
+  "testId": "Test1",
+  "title": "IELTS Reading Test 1",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Return of Urban Wetlands",
+      "passage": {
+        "passageId": "P1",
+        "title": "The Return of Urban Wetlands",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "For much of the nineteenth and twentieth centuries, wetlands inside growing cities were regarded as obstacles to development. Marshes and shallow ponds were drained, channels were straightened, and low-lying ground was filled so that roads, houses, and factories could be constructed. The decision often appeared practical at the time. Wetlands were associated with unpleasant smells, insects, and disease, while their irregular surfaces were difficult to build on. Yet researchers now recognize that these areas performed important ecological functions that engineered drainage systems could not completely replace."
+          },
+          {
+            "id": "B",
+            "text": "One of the most valuable functions of an urban wetland is its ability to store water temporarily. During heavy rainfall, vegetation and shallow basins slow the movement of water and allow some of it to soak into the ground. This can reduce the amount of water reaching rivers and drainage pipes at the same moment. Wetlands can also trap sediment and absorb some pollutants before water moves downstream. As a result, a wetland does not simply hold water; it can improve the condition of that water while reducing pressure on other parts of the drainage network."
+          },
+          {
+            "id": "C",
+            "text": "The ecological value of wetlands extends beyond water management. Dense vegetation provides shelter for insects, amphibians, and birds, while flowering plants can support pollinators. Even relatively small wetland fragments may become stepping stones between larger natural habitats. Scientists caution, however, that size alone does not determine ecological success. A poorly connected wetland surrounded by roads may support fewer species than a smaller site linked to parks, rivers, or other green spaces."
+          },
+          {
+            "id": "D",
+            "text": "Urban planners have consequently begun to include wetlands in projects designed to make cities more resilient. In some locations, former industrial land has been converted into public wetland parks. These projects can combine flood protection with recreation, environmental education, and improved scenery. They are not always inexpensive, and maintenance remains necessary. Designers must consider invasive plants, polluted soil, mosquitoes, and changes in water levels. Nevertheless, projects that combine ecological functions with public access can gain broader support than schemes presented only as engineering infrastructure."
+          },
+          {
+            "id": "E",
+            "text": "Restoring an urban wetland is not the same as simply digging a pond and planting reeds. Successful projects usually depend on understanding how water moves through the entire local landscape. Engineers and ecologists may need to remove barriers, recreate shallow areas, select appropriate native plants, and monitor water quality over several years. In some cases, a wetland must be deliberately connected to a river or drainage channel; in others, excessive connection could carry pollution into the site. Restoration therefore requires decisions based on local conditions rather than a single universal design."
+          },
+          {
+            "id": "F",
+            "text": "Public attitudes have also changed. A place once considered wasted land may now be valued as a space for walking, observing wildlife, or learning about local ecosystems. This change does not mean every wetland should be preserved exactly as it is. Urban land is under competing pressures, and some sites may be heavily contaminated or unsuitable for public use. The growing recognition of wetlands instead means that their ecological services are increasingly considered when cities decide how land and water should be managed."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "1-5",
+          "instructions": "Choose the correct heading for paragraphs A-E from the list of headings below.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "A change in the way urban land is valued"
+            },
+            {
+              "id": "ii",
+              "text": "Why wetlands were once removed from cities"
+            },
+            {
+              "id": "iii",
+              "text": "Wetlands as habitats for wildlife"
+            },
+            {
+              "id": "iv",
+              "text": "The importance of designing restoration carefully"
+            },
+            {
+              "id": "v",
+              "text": "How wetlands can reduce water-related problems"
+            },
+            {
+              "id": "vi",
+              "text": "The financial cost of creating public parks"
+            },
+            {
+              "id": "vii",
+              "text": "A new method of measuring rainfall"
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "paragraph": "A",
+              "answer": "ii"
+            },
+            {
+              "number": 2,
+              "paragraph": "B",
+              "answer": "v"
+            },
+            {
+              "number": 3,
+              "paragraph": "C",
+              "answer": "iii"
+            },
+            {
+              "number": 4,
+              "paragraph": "D",
+              "answer": "i"
+            },
+            {
+              "number": 5,
+              "paragraph": "E",
+              "answer": "iv"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "6-8",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 6,
+              "text": "Urban wetlands can reduce the amount of water entering drainage systems during heavy rain.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 7,
+              "text": "Every small urban wetland provides an equally valuable habitat for wildlife.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 8,
+              "text": "Most urban wetlands were originally created as wildlife reserves.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "9-10",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 9,
+              "text": "Wetlands can trap ________ and absorb some pollutants before water moves downstream.",
+              "answer": "sediment"
+            },
+            {
+              "number": 10,
+              "text": "Restoration projects may require the selection of appropriate ________ plants.",
+              "answer": "native"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "11-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 11,
+              "text": "Why does the passage say that wetlands should not simply be recreated using one standard design?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Different locations have different water and environmental conditions"
+                },
+                {
+                  "letter": "B",
+                  "text": "Most wetlands are too expensive to recreate"
+                },
+                {
+                  "letter": "C",
+                  "text": "Native plants cannot grow in cities"
+                },
+                {
+                  "letter": "D",
+                  "text": "Engineers generally oppose ecological projects"
+                }
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 12,
+              "text": "What can make a wetland particularly valuable as a wildlife habitat?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Its distance from all other green spaces"
+                },
+                {
+                  "letter": "B",
+                  "text": "Its connection with other natural areas"
+                },
+                {
+                  "letter": "C",
+                  "text": "Its location beside a major road"
+                },
+                {
+                  "letter": "D",
+                  "text": "Its complete lack of vegetation"
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 13,
+              "text": "What is the main purpose of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "To argue that all urban construction should stop"
+                },
+                {
+                  "letter": "B",
+                  "text": "To describe why urban wetlands are increasingly being recognized as useful"
+                },
+                {
+                  "letter": "C",
+                  "text": "To compare different types of agricultural wetlands"
+                },
+                {
+                  "letter": "D",
+                  "text": "To explain how mosquitoes can be eliminated from cities"
+                }
+              ],
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "The Science of Sleep and Memory",
+      "passage": {
+        "passageId": "P2",
+        "title": "The Science of Sleep and Memory",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Sleep was once treated largely as a period in which the brain became inactive. Modern neuroscience has shown a much more complicated picture. During sleep, the brain passes through several recurring stages, each associated with characteristic patterns of electrical activity and changes in the body. Although researchers continue to debate the precise functions of every stage, evidence suggests that sleep contributes to learning, memory, emotional regulation, and physical recovery."
+          },
+          {
+            "id": "B",
+            "text": "Memory is not a single process. When people encounter new information, they initially form temporary representations of it. Some of these memories are later stabilized and integrated with existing knowledge. Researchers often refer to this transformation as consolidation. Sleep appears to influence consolidation, but the effect is not identical for every type of memory. Skills such as learning a sequence of movements may benefit from different sleep processes than memories involving facts, events, or locations."
+          },
+          {
+            "id": "C",
+            "text": "One reason sleep may assist memory is that the sleeping brain appears to reactivate patterns associated with recent experiences. In laboratory studies, participants may learn material before sleeping and then perform a memory test later. Brain recordings have suggested that some neural patterns linked to earlier learning reappear during sleep. This has led researchers to propose that the brain is effectively revisiting selected information, although the exact mechanism remains under investigation."
+          },
+          {
+            "id": "D",
+            "text": "Experiments involving sound and smell have provided another line of evidence. Researchers can sometimes associate a neutral cue with information learned during the day and then present the cue again while a participant sleeps. In certain studies, this procedure has improved later recall. However, such findings should not be interpreted as proof that complex new knowledge can simply be taught to a sleeping person. The effects are usually modest, depend on experimental conditions, and concern information that was already learned while awake."
+          },
+          {
+            "id": "E",
+            "text": "Sleep may also affect what people forget. Forgetting is not necessarily a failure of the memory system; removing or weakening irrelevant information can help the brain manage a large amount of incoming material. Some theories propose that sleep strengthens important connections while allowing less useful ones to weaken. The balance between retaining and discarding information may therefore be part of how the brain maintains an efficient memory system."
+          },
+          {
+            "id": "F",
+            "text": "These findings have attracted interest in education, but they do not support the idea that students can compensate indefinitely for inadequate sleep by studying harder. A student who studies for several hours but repeatedly sleeps too little may not obtain the same benefit from learning as someone who allows sufficient time for sleep. Researchers also emphasize that individual experiments have limitations and that sleep is only one factor affecting academic performance. Good learning is therefore better understood as a combination of effective study, sufficient rest, and other healthy routines."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_information",
+          "questionRange": "14-18",
+          "instructions": "The passage has six paragraphs, A-F. Which paragraph contains the following information? You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 14,
+              "text": "an explanation of why forgetting may be useful",
+              "answer": "E"
+            },
+            {
+              "number": 15,
+              "text": "evidence involving a cue presented during sleep",
+              "answer": "D"
+            },
+            {
+              "number": 16,
+              "text": "a description of different kinds of memory",
+              "answer": "B"
+            },
+            {
+              "number": 17,
+              "text": "a warning against an exaggerated interpretation of research findings",
+              "answer": "D"
+            },
+            {
+              "number": 18,
+              "text": "the idea that sleep was previously misunderstood",
+              "answer": "A"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "19-22",
+          "instructions": "Do the following statements agree with the claims of the writer?",
+          "questions": [
+            {
+              "number": 19,
+              "text": "Researchers now believe that the brain is completely inactive during sleep.",
+              "answer": "NO"
+            },
+            {
+              "number": 20,
+              "text": "All forms of memory benefit from exactly the same sleep processes.",
+              "answer": "NO"
+            },
+            {
+              "number": 21,
+              "text": "Research has shown that a person can learn complicated new subjects while asleep.",
+              "answer": "NO"
+            },
+            {
+              "number": 22,
+              "text": "The writer believes that sleep is the only factor affecting academic performance.",
+              "answer": "NO"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "23-26",
+          "instructions": "Complete the summary below. Write NO MORE THAN TWO WORDS from the passage.",
+          "summary": "Researchers use the term ________ to describe the process by which newly formed memories become more stable. During sleep, some neural ________ associated with recent experiences may reappear. Experiments using sounds or smells have sometimes improved later ________, although the effects are generally ________.",
+          "blanks": [
+            {
+              "number": 23,
+              "text": "________",
+              "answer": "consolidation"
+            },
+            {
+              "number": 24,
+              "text": "________",
+              "answer": "patterns"
+            },
+            {
+              "number": 25,
+              "text": "________",
+              "answer": "recall"
+            },
+            {
+              "number": 26,
+              "text": "________",
+              "answer": "modest"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice_multiple",
+          "questionRange": "27-28",
+          "instructions": "Choose TWO letters, A-F. Which TWO statements are supported by the passage?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Sleep can play a role in consolidating some newly learned information."
+            },
+            {
+              "letter": "B",
+              "text": "Scientists have established exactly how every stage of sleep affects memory."
+            },
+            {
+              "letter": "C",
+              "text": "Sound and smell experiments prove that people can learn an entire language while sleeping."
+            },
+            {
+              "letter": "D",
+              "text": "Forgetting may sometimes help the brain manage irrelevant information."
+            },
+            {
+              "letter": "E",
+              "text": "Students should replace studying with longer periods of sleep."
+            },
+            {
+              "letter": "F",
+              "text": "Academic performance is determined entirely by sleep duration."
+            }
+          ],
+          "questions": [
+            {
+              "number": 27,
+              "text": "First correct answer",
+              "answer": "A"
+            },
+            {
+              "number": 28,
+              "text": "Second correct answer",
+              "answer": "D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "Maps That Changed the World",
+      "passage": {
+        "passageId": "P3",
+        "title": "Maps That Changed the World",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Maps are often described as neutral representations of geography, but every map reflects decisions about what should be measured, emphasized, named, or omitted. Early mapmakers worked with incomplete observations and inherited ideas about the shape of the world. Their products were therefore not simply pictures of known territory. They were arguments about space, built from the evidence and assumptions available at the time."
+          },
+          {
+            "id": "B",
+            "text": "Ancient and medieval mapmaking traditions varied considerably. Some maps were designed primarily for practical navigation, while others were intended to express religious, political, or philosophical ideas. A map might place a particular city at its centre not because it was geographically central but because it was considered culturally important. Such maps can seem inaccurate by modern standards, yet they can reveal how their creators understood the world and their place within it."
+          },
+          {
+            "id": "C",
+            "text": "The development of more systematic surveying gradually changed this situation. Surveyors began using repeated measurements, mathematical techniques, and increasingly standardized instruments. The purpose was not always to create a single perfect map. Instead, reliable local measurements could be combined into larger representations. Governments found such information useful for taxation, military planning, road construction, and the administration of land."
+          },
+          {
+            "id": "D",
+            "text": "The arrival of accurate longitude measurements was especially significant for ocean travel. Latitude could be estimated relatively effectively by observing the height of certain celestial objects, but determining longitude at sea was historically more difficult. Improvements in clocks and astronomical methods eventually allowed navigators to calculate east-west position with greater confidence. This reduced some navigational uncertainty and contributed to safer and more predictable long-distance voyages."
+          },
+          {
+            "id": "E",
+            "text": "Maps also played a role in the expansion of political power. When governments surveyed territories and placed boundaries on maps, lines that had previously been flexible or disputed could acquire an appearance of precision. A printed boundary could influence later negotiations even when the landscape itself contained no visible dividing line. Historians therefore examine maps not only as records of territory but also as instruments through which states organized and communicated claims."
+          },
+          {
+            "id": "F",
+            "text": "In the digital era, mapping has become both more detailed and more accessible. Satellites, mobile devices, and geographic information systems allow people to view and analyze spatial information at scales that earlier mapmakers could not have imagined. Yet the fundamental issue of selection remains. Digital maps still depend on data collection, classification, software design, and decisions about which features users see. Greater technical accuracy does not automatically make a map free from human choices."
+          },
+          {
+            "id": "G",
+            "text": "The history of cartography therefore tells more than a story of technological improvement. It shows how changing tools altered what could be known while social priorities influenced what was worth mapping. A map of a coastline, a property boundary, or a transport network can serve very different purposes depending on who commissioned it and how it will be used. Understanding maps requires attention to both their geographical information and the circumstances in which they were produced."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_features",
+          "questionRange": "29-32",
+          "instructions": "Match each statement with the correct paragraph, A-G. You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 29,
+              "text": "an example of how maps can reflect cultural priorities",
+              "answer": "B"
+            },
+            {
+              "number": 30,
+              "text": "a development that made sea travel more predictable",
+              "answer": "D"
+            },
+            {
+              "number": 31,
+              "text": "an explanation of how maps can support governmental activities",
+              "answer": "C"
+            },
+            {
+              "number": 32,
+              "text": "a reason why modern digital maps are not completely objective",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "33-35",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 33,
+              "text": "Governments used survey information for taxation, military planning and ________ construction.",
+              "answer": "road"
+            },
+            {
+              "number": 34,
+              "text": "Determining ________ at sea was historically more difficult than determining latitude.",
+              "answer": "longitude"
+            },
+            {
+              "number": 35,
+              "text": "Modern mapping systems use satellites, mobile devices and geographic information ________.",
+              "answer": "systems"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "36-38",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 36,
+              "text": "All ancient maps were created mainly for navigation.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 37,
+              "text": "Printed boundaries could influence political negotiations.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 38,
+              "text": "Digital maps always contain more accurate information than historical maps.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "39-40",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 39,
+              "text": "What does the writer suggest about maps in the first paragraph?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "They have always been completely objective records."
+                },
+                {
+                  "letter": "B",
+                  "text": "They are influenced by the information and assumptions available to their creators."
+                },
+                {
+                  "letter": "C",
+                  "text": "They are mainly designed for religious purposes."
+                },
+                {
+                  "letter": "D",
+                  "text": "They became useful only after the invention of digital technology."
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 40,
+              "text": "What is the main conclusion of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Modern technology has made historical maps unnecessary."
+                },
+                {
+                  "letter": "B",
+                  "text": "The main purpose of cartography is to improve navigation."
+                },
+                {
+                  "letter": "C",
+                  "text": "Maps should be understood in relation to both geographic information and the purposes for which they are produced."
+                },
+                {
+                  "letter": "D",
+                  "text": "Governments should no longer use maps to define boundaries."
+                }
+              ],
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

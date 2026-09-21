@@ -1,0 +1,564 @@
+{
+  "testId": "Test4",
+  "title": "IELTS Reading Test 4",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Origins of Chocolate",
+      "passage": {
+        "passageId": "P1",
+        "title": "The Origins of Chocolate",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Chocolate has a history very different from the sweet products found in shops today. The cacao tree is native to the tropical regions of the Americas, where its seeds were used by several ancient societies. Archaeological and historical evidence suggests that cacao was valued long before European contact. The seeds could be processed into a bitter drink, and cacao products sometimes played a role in ceremonies, trade, and social life."
+          },
+          {
+            "id": "B",
+            "text": "Among the Maya, cacao was consumed as a beverage and appears to have had cultural significance. The drink was not necessarily sweet. It could be mixed with spices or other ingredients, producing flavors quite different from modern hot chocolate. Cacao also became important among the Aztecs, where it was associated with status and trade. Historical accounts indicate that cacao seeds could be used in exchanges, although their exact economic role varied across time and place."
+          },
+          {
+            "id": "C",
+            "text": "European interest in cacao grew after contact between the Americas and Europe. At first, the unfamiliar drink did not immediately appeal to everyone. Europeans gradually modified it by adding ingredients such as sugar. As production and trade expanded, cacao became increasingly available outside the Americas. Its transformation from a regional beverage into an international commodity was closely connected with colonial trade networks."
+          },
+          {
+            "id": "D",
+            "text": "Technological developments later changed the texture and form of chocolate. Processes for separating cocoa solids from cocoa butter made it possible to create smoother products. New machinery also helped manufacturers produce chocolate on a larger scale. These developments contributed to the emergence of solid chocolate bars and other forms that became increasingly accessible to consumers."
+          },
+          {
+            "id": "E",
+            "text": "The expansion of chocolate production came with serious social and environmental consequences. Cacao cultivation required large amounts of land and labor, and colonial systems often depended on unequal relationships between producers and traders. In modern times, concerns have included deforestation, farmer incomes, labor conditions, and the environmental effects of expanding plantations. Attempts to improve sustainability include certification schemes, agroforestry, and efforts to strengthen producer organizations."
+          },
+          {
+            "id": "F",
+            "text": "Chocolate therefore represents more than a familiar food. Its history connects indigenous traditions, global trade, industrial technology, agriculture, and changing consumer preferences. The modern chocolate industry depends on a long chain stretching from cacao-growing regions to factories and consumers around the world. Understanding that history helps explain why the product has changed so dramatically and why questions about its production remain important today."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "multiple_choice",
+          "questionRange": "1-4",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 1,
+              "text": "What was cacao used for by some ancient societies?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Only as a medicine"
+                },
+                {
+                  "letter": "B",
+                  "text": "As a drink and in social or ceremonial activities"
+                },
+                {
+                  "letter": "C",
+                  "text": "Only as a source of cooking oil"
+                },
+                {
+                  "letter": "D",
+                  "text": "As a replacement for grain"
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 2,
+              "text": "How did Europeans change the taste of cacao?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "They removed all spices."
+                },
+                {
+                  "letter": "B",
+                  "text": "They added sugar and other ingredients."
+                },
+                {
+                  "letter": "C",
+                  "text": "They stopped using cacao seeds."
+                },
+                {
+                  "letter": "D",
+                  "text": "They made it more bitter."
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 3,
+              "text": "What technological development helped create smoother chocolate?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "The separation of cocoa solids and cocoa butter"
+                },
+                {
+                  "letter": "B",
+                  "text": "The invention of refrigeration"
+                },
+                {
+                  "letter": "C",
+                  "text": "The discovery of new cacao species"
+                },
+                {
+                  "letter": "D",
+                  "text": "The use of wooden containers"
+                }
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 4,
+              "text": "What is the main focus of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "The nutritional value of chocolate"
+                },
+                {
+                  "letter": "B",
+                  "text": "The history and changing production of chocolate"
+                },
+                {
+                  "letter": "C",
+                  "text": "Modern recipes for chocolate"
+                },
+                {
+                  "letter": "D",
+                  "text": "The geography of European agriculture"
+                }
+              ],
+              "answer": "B"
+            }
+          ]
+        },
+        {
+          "type": "matching_information",
+          "questionRange": "5-8",
+          "instructions": "The passage has six paragraphs, A-F. Which paragraph contains the following information? You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 5,
+              "text": "an explanation of how chocolate became easier to produce on a large scale",
+              "answer": "D"
+            },
+            {
+              "number": 6,
+              "text": "examples of problems associated with modern cacao production",
+              "answer": "E"
+            },
+            {
+              "number": 7,
+              "text": "evidence that cacao had economic importance before European contact",
+              "answer": "B"
+            },
+            {
+              "number": 8,
+              "text": "a description of the connections between several stages of the chocolate industry",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "9-10",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 9,
+              "text": "The cacao tree is native to tropical regions of the ________.",
+              "answer": "Americas"
+            },
+            {
+              "number": 10,
+              "text": "Modern sustainability efforts include certification schemes and ________.",
+              "answer": "agroforestry"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "11-13",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 11,
+              "text": "Ancient cacao drinks were always sweet.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 12,
+              "text": "Chocolate production has never caused environmental concerns.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 13,
+              "text": "The passage gives the exact date when the first chocolate bar was produced.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "How Buildings Stay Cool",
+      "passage": {
+        "passageId": "P2",
+        "title": "How Buildings Stay Cool",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Keeping buildings cool is becoming an important challenge in many cities. Air conditioning can provide reliable indoor temperatures, but it requires energy and can increase electricity demand during hot periods. Architects and engineers have therefore studied ways of reducing heat before mechanical cooling becomes necessary. Some of these techniques are modern, while others are based on principles used in traditional buildings for centuries."
+          },
+          {
+            "id": "B",
+            "text": "One basic strategy is to prevent sunlight from entering a building directly. Roof overhangs, shutters, blinds, and external shades can reduce solar radiation reaching windows and walls. External shading can be particularly effective because it blocks sunlight before the energy enters the building. The design of the shade must nevertheless take account of the position of the sun at different times of the day and year."
+          },
+          {
+            "id": "C",
+            "text": "Ventilation is another important technique. When outdoor conditions are suitable, windows and vents can allow cooler air to enter and warmer air to leave. Some buildings are designed so that differences in air pressure or temperature naturally encourage movement through rooms. Night ventilation can be especially useful in climates where temperatures fall after sunset, allowing the structure to release heat accumulated during the day."
+          },
+          {
+            "id": "D",
+            "text": "Building materials also influence indoor temperatures. Materials with high thermal mass can absorb heat and release it gradually rather than allowing indoor temperatures to rise rapidly. Thick walls have been used for this purpose in many traditional buildings. Modern designs may combine thermal mass with insulation, which reduces the rate at which heat passes through the building envelope."
+          },
+          {
+            "id": "E",
+            "text": "The surrounding environment can affect cooling as well. Trees provide shade and can cool nearby areas through evaporation from their leaves. Vegetation on roofs can also reduce surface temperatures and, under suitable conditions, contribute to insulation. However, plants require water and maintenance, and their cooling effect varies with climate and design. Green infrastructure is therefore not a universal substitute for other cooling measures."
+          },
+          {
+            "id": "F",
+            "text": "The most effective approach is often to combine several strategies. A building might use external shading, insulation, controlled ventilation, and efficient mechanical cooling rather than depending entirely on one technique. The appropriate combination varies according to climate, building use, orientation, local materials, and cost. Designing for thermal comfort is consequently not simply a matter of installing a larger air-conditioning system."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "summary_completion",
+          "questionRange": "14-17",
+          "instructions": "Complete the summary below. Write NO MORE THAN TWO WORDS from the passage.",
+          "summary": "Buildings can be kept cool by reducing the amount of ________ entering them. External shading can prevent solar radiation from reaching windows and ________. Ventilation can remove warm air, while materials with high ________ mass can absorb and release heat gradually. Trees may also provide shade and cool areas through ________.",
+          "blanks": [
+            {
+              "number": 14,
+              "text": "________",
+              "answer": "sunlight"
+            },
+            {
+              "number": 15,
+              "text": "________",
+              "answer": "walls"
+            },
+            {
+              "number": 16,
+              "text": "________",
+              "answer": "thermal"
+            },
+            {
+              "number": 17,
+              "text": "________",
+              "answer": "evaporation"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "18-21",
+          "instructions": "Do the following statements agree with the claims of the writer?",
+          "questions": [
+            {
+              "number": 18,
+              "text": "Air conditioning is the only reliable method of cooling buildings.",
+              "answer": "NO"
+            },
+            {
+              "number": 19,
+              "text": "External shading can prevent solar energy from entering a building.",
+              "answer": "YES"
+            },
+            {
+              "number": 20,
+              "text": "Night ventilation is useful in every climate.",
+              "answer": "NO"
+            },
+            {
+              "number": 21,
+              "text": "Traditional buildings never used materials with high thermal mass.",
+              "answer": "NO"
+            }
+          ]
+        },
+        {
+          "type": "matching_headings",
+          "questionRange": "22-25",
+          "instructions": "Choose the correct heading for paragraphs B-E from the list of headings below.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "Using vegetation to reduce heat"
+            },
+            {
+              "id": "ii",
+              "text": "The role of building materials"
+            },
+            {
+              "id": "iii",
+              "text": "Controlling sunlight"
+            },
+            {
+              "id": "iv",
+              "text": "Moving air through a building"
+            },
+            {
+              "id": "v",
+              "text": "Why air conditioning is becoming cheaper"
+            },
+            {
+              "id": "vi",
+              "text": "The history of skyscrapers"
+            }
+          ],
+          "questions": [
+            {
+              "number": 22,
+              "paragraph": "B",
+              "answer": "iii"
+            },
+            {
+              "number": 23,
+              "paragraph": "C",
+              "answer": "iv"
+            },
+            {
+              "number": 24,
+              "paragraph": "D",
+              "answer": "ii"
+            },
+            {
+              "number": 25,
+              "paragraph": "E",
+              "answer": "i"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice_multiple",
+          "questionRange": "26-27",
+          "instructions": "Choose TWO letters, A-F. Which TWO factors does the passage say can influence the choice of cooling strategies?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Climate"
+            },
+            {
+              "letter": "B",
+              "text": "Building use"
+            },
+            {
+              "letter": "C",
+              "text": "The age of the architect"
+            },
+            {
+              "letter": "D",
+              "text": "The number of nearby airports"
+            },
+            {
+              "letter": "E",
+              "text": "The color of every interior wall"
+            },
+            {
+              "letter": "F",
+              "text": "The language spoken by residents"
+            }
+          ],
+          "questions": [
+            {
+              "number": 26,
+              "text": "First correct answer",
+              "answer": "A"
+            },
+            {
+              "number": 27,
+              "text": "Second correct answer",
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "The Psychology of Decision-Making",
+      "passage": {
+        "passageId": "P3",
+        "title": "The Psychology of Decision-Making",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "People make decisions constantly, from choosing what to eat to deciding whether to change jobs or make a major purchase. Traditional economic models often assumed that individuals would carefully compare available options and choose the one that maximized their benefit. Psychological research has shown that real decisions are frequently influenced by limited attention, emotions, habits, social expectations, and the way information is presented."
+          },
+          {
+            "id": "B",
+            "text": "One influential idea is that people use mental shortcuts when making decisions. These shortcuts can save time and effort, especially when a person has limited information. They can also produce systematic errors. For example, someone may judge the likelihood of an event partly by how easily examples come to mind. If a dramatic event has recently received extensive media coverage, people may perceive it as more common than statistical evidence suggests."
+          },
+          {
+            "id": "C",
+            "text": "The way choices are presented can also affect behavior. A product described as having a high success rate may appear more attractive than the same product described in terms of its failure rate, even when the underlying numbers are identical. This is sometimes called a framing effect. Researchers have observed framing effects in areas such as medical decisions, financial choices, and consumer behavior."
+          },
+          {
+            "id": "D",
+            "text": "Emotions can influence decisions as well. Fear may encourage a person to avoid a perceived danger, while excitement can increase willingness to take a risk. Such effects are not necessarily irrational in every situation because emotions can provide useful signals about circumstances. Problems may arise when strong emotions cause people to focus narrowly on immediate consequences while neglecting longer-term outcomes."
+          },
+          {
+            "id": "E",
+            "text": "Habits represent another influence. Repeated behavior can become automatic, reducing the amount of conscious effort required to make familiar choices. This can be useful when a routine works well, but it can also make change difficult. A person may continue using a familiar product or traveling the same route even when another option would be more convenient. Changing a habit often requires altering the surrounding cues or creating a new routine rather than relying entirely on willpower."
+          },
+          {
+            "id": "F",
+            "text": "These findings have influenced the design of systems intended to help people make choices. Some organizations simplify forms, provide clearer comparisons, or arrange information so that important options are easier to notice. Such interventions are sometimes described as choice architecture. Their purpose can be to make beneficial decisions easier without removing the alternatives available to people. However, the design of a choice environment can raise ethical questions, particularly when the intentions of the designer are hidden."
+          },
+          {
+            "id": "G",
+            "text": "Decision-making research does not imply that people are incapable of making rational choices. Instead, it suggests that reasoning takes place within practical limits. People have limited time, attention, information, and cognitive resources. Understanding these limits can help individuals recognize situations in which they are vulnerable to predictable errors. It can also help organizations design information and environments that support clearer decisions while respecting individual choice."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_features",
+          "questionRange": "28-32",
+          "instructions": "Match each statement with the correct paragraph, A-G. You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 28,
+              "text": "an example involving the influence of recent publicity",
+              "answer": "B"
+            },
+            {
+              "number": 29,
+              "text": "an explanation of how identical information can produce different reactions",
+              "answer": "C"
+            },
+            {
+              "number": 30,
+              "text": "a possible disadvantage of automatic behavior",
+              "answer": "E"
+            },
+            {
+              "number": 31,
+              "text": "an ethical concern about influencing choices",
+              "answer": "F"
+            },
+            {
+              "number": 32,
+              "text": "a description of factors that can limit human reasoning",
+              "answer": "G"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "33-35",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 33,
+              "text": "Mental shortcuts can save time and ________.",
+              "answer": "effort"
+            },
+            {
+              "number": 34,
+              "text": "A product's presentation can create a ________ effect.",
+              "answer": "framing"
+            },
+            {
+              "number": 35,
+              "text": "Changing a habit may require changing surrounding ________.",
+              "answer": "cues"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "36-38",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 36,
+              "text": "Psychological research shows that people always compare every available option carefully.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 37,
+              "text": "Emotions can sometimes provide useful information when people make decisions.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 38,
+              "text": "Choice architecture always removes alternatives from people.",
+              "answer": "FALSE"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "39-40",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 39,
+              "text": "What is one purpose of choice architecture?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "To prevent people from making any choices themselves"
+                },
+                {
+                  "letter": "B",
+                  "text": "To make certain beneficial decisions easier without necessarily removing alternatives"
+                },
+                {
+                  "letter": "C",
+                  "text": "To eliminate emotional responses from decision-making"
+                },
+                {
+                  "letter": "D",
+                  "text": "To guarantee that every person chooses the same option"
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 40,
+              "text": "What is the main conclusion of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Human beings are unable to make rational decisions."
+                },
+                {
+                  "letter": "B",
+                  "text": "Good decisions require people to ignore their emotions completely."
+                },
+                {
+                  "letter": "C",
+                  "text": "Understanding the limits and influences on decision-making can help people and organizations make choices more effectively."
+                },
+                {
+                  "letter": "D",
+                  "text": "Economic models are more reliable than psychological research."
+                }
+              ],
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,580 @@
+{
+  "testId": "Test3",
+  "title": "IELTS Reading Test 3",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Changing Face of Farming",
+      "passage": {
+        "passageId": "P1",
+        "title": "The Changing Face of Farming",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Agriculture has changed dramatically over the past two centuries. Farming was once heavily dependent on local knowledge, animal power, seasonal labor, and weather conditions. The introduction of mechanized equipment, synthetic fertilizers, improved crop varieties, and irrigation transformed production in many regions. These changes allowed farmers to cultivate larger areas and, in favorable circumstances, produce considerably more food with fewer workers."
+          },
+          {
+            "id": "B",
+            "text": "Mechanization was particularly important in countries where agricultural wages were rising or where large areas of land could be cultivated efficiently. Tractors gradually replaced many tasks previously performed by animals or people, while harvesting machines reduced the labor required at busy times of the year. Mechanization did not eliminate human work, however. Farmers still needed to maintain equipment, make production decisions, and respond to changing market and environmental conditions."
+          },
+          {
+            "id": "C",
+            "text": "Chemical fertilizers also increased agricultural productivity by supplying nutrients that crops require. Their use can be highly effective when nutrients are genuinely limited, but excessive application may create environmental problems. Nutrients can move from fields into rivers and lakes, contributing to algal growth and changes in aquatic ecosystems. Farmers therefore face a balance between supplying enough nutrients for crops and avoiding unnecessary losses."
+          },
+          {
+            "id": "D",
+            "text": "Water management has presented a similar challenge. Irrigation allows crops to be grown in areas where rainfall is insufficient or unreliable, and it can reduce the risk of crop failure during dry periods. Yet irrigation systems may place pressure on rivers and underground water reserves. In some regions, farmers have responded by adopting drip systems, scheduling irrigation according to soil moisture, or selecting crops that require less water."
+          },
+          {
+            "id": "E",
+            "text": "More recently, digital technologies have entered agriculture. Sensors can measure soil moisture, weather stations can collect local data, and satellite images can reveal differences in crop growth across a field. Farmers can use these measurements to apply water or fertilizer more precisely rather than treating every part of a field identically. This approach, sometimes called precision agriculture, aims to improve efficiency by matching inputs more closely with actual conditions."
+          },
+          {
+            "id": "F",
+            "text": "Technology alone, however, cannot solve every agricultural problem. Small farmers may face high initial costs, limited technical support, or poor access to reliable internet services. Even when equipment is available, farmers must decide whether the expected benefits justify the expense. The future of farming is therefore unlikely to consist of a single technological solution. Instead, it will involve combinations of machinery, scientific knowledge, local experience, and careful management of natural resources."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "1-5",
+          "instructions": "Choose the correct heading for paragraphs A-E from the list of headings below.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "The environmental risks of supplying nutrients"
+            },
+            {
+              "id": "ii",
+              "text": "Technology that allows farmers to target resources"
+            },
+            {
+              "id": "iii",
+              "text": "The historical transformation of farming"
+            },
+            {
+              "id": "iv",
+              "text": "The continuing importance of human decisions"
+            },
+            {
+              "id": "v",
+              "text": "Managing agricultural water supplies"
+            },
+            {
+              "id": "vi",
+              "text": "Why farmers abandoned all traditional methods"
+            },
+            {
+              "id": "vii",
+              "text": "The development of international food markets"
+            }
+          ],
+          "questions": [
+            {
+              "number": 1,
+              "paragraph": "A",
+              "answer": "iii"
+            },
+            {
+              "number": 2,
+              "paragraph": "B",
+              "answer": "iv"
+            },
+            {
+              "number": 3,
+              "paragraph": "C",
+              "answer": "i"
+            },
+            {
+              "number": 4,
+              "paragraph": "D",
+              "answer": "v"
+            },
+            {
+              "number": 5,
+              "paragraph": "E",
+              "answer": "ii"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "6-8",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 6,
+              "text": "Mechanization reduced the amount of human labor needed for some agricultural tasks.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 7,
+              "text": "The use of fertilizers always causes environmental damage.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 8,
+              "text": "All precision agriculture equipment requires farmers to have a university degree.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "9-10",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 9,
+              "text": "Excess nutrients can move from fields into ________ and lakes.",
+              "answer": "rivers"
+            },
+            {
+              "number": 10,
+              "text": "Some farmers use soil ________ to help decide when to irrigate.",
+              "answer": "moisture"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "11-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 11,
+              "text": "What is one advantage of precision agriculture mentioned in the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "It makes all farms independent of weather."
+                },
+                {
+                  "letter": "B",
+                  "text": "It allows resources to be matched more closely with local conditions."
+                },
+                {
+                  "letter": "C",
+                  "text": "It eliminates the need for farmers."
+                },
+                {
+                  "letter": "D",
+                  "text": "It guarantees higher crop prices."
+                }
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 12,
+              "text": "Why may some small farmers have difficulty adopting new technologies?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "They cannot grow crops using modern equipment."
+                },
+                {
+                  "letter": "B",
+                  "text": "They are legally prevented from using machines."
+                },
+                {
+                  "letter": "C",
+                  "text": "Initial costs and limited technical support can be barriers."
+                },
+                {
+                  "letter": "D",
+                  "text": "Digital technology can only be used in large cities."
+                }
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 13,
+              "text": "What is the main idea of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Modern farming has developed through technological change but still requires careful resource management."
+                },
+                {
+                  "letter": "B",
+                  "text": "Traditional farming is more productive than modern farming."
+                },
+                {
+                  "letter": "C",
+                  "text": "Farmers should replace all existing equipment with digital systems."
+                },
+                {
+                  "letter": "D",
+                  "text": "Agriculture has become independent of environmental conditions."
+                }
+              ],
+              "answer": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "Why People Collect Things",
+      "passage": {
+        "passageId": "P2",
+        "title": "Why People Collect Things",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "People collect an extraordinary variety of objects, from stamps and coins to toys, books, artworks, and natural specimens. Collecting is often described as a hobby, but researchers in psychology, history, and anthropology have examined it as a broader human behavior. Collections can organize memories, express identity, create social connections, or provide a sense of achievement. The meaning of a collection can therefore be different for the person who creates it and for an observer."
+          },
+          {
+            "id": "B",
+            "text": "One reason people collect is the desire to preserve memories. An object associated with a particular place or period can act as a reminder of an experience. Photographs perform a similar function, but physical objects may have an additional sensory quality: their appearance, texture, or even smell can trigger associations. Collectors sometimes report that an ordinary object becomes valuable because of the personal story attached to it rather than because of its market price."
+          },
+          {
+            "id": "C",
+            "text": "Collecting can also provide a sense of order. A collector may establish categories, search for missing items, and arrange objects according to a chosen system. Completing a series can create a clear goal, while finding a rare item may produce a strong feeling of achievement. Psychologists have suggested that this structured activity can be satisfying because it transforms an otherwise open-ended world into a manageable set of objects and rules."
+          },
+          {
+            "id": "D",
+            "text": "The social dimension of collecting is equally important. Clubs, exhibitions, online communities, and specialist markets allow collectors to exchange information and display their knowledge. A collection can therefore become a way of entering a community with shared interests. Social recognition may sometimes increase the desire to acquire additional objects, especially when collectors compete to complete difficult sets or obtain particularly unusual examples."
+          },
+          {
+            "id": "E",
+            "text": "Markets can influence collecting behavior in complicated ways. An object may become desirable because its price rises, but financial value can also change the character of a hobby. Collectors who originally cared mainly about history or personal meaning may begin to think about investment. At the same time, high prices can discourage new participants and make some collections less accessible. Market value is therefore only one of several forces shaping collecting."
+          },
+          {
+            "id": "F",
+            "text": "Digital technology has changed collecting without eliminating its basic motivations. People can now collect digital photographs, music files, virtual objects, or information about subjects of interest. Online marketplaces make rare physical objects easier to find, while databases help collectors catalogue large collections. Yet digital collecting can create a different challenge: the enormous quantity of available material may make selection more difficult rather than easier."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_information",
+          "questionRange": "14-18",
+          "instructions": "The passage has six paragraphs, A-F. Which paragraph contains the following information? You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 14,
+              "text": "an explanation of why arranging objects can be satisfying",
+              "answer": "C"
+            },
+            {
+              "number": 15,
+              "text": "the effect of collecting on participation in a social group",
+              "answer": "D"
+            },
+            {
+              "number": 16,
+              "text": "a warning that financial value can change a hobby",
+              "answer": "E"
+            },
+            {
+              "number": 17,
+              "text": "the use of physical objects as reminders of experiences",
+              "answer": "B"
+            },
+            {
+              "number": 18,
+              "text": "a difficulty created by the huge amount of digital material available",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "19-22",
+          "instructions": "Do the following statements agree with the claims of the writer?",
+          "questions": [
+            {
+              "number": 19,
+              "text": "The main reason people collect objects is to make money.",
+              "answer": "NO"
+            },
+            {
+              "number": 20,
+              "text": "All collectors organize their collections according to exactly the same rules.",
+              "answer": "NO"
+            },
+            {
+              "number": 21,
+              "text": "Collecting can help some people feel that their goals are clearly defined.",
+              "answer": "YES"
+            },
+            {
+              "number": 22,
+              "text": "Digital technology has removed the need for collectors to meet other people.",
+              "answer": "NO"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "23-26",
+          "instructions": "Complete the summary below. Write NO MORE THAN TWO WORDS from the passage.",
+          "summary": "Collections can serve several purposes. Objects may preserve ________ and provide reminders of experiences. Organizing objects into categories can create a sense of ________, while clubs and online groups can provide social ________. In modern collecting, digital technology has made it easier to find and ________ large collections.",
+          "blanks": [
+            {
+              "number": 23,
+              "text": "________",
+              "answer": "memories"
+            },
+            {
+              "number": 24,
+              "text": "________",
+              "answer": "order"
+            },
+            {
+              "number": 25,
+              "text": "________",
+              "answer": "connections"
+            },
+            {
+              "number": 26,
+              "text": "________",
+              "answer": "catalogue"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice_multiple",
+          "questionRange": "27-28",
+          "instructions": "Choose TWO letters, A-F. Which TWO statements are supported by the passage?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "The personal meaning of an object can be more important than its market price."
+            },
+            {
+              "letter": "B",
+              "text": "All collectors eventually become professional investors."
+            },
+            {
+              "letter": "C",
+              "text": "Collecting can create opportunities for social interaction."
+            },
+            {
+              "letter": "D",
+              "text": "Digital collecting has made selecting objects easier in every case."
+            },
+            {
+              "letter": "E",
+              "text": "Collectors never compete with one another."
+            },
+            {
+              "letter": "F",
+              "text": "Physical collections are no longer popular."
+            }
+          ],
+          "questions": [
+            {
+              "number": 27,
+              "text": "First correct answer",
+              "answer": "A"
+            },
+            {
+              "number": 28,
+              "text": "Second correct answer",
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "The Problem of Measuring Happiness",
+      "passage": {
+        "passageId": "P3",
+        "title": "The Problem of Measuring Happiness",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Happiness sounds like an obvious concept until researchers attempt to measure it. A person may describe happiness as pleasure, another may associate it with life satisfaction, and a third may emphasize meaning or relationships. Scientists studying well-being therefore distinguish between several related concepts rather than assuming that a single question can capture every aspect of a person's experience. Measurement choices can influence the conclusions researchers draw."
+          },
+          {
+            "id": "B",
+            "text": "One common approach is to ask people directly about their lives. Surveys may ask participants to rate their overall satisfaction or to report how they felt during particular activities. Such measures are relatively inexpensive and can be administered to large populations. They also provide information that cannot easily be observed from outside, because feelings and personal evaluations are private experiences. However, responses can be influenced by wording, expectations, recent events, or the standards people use when judging their own lives."
+          },
+          {
+            "id": "C",
+            "text": "Researchers have therefore developed additional methods. Experience-sampling studies ask participants to report their feelings at several points during ordinary days, reducing the need to remember an entire week or month. Other studies examine behavior, social relationships, physical activity, sleep, or biological indicators. These measures can complement self-reports, but none should automatically be treated as a perfect substitute for asking people how they feel."
+          },
+          {
+            "id": "D",
+            "text": "Cross-cultural comparisons create another difficulty. The meaning of a satisfying life may vary between societies, as can the willingness to describe personal feelings openly. A survey question that works well in one language may not have exactly the same meaning when translated into another. Researchers can reduce some problems through careful translation and culturally appropriate methods, but comparisons across countries still require caution."
+          },
+          {
+            "id": "E",
+            "text": "Economic conditions are often included in studies of well-being because income can influence people's ability to obtain housing, food, healthcare, leisure, and other resources. Yet the relationship between money and happiness is not simple. Researchers distinguish between having enough resources to meet basic needs and differences among people who are already relatively comfortable. Other factors, including health, social relationships, security, and a sense of control, can also affect well-being."
+          },
+          {
+            "id": "F",
+            "text": "Policy makers have become increasingly interested in well-being measures because economic statistics do not describe every aspect of people's lives. A government may therefore examine indicators related to health, social connection, housing, safety, or life satisfaction alongside traditional economic measures. This does not mean that happiness can be reduced to a single national score. Rather, well-being indicators can provide additional information when governments assess social conditions and consider policy priorities."
+          },
+          {
+            "id": "G",
+            "text": "The study of happiness is consequently less about discovering one perfect number than about improving the quality of questions and evidence. Different methods answer different questions. Surveys can capture personal evaluations, experience sampling can reveal feelings in daily life, and broader indicators can describe conditions that influence well-being. When these forms of evidence are interpreted carefully, they can provide a more useful picture than any one measurement used in isolation."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "29-33",
+          "instructions": "Choose the correct heading for paragraphs A-E from the list of headings below.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "Why direct questions can be useful but imperfect"
+            },
+            {
+              "id": "ii",
+              "text": "Different meanings of happiness"
+            },
+            {
+              "id": "iii",
+              "text": "The influence of financial circumstances"
+            },
+            {
+              "id": "iv",
+              "text": "Difficulties in comparing different societies"
+            },
+            {
+              "id": "v",
+              "text": "Alternative ways to collect evidence"
+            },
+            {
+              "id": "vi",
+              "text": "Why governments should stop using economic statistics"
+            },
+            {
+              "id": "vii",
+              "text": "A historical account of happiness research"
+            }
+          ],
+          "questions": [
+            {
+              "number": 29,
+              "paragraph": "A",
+              "answer": "ii"
+            },
+            {
+              "number": 30,
+              "paragraph": "B",
+              "answer": "i"
+            },
+            {
+              "number": 31,
+              "paragraph": "C",
+              "answer": "v"
+            },
+            {
+              "number": 32,
+              "paragraph": "D",
+              "answer": "iv"
+            },
+            {
+              "number": 33,
+              "paragraph": "E",
+              "answer": "iii"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "34-36",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 34,
+              "text": "Experience-sampling studies can reduce the need to remember an entire week or ________.",
+              "answer": "month"
+            },
+            {
+              "number": 35,
+              "text": "Differences in ________ can affect the meaning of survey questions between countries.",
+              "answer": "language"
+            },
+            {
+              "number": 36,
+              "text": "Well-being research may examine health, social relationships, security and a sense of ________.",
+              "answer": "control"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "37-38",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 37,
+              "text": "The passage suggests that self-report surveys are useless for studying happiness.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 38,
+              "text": "Researchers have created one measurement that perfectly captures happiness in every culture.",
+              "answer": "FALSE"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "39-40",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 39,
+              "text": "Why are well-being indicators of interest to policy makers?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "They can provide information about social conditions beyond traditional economic statistics."
+                },
+                {
+                  "letter": "B",
+                  "text": "They allow governments to calculate one perfect measure of national happiness."
+                },
+                {
+                  "letter": "C",
+                  "text": "They prove that income has no relationship with well-being."
+                },
+                {
+                  "letter": "D",
+                  "text": "They make surveys unnecessary."
+                }
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 40,
+              "text": "What is the main conclusion of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Happiness should only be measured through biological indicators."
+                },
+                {
+                  "letter": "B",
+                  "text": "A combination of carefully interpreted methods can provide a more useful understanding of well-being."
+                },
+                {
+                  "letter": "C",
+                  "text": "International comparisons of happiness are impossible."
+                },
+                {
+                  "letter": "D",
+                  "text": "Economic statistics are the best measure of human happiness."
+                }
+              ],
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

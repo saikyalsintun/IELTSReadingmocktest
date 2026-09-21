@@ -1,0 +1,558 @@
+{
+  "testId": "Test5",
+  "title": "IELTS Reading Test 5",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Return of the Beaver",
+      "passage": {
+        "passageId": "P1",
+        "title": "The Return of the Beaver",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Beavers are among the most influential animals in freshwater environments. By cutting trees and building dams, they can change the movement of water across a landscape. For centuries, however, beavers were heavily hunted in parts of Europe and North America for their fur, meat, and castoreum, a substance once used in medicines and perfumes. As their numbers declined, many landscapes lost an animal capable of creating and maintaining small wetlands."
+          },
+          {
+            "id": "B",
+            "text": "The decline of beavers had consequences that were not immediately obvious. Without dams, streams in some areas flowed more rapidly, and water moved through landscapes with fewer natural obstacles. Wet areas could shrink, reducing habitat for plants, insects, amphibians, and birds. Researchers now describe beavers as ecosystem engineers because their physical activities create conditions that influence many other species."
+          },
+          {
+            "id": "C",
+            "text": "During the twentieth and twenty-first centuries, beaver populations began to recover in several regions because of legal protection, changes in land management, and reintroduction projects. In some places, animals returned naturally from neighboring populations. Their return has attracted interest from conservationists because beaver wetlands can store water, trap sediment, and provide habitats for wildlife."
+          },
+          {
+            "id": "D",
+            "text": "Beaver activity can also create difficulties for people. Dams may flood roads, agricultural fields, or gardens, while trees cut near settlements can become a safety concern. Removing every dam is not always considered the best solution because the structures may provide ecological benefits. Managers have therefore experimented with devices that allow water to pass through dams while limiting flooding in sensitive locations."
+          },
+          {
+            "id": "E",
+            "text": "The response to beavers varies according to local circumstances. A dam in a remote forest may cause few problems and produce valuable habitat, whereas a similar structure near a road may require intervention. Effective management therefore involves identifying where beaver activity creates unacceptable risks and where it can be allowed to continue. This approach treats beavers neither as universally beneficial nor as pests that must always be removed."
+          },
+          {
+            "id": "F",
+            "text": "The story of the beaver illustrates a wider change in conservation thinking. Protecting a species is not always simply a matter of increasing its population. Ecologists increasingly consider how animals interact with landscapes and with human communities. The challenge is to understand these interactions and design management strategies that allow ecological processes to continue while reducing serious conflicts with people."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "true_false_not_given",
+          "questionRange": "1-4",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 1,
+              "text": "Beavers were hunted for several different reasons in Europe and North America.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 2,
+              "text": "The decline of beavers immediately caused all wetlands to disappear.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 3,
+              "text": "Every beaver population in the world has recovered completely.",
+              "answer": "NOT GIVEN"
+            },
+            {
+              "number": 4,
+              "text": "Some modern devices can allow water to pass through beaver dams.",
+              "answer": "TRUE"
+            }
+          ]
+        },
+        {
+          "type": "matching_information",
+          "questionRange": "5-8",
+          "instructions": "The passage has six paragraphs, A-F. Which paragraph contains the following information? You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 5,
+              "text": "a description of why beavers are called ecosystem engineers",
+              "answer": "B"
+            },
+            {
+              "number": 6,
+              "text": "examples of problems caused by beaver activity",
+              "answer": "D"
+            },
+            {
+              "number": 7,
+              "text": "a description of circumstances in which beavers may be left alone",
+              "answer": "E"
+            },
+            {
+              "number": 8,
+              "text": "a broader lesson about modern conservation",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "9-10",
+          "instructions": "Complete the sentences below. Write NO MORE THAN TWO WORDS from the passage.",
+          "questions": [
+            {
+              "number": 9,
+              "text": "Beavers can create and maintain small ________.",
+              "answer": "wetlands"
+            },
+            {
+              "number": 10,
+              "text": "Beaver dams can store water and trap ________.",
+              "answer": "sediment"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "11-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 11,
+              "text": "Why are conservationists interested in beaver recovery?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Beavers can create habitats and store water."
+                },
+                {
+                  "letter": "B",
+                  "text": "Beavers eliminate all other species from wetlands."
+                },
+                {
+                  "letter": "C",
+                  "text": "Beavers prevent every type of flooding."
+                },
+                {
+                  "letter": "D",
+                  "text": "Beavers require no management."
+                }
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 12,
+              "text": "What approach to beaver management does the passage support?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Remove every dam immediately."
+                },
+                {
+                  "letter": "B",
+                  "text": "Allow every dam to remain untouched."
+                },
+                {
+                  "letter": "C",
+                  "text": "Make decisions according to local risks and benefits."
+                },
+                {
+                  "letter": "D",
+                  "text": "Move all beavers to protected forests."
+                }
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 13,
+              "text": "What is the main purpose of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "To explain how beavers have affected landscapes and why their management is complex"
+                },
+                {
+                  "letter": "B",
+                  "text": "To describe the commercial value of beaver fur"
+                },
+                {
+                  "letter": "C",
+                  "text": "To prove that beavers are harmful animals"
+                },
+                {
+                  "letter": "D",
+                  "text": "To compare beavers with other freshwater mammals"
+                }
+              ],
+              "answer": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "The Science of Sound in Cities",
+      "passage": {
+        "passageId": "P2",
+        "title": "The Science of Sound in Cities",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Cities are full of sound. Traffic, construction, public transport, businesses, and human activity all contribute to an acoustic environment that changes throughout the day. Urban noise is often discussed as a problem because prolonged exposure to unwanted sound can affect concentration, sleep, and general well-being. Researchers studying city sound, however, increasingly distinguish between simply reducing noise and designing healthier acoustic environments."
+          },
+          {
+            "id": "B",
+            "text": "The physical characteristics of streets strongly influence how sound travels. Hard surfaces such as concrete and glass can reflect sound, while vegetation and certain materials can absorb some acoustic energy. Tall buildings can create complex patterns of reflection, sometimes producing quieter areas and sometimes concentrating sound. Consequently, the same source of noise can be experienced differently depending on the shape and materials of the surrounding environment."
+          },
+          {
+            "id": "C",
+            "text": "Traffic is one of the most common sources of continuous urban noise. Engine sounds, tire noise, braking, and vehicle acceleration contribute to the overall level. Reducing traffic volume can lower noise, but speed also matters. At relatively high speeds, tire and road noise can become particularly important. Measures such as smoother road surfaces, lower speed limits, and changes in traffic flow may therefore influence the acoustic environment."
+          },
+          {
+            "id": "D",
+            "text": "Not all urban sounds are necessarily undesirable. The sound of water, birds, or human conversation may be perceived as pleasant or meaningful even when they are not quiet. Researchers sometimes use the term soundscape to describe the overall acoustic environment and the way people experience it. A successful soundscape strategy may therefore seek to mask an unpleasant sound with a more attractive one rather than attempting to eliminate every sound."
+          },
+          {
+            "id": "E",
+            "text": "Technology has expanded the ability to measure urban sound. Portable sensors can record sound levels at many locations, while digital systems can combine acoustic measurements with information about traffic and land use. These tools can reveal differences between streets that would be difficult to identify through occasional human observation. Nevertheless, numerical measurements do not fully capture how people perceive sound, so researchers often combine physical data with surveys or interviews."
+          },
+          {
+            "id": "F",
+            "text": "Urban sound planning is consequently becoming part of broader city design. Architects can consider building orientation and materials, transport planners can address vehicle movement, and landscape designers can introduce vegetation or water features. The objective is not necessarily to create silent cities. Instead, it is to reduce harmful exposure while creating acoustic environments that support comfort, communication, and everyday activities."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "14-18",
+          "instructions": "Choose the correct heading for paragraphs A-E from the list of headings below.",
+          "headings": [
+            {
+              "id": "i",
+              "text": "The influence of street design on sound"
+            },
+            {
+              "id": "ii",
+              "text": "Measuring sound with modern technology"
+            },
+            {
+              "id": "iii",
+              "text": "Why some urban sounds are valued"
+            },
+            {
+              "id": "iv",
+              "text": "Traffic as a major source of noise"
+            },
+            {
+              "id": "v",
+              "text": "A broader approach to urban sound"
+            },
+            {
+              "id": "vi",
+              "text": "The history of musical instruments"
+            },
+            {
+              "id": "vii",
+              "text": "Why cities should become completely silent"
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "paragraph": "A",
+              "answer": "v"
+            },
+            {
+              "number": 15,
+              "paragraph": "B",
+              "answer": "i"
+            },
+            {
+              "number": 16,
+              "paragraph": "C",
+              "answer": "iv"
+            },
+            {
+              "number": 17,
+              "paragraph": "D",
+              "answer": "iii"
+            },
+            {
+              "number": 18,
+              "paragraph": "E",
+              "answer": "ii"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "19-22",
+          "instructions": "Do the following statements agree with the claims of the writer?",
+          "questions": [
+            {
+              "number": 19,
+              "text": "The writer believes that all urban sounds should be eliminated.",
+              "answer": "NO"
+            },
+            {
+              "number": 20,
+              "text": "Building materials can affect the way sound moves through a city.",
+              "answer": "YES"
+            },
+            {
+              "number": 21,
+              "text": "Vehicle speed can influence the amount of road noise.",
+              "answer": "YES"
+            },
+            {
+              "number": 22,
+              "text": "Sound sensors are cheaper than all other forms of urban research.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "answer_box",
+          "questionRange": "23-25",
+          "instructions": "Choose the correct answer from the box.",
+          "options": [
+            "traffic",
+            "vegetation",
+            "soundscape",
+            "interviews",
+            "construction",
+            "glass"
+          ],
+          "questions": [
+            {
+              "number": 23,
+              "text": "A term used to describe the overall acoustic environment is ________.",
+              "answer": "soundscape"
+            },
+            {
+              "number": 24,
+              "text": "Some acoustic energy can be absorbed by ________.",
+              "answer": "vegetation"
+            },
+            {
+              "number": 25,
+              "text": "Researchers may combine measurements with surveys or ________.",
+              "answer": "interviews"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice_multiple",
+          "questionRange": "26-27",
+          "instructions": "Choose TWO letters, A-F. Which TWO methods can influence urban noise according to the passage?",
+          "options": [
+            {
+              "letter": "A",
+              "text": "Changing traffic flow"
+            },
+            {
+              "letter": "B",
+              "text": "Using smoother road surfaces"
+            },
+            {
+              "letter": "C",
+              "text": "Removing all vegetation"
+            },
+            {
+              "letter": "D",
+              "text": "Increasing vehicle acceleration"
+            },
+            {
+              "letter": "E",
+              "text": "Replacing all buildings with glass"
+            },
+            {
+              "letter": "F",
+              "text": "Eliminating public transport"
+            }
+          ],
+          "questions": [
+            {
+              "number": 26,
+              "text": "First correct answer",
+              "answer": "A"
+            },
+            {
+              "number": 27,
+              "text": "Second correct answer",
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "The Value of Failure in Innovation",
+      "passage": {
+        "passageId": "P3",
+        "title": "The Value of Failure in Innovation",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Innovation is commonly associated with successful inventions, successful companies, and dramatic breakthroughs. Yet research into scientific and technological development suggests that unsuccessful attempts can also contribute to progress. An experiment that fails to produce the expected result may reveal weaknesses in an idea, provide new information about a system, or suggest a different direction. The value of failure therefore depends partly on what is learned from it."
+          },
+          {
+            "id": "B",
+            "text": "Not all failures are equally useful. A carefully designed experiment that tests a clear hypothesis can produce valuable evidence even when the hypothesis is rejected. By contrast, an poorly controlled experiment may fail without teaching researchers much because the cause of the result is uncertain. For this reason, scientists often emphasize documentation and repeatability. Recording what happened allows later researchers to distinguish between a promising unexpected result and an error caused by experimental conditions."
+          },
+          {
+            "id": "C",
+            "text": "Businesses face a different challenge because failure can involve significant financial costs. Some innovative companies encourage employees to test ideas quickly on a small scale so that unsuccessful approaches can be identified before large amounts of money are committed. This strategy can reduce the cost of failure, but it does not make failure harmless. A culture that celebrates experimentation without considering consequences may encourage careless decisions."
+          },
+          {
+            "id": "D",
+            "text": "Historical examples show that unexpected results can sometimes become important discoveries. A researcher may notice an unusual effect that was not part of the original research question and investigate it further. However, stories about accidental discoveries are often simplified after the event. Major breakthroughs usually depend on previous knowledge, repeated testing, technical skill, and the ability to recognize why an unexpected observation matters."
+          },
+          {
+            "id": "E",
+            "text": "Education presents another issue. Students who believe that mistakes indicate a lack of ability may avoid difficult problems and choose tasks they already know how to complete. Teachers can instead treat errors as evidence about what needs to be understood. This does not mean praising every mistake. Productive learning requires identifying the reason for an error and using that information to improve later performance."
+          },
+          {
+            "id": "F",
+            "text": "The idea that failure can be useful should therefore be interpreted carefully. Failure is not automatically a step toward success, and repeated failure without reflection may simply waste time and resources. What matters is the process surrounding the unsuccessful attempt: the quality of the original question, the information collected, the willingness to revise assumptions, and the ability to apply lessons to the next attempt."
+          },
+          {
+            "id": "G",
+            "text": "Innovation can consequently be understood as a process of adjustment rather than a sequence of perfect decisions. Successful innovators may encounter many unsuccessful ideas, but they learn to identify which results contain useful information. Organizations and educational systems can support this process by allowing controlled experimentation, documenting results, and making room for revision. The objective is not to make failure desirable in itself, but to ensure that unavoidable setbacks can generate knowledge."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_information",
+          "questionRange": "28-32",
+          "instructions": "The passage has seven paragraphs, A-G. Which paragraph contains the following information? You may use any letter more than once.",
+          "questions": [
+            {
+              "number": 28,
+              "text": "an explanation of why a badly designed experiment may be less informative",
+              "answer": "B"
+            },
+            {
+              "number": 29,
+              "text": "a method businesses can use to limit the cost of unsuccessful ideas",
+              "answer": "C"
+            },
+            {
+              "number": 30,
+              "text": "a warning that stories of accidental discoveries can be oversimplified",
+              "answer": "D"
+            },
+            {
+              "number": 31,
+              "text": "an application of the idea of productive failure to education",
+              "answer": "E"
+            },
+            {
+              "number": 32,
+              "text": "a statement that failure alone does not guarantee progress",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "33-35",
+          "instructions": "Complete the summary below. Write NO MORE THAN TWO WORDS from the passage.",
+          "summary": "An unsuccessful experiment can still be useful if researchers learn from the ________. Careful documentation helps scientists identify whether an unexpected result is promising or simply an ________. In business, testing ideas on a small scale can reduce the ________ of failure.",
+          "blanks": [
+            {
+              "number": 33,
+              "text": "________",
+              "answer": "result"
+            },
+            {
+              "number": 34,
+              "text": "________",
+              "answer": "error"
+            },
+            {
+              "number": 35,
+              "text": "________",
+              "answer": "cost"
+            }
+          ]
+        },
+        {
+          "type": "true_false_not_given",
+          "questionRange": "36-38",
+          "instructions": "Do the following statements agree with the information given in the passage?",
+          "questions": [
+            {
+              "number": 36,
+              "text": "Every failed experiment provides valuable scientific information.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 37,
+              "text": "Some companies test ideas on a small scale before making larger investments.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 38,
+              "text": "The passage identifies one particular invention as the most important example of useful failure.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "39-40",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 39,
+              "text": "According to the passage, what makes failure more useful?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Ignoring the reasons for the failure"
+                },
+                {
+                  "letter": "B",
+                  "text": "Repeating the same unsuccessful approach indefinitely"
+                },
+                {
+                  "letter": "C",
+                  "text": "Collecting information and applying lessons to later attempts"
+                },
+                {
+                  "letter": "D",
+                  "text": "Avoiding all forms of experimentation"
+                }
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 40,
+              "text": "What is the main conclusion of the passage?",
+              "options": [
+                {
+                  "letter": "A",
+                  "text": "Failure is always necessary for innovation."
+                },
+                {
+                  "letter": "B",
+                  "text": "Failure can contribute to innovation when unsuccessful attempts are carefully analyzed and used to generate knowledge."
+                },
+                {
+                  "letter": "C",
+                  "text": "Organizations should encourage employees to fail as often as possible."
+                },
+                {
+                  "letter": "D",
+                  "text": "Successful inventions usually happen by accident."
+                }
+              ],
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

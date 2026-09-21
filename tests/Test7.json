@@ -1,0 +1,511 @@
+{
+  "testId": "Test7",
+  "title": "IELTS Academic Reading Practice Test 7",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Hidden World of Fungi",
+      "passage": {
+        "passageId": "T7P1",
+        "title": "The Hidden World of Fungi",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "For much of human history, fungi were treated as a relatively minor part of the natural world. They were sometimes grouped with plants because they grow from the ground and cannot move from place to place. Modern biology, however, recognises fungi as a separate kingdom of organisms with distinctive characteristics. Scientists now know that fungi perform essential functions in forests, grasslands and many other ecosystems."
+          },
+          {
+            "id": "B",
+            "text": "One of the most important functions of fungi is decomposition. When leaves, branches and dead organisms fall to the ground, fungi break down complex materials within them. This releases nutrients that can eventually become available to plants. Without decomposers, ecosystems would accumulate enormous quantities of dead organic material and many nutrients would remain locked away."
+          },
+          {
+            "id": "C",
+            "text": "Fungi also form partnerships with living plants. In a relationship known as mycorrhiza, fungal threads grow around or inside plant roots. The fungus can help the plant obtain minerals and water from the soil, while the plant supplies the fungus with sugars produced through photosynthesis. This exchange can be especially valuable in soils where particular nutrients are difficult for plants to obtain."
+          },
+          {
+            "id": "D",
+            "text": "The visible mushroom is only one part of many fungi. Much of the organism consists of fine threads called hyphae. A network of these threads is known as a mycelium. Mycelia can spread through soil, wood or other materials, sometimes covering a surprisingly large area. Because much of this network remains hidden, the presence of fungi can be underestimated when people observe an ecosystem."
+          },
+          {
+            "id": "E",
+            "text": "Some fungi are also important to humans. Yeasts are used in baking and fermentation, while certain fungi have contributed to the development of medicines. Other species are eaten directly. At the same time, fungi can cause disease in plants, animals and humans, so their effects are not always beneficial."
+          },
+          {
+            "id": "F",
+            "text": "Researchers are increasingly investigating fungi for possible environmental applications. Certain species can break down pollutants or assist plants growing in damaged soils. Scientists are also studying fungal materials as possible alternatives to some plastics and synthetic products. These applications remain an active area of research, and their practical value varies between species."
+          },
+          {
+            "id": "G",
+            "text": "Despite their importance, fungi remain less familiar to the public than many plants and animals. Their hidden growth patterns make them difficult to observe, and many species produce visible structures only briefly. Advances in DNA analysis are now allowing researchers to detect fungal organisms that might otherwise go unnoticed, revealing that fungal diversity is much greater than earlier surveys suggested."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "true_false_not_given",
+          "questionRange": "1-5",
+          "instructions": "Do the following statements agree with the information given in the passage? Write TRUE, FALSE or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 1,
+              "text": "Fungi were historically sometimes classified as plants.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 2,
+              "text": "Fungi are responsible for producing all the nutrients needed by plants.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 3,
+              "text": "Mycorrhizal relationships can help plants obtain minerals from soil.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 4,
+              "text": "All fungi spend most of their lives producing visible mushrooms.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 5,
+              "text": "Scientists have already replaced most plastics with fungal materials.",
+              "answer": "FALSE"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "6-9",
+          "instructions": "Complete the sentences. Write NO MORE THAN TWO WORDS from the passage for each answer.",
+          "questions": [
+            {
+              "number": 6,
+              "text": "Fungi help ecosystems by breaking down dead organic ______.",
+              "answer": "material"
+            },
+            {
+              "number": 7,
+              "text": "Fine fungal threads are called ______.",
+              "answer": "hyphae"
+            },
+            {
+              "number": 8,
+              "text": "A network of fungal threads is known as a ______.",
+              "answer": "mycelium"
+            },
+            {
+              "number": 9,
+              "text": "Yeasts are used in baking and ______.",
+              "answer": "fermentation"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "10-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 10,
+              "text": "What is one benefit fungi provide through decomposition?",
+              "options": [
+                "A. They prevent plants from producing sugars",
+                "B. They release nutrients from dead material",
+                "C. They increase the size of animal populations",
+                "D. They remove all microorganisms from soil"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 11,
+              "text": "What does the plant provide to a fungus in a mycorrhizal relationship?",
+              "options": [
+                "A. Minerals",
+                "B. Water",
+                "C. Sugars",
+                "D. Oxygen"
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 12,
+              "text": "Why can fungi be difficult for people to notice?",
+              "options": [
+                "A. They only live in deserts",
+                "B. Much of their growth is hidden",
+                "C. They cannot grow near plants",
+                "D. They never produce visible structures"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 13,
+              "text": "What has DNA analysis helped researchers do?",
+              "options": [
+                "A. Detect fungal organisms that might otherwise be missed",
+                "B. Stop fungi from decomposing dead material",
+                "C. Make all fungi visible to the human eye",
+                "D. Eliminate harmful fungi from ecosystems"
+              ],
+              "answer": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "The Rise of Rooftop Gardens",
+      "passage": {
+        "passageId": "T7P2",
+        "title": "The Rise of Rooftop Gardens",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "As cities become more densely populated, opportunities to create conventional gardens can become limited. One response has been the development of rooftop gardens, in which plants are grown on the roofs of homes, offices, schools and other buildings. Although rooftop gardening has ancient precedents, modern projects have expanded as cities search for ways to increase vegetation without requiring additional land at ground level."
+          },
+          {
+            "id": "B",
+            "text": "Rooftop gardens vary considerably in design. Some are simple systems containing a thin layer of soil and hardy plants that require little maintenance. Others are intensive gardens with deeper growing areas that can support vegetables, shrubs and even small trees. The choice depends partly on the strength of the building and the amount of maintenance that owners are prepared to provide."
+          },
+          {
+            "id": "C",
+            "text": "One potential benefit is temperature regulation. Vegetation and growing media can absorb some solar energy and reduce the amount of heat transferred directly into a building. In some circumstances, this may reduce the need for air conditioning. The effect depends on factors such as climate, roof design, plant coverage and the materials used in the building."
+          },
+          {
+            "id": "D",
+            "text": "Rooftop vegetation can also influence stormwater. Conventional roofs often allow rain to flow quickly into drainage systems. Plants and soil can temporarily retain some rainfall, releasing water more gradually. This does not eliminate flooding risk, particularly during very heavy storms, but it can change the timing and quantity of water entering urban drainage networks."
+          },
+          {
+            "id": "E",
+            "text": "Another attraction is the possibility of producing food close to consumers. Rooftop farms may grow herbs, leafy vegetables and other crops. Because the distance between producer and customer can be short, transportation requirements may be reduced. However, rooftop farming can involve substantial costs for construction, irrigation, maintenance and access."
+          },
+          {
+            "id": "F",
+            "text": "Rooftops can also provide habitats for insects and birds. The ecological value of a roof depends on its design. A roof containing several plant species and flowering at different times of year may support a wider range of organisms than a surface covered by a single plant species. Connections between several green roofs may further improve their value for some urban wildlife."
+          },
+          {
+            "id": "G",
+            "text": "Despite these benefits, rooftop gardens are not suitable for every building. Structural capacity must be considered because soil and stored water can add considerable weight. Safety, irrigation and maintenance also require planning. For this reason, successful rooftop projects usually depend on cooperation between architects, engineers, building owners and horticultural specialists."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "14-18",
+          "instructions": "Choose the correct heading for paragraphs B-F from the list of headings below.",
+          "headings": [
+            {
+              "value": "i",
+              "text": "Different levels of garden complexity"
+            },
+            {
+              "value": "ii",
+              "text": "Reducing the amount of rain entering drainage systems"
+            },
+            {
+              "value": "iii",
+              "text": "Food production and its economic limitations"
+            },
+            {
+              "value": "iv",
+              "text": "The effect of vegetation on building temperatures"
+            },
+            {
+              "value": "v",
+              "text": "Supporting urban wildlife"
+            },
+            {
+              "value": "vi",
+              "text": "Why rooftop gardens are cheaper than ground gardens"
+            },
+            {
+              "value": "vii",
+              "text": "The history of farming in rural areas"
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "text": "Paragraph B",
+              "answer": "i"
+            },
+            {
+              "number": 15,
+              "text": "Paragraph C",
+              "answer": "iv"
+            },
+            {
+              "number": 16,
+              "text": "Paragraph D",
+              "answer": "ii"
+            },
+            {
+              "number": 17,
+              "text": "Paragraph E",
+              "answer": "iii"
+            },
+            {
+              "number": 18,
+              "text": "Paragraph F",
+              "answer": "v"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "19-22",
+          "instructions": "Complete the summary. Choose NO MORE THAN TWO WORDS from the box for each answer.",
+          "options": [
+            "thin",
+            "soil",
+            "air conditioning",
+            "rainfall",
+            "vegetables",
+            "wildlife",
+            "transportation",
+            "maintenance"
+          ],
+          "summary": "Rooftop gardens can be designed in different ways. Simple systems may use a ______ layer of growing material, while more intensive systems can support crops and larger plants. Vegetation may reduce the need for ______ by limiting heat entering buildings. Rooftop plants can also temporarily retain ______ and release it gradually. Some rooftop farms produce ______ close to urban consumers.",
+          "blanks": [
+            {
+              "number": 19,
+              "answer": "thin"
+            },
+            {
+              "number": 20,
+              "answer": "air conditioning"
+            },
+            {
+              "number": 21,
+              "answer": "rainfall"
+            },
+            {
+              "number": 22,
+              "answer": "vegetables"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "23-27",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 23,
+              "text": "What determines the type of rooftop garden that can be developed?",
+              "options": [
+                "A. The number of nearby roads",
+                "B. The strength of the building and available maintenance",
+                "C. The age of the city",
+                "D. The number of people living underground"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 24,
+              "text": "What does the passage say about rooftop gardens and flooding?",
+              "options": [
+                "A. They completely prevent urban flooding",
+                "B. They have no effect on stormwater",
+                "C. They can alter the timing and quantity of water entering drains",
+                "D. They make heavy storms impossible"
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 25,
+              "text": "Which of the following is mentioned as a cost associated with rooftop farming?",
+              "options": [
+                "A. International travel",
+                "B. Irrigation",
+                "C. Road construction",
+                "D. Public transportation"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 26,
+              "text": "What can increase the ecological value of a rooftop?",
+              "options": [
+                "A. Growing only one plant species",
+                "B. Removing all flowering plants",
+                "C. Having several plant species that flower at different times",
+                "D. Covering the roof entirely with concrete"
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 27,
+              "text": "Why must the structural capacity of a building be considered?",
+              "options": [
+                "A. Plants produce too much oxygen",
+                "B. Soil and water can add significant weight",
+                "C. Birds damage all buildings",
+                "D. Rooftop gardens require underground foundations"
+              ],
+              "answer": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "The Architecture of Attention",
+      "passage": {
+        "passageId": "T7P3",
+        "title": "The Architecture of Attention",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Human attention is often described as though it were a single mental ability, but researchers distinguish between several related processes. People can deliberately concentrate on a task, automatically notice a sudden change in their surroundings, or maintain attention over a long period. These different forms of attention interact with one another and are influenced by both the individual and the environment."
+          },
+          {
+            "id": "B",
+            "text": "The physical arrangement of a space can influence where people direct their attention. In workplaces, for example, visual movement and nearby conversations can interrupt tasks that require concentration. Designers have therefore experimented with layouts that provide quieter areas, adjustable lighting and spaces for different kinds of work. No single arrangement is suitable for everyone, however."
+          },
+          {
+            "id": "C",
+            "text": "Digital environments create another set of challenges. Notifications, messages and constantly changing information can compete for attention. The problem is not necessarily that people cannot concentrate; rather, frequent interruptions can cause them to repeatedly switch between tasks. Each switch may require time to reconstruct what they were doing before."
+          },
+          {
+            "id": "D",
+            "text": "Attention is also affected by expectations. When people expect an important event to occur, they may become particularly sensitive to related information. This can be useful in situations such as driving, where a person needs to notice potential hazards. However, strong expectations can also cause people to overlook information that does not fit what they anticipated."
+          },
+          {
+            "id": "E",
+            "text": "Breaks can play an important role in sustained attention. Research into workplace and learning practices suggests that short periods away from a demanding activity can help people return to it with renewed focus. The ideal length and frequency of breaks vary, and a break that becomes too long or distracting may simply replace one interruption with another."
+          },
+          {
+            "id": "F",
+            "text": "Sound is another environmental factor. Some people find speech particularly distracting because the brain automatically processes meaningful language even when the listener is not trying to follow the conversation. Other background sounds may be less disruptive, especially when they are predictable and do not contain information that demands interpretation."
+          },
+          {
+            "id": "G",
+            "text": "The study of attention has practical implications for schools, workplaces and public spaces. Rather than searching for a universal environment that maximises concentration, researchers increasingly consider how spaces can offer people choices. A person may need a quiet room for one task, a collaborative area for another and a place for short recovery periods. Flexibility may therefore be more useful than a single ideal design."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_features",
+          "questionRange": "28-32",
+          "instructions": "Match each statement with the correct paragraph, A-G. You may use any letter more than once.",
+          "options": [
+            {
+              "value": "A",
+              "text": "A"
+            },
+            {
+              "value": "B",
+              "text": "B"
+            },
+            {
+              "value": "C",
+              "text": "C"
+            },
+            {
+              "value": "D",
+              "text": "D"
+            },
+            {
+              "value": "E",
+              "text": "E"
+            },
+            {
+              "value": "F",
+              "text": "F"
+            },
+            {
+              "value": "G",
+              "text": "G"
+            }
+          ],
+          "questions": [
+            {
+              "number": 28,
+              "text": "a description of how repeated task switching can interfere with concentration",
+              "answer": "C"
+            },
+            {
+              "number": 29,
+              "text": "an example of a situation where expectations can help people notice important information",
+              "answer": "D"
+            },
+            {
+              "number": 30,
+              "text": "a reason why certain sounds may be especially distracting",
+              "answer": "F"
+            },
+            {
+              "number": 31,
+              "text": "a discussion of how physical spaces can be designed for different types of work",
+              "answer": "B"
+            },
+            {
+              "number": 32,
+              "text": "a conclusion that different people and tasks may require different environments",
+              "answer": "G"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "33-36",
+          "instructions": "Do the following statements agree with the views of the writer? Write YES, NO or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 33,
+              "text": "Attention consists of several related processes rather than one single ability.",
+              "answer": "YES"
+            },
+            {
+              "number": 34,
+              "text": "There is one workplace design that is suitable for every person.",
+              "answer": "NO"
+            },
+            {
+              "number": 35,
+              "text": "Long breaks are always more effective than short breaks.",
+              "answer": "NO"
+            },
+            {
+              "number": 36,
+              "text": "Predictable background sounds are always completely ignored by the brain.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "matching_information",
+          "questionRange": "37-40",
+          "instructions": "Which paragraph contains the following information? Choose the correct letter, A-G.",
+          "questions": [
+            {
+              "number": 37,
+              "text": "a warning that expectations can sometimes cause people to miss unexpected information",
+              "answer": "D"
+            },
+            {
+              "number": 38,
+              "text": "an explanation of why changing tasks repeatedly may have a cost",
+              "answer": "C"
+            },
+            {
+              "number": 39,
+              "text": "a statement that the appropriate frequency of breaks is not the same for everyone",
+              "answer": "E"
+            },
+            {
+              "number": 40,
+              "text": "a suggestion that flexibility may be more useful than one universal design",
+              "answer": "G"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

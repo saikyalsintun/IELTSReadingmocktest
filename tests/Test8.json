@@ -1,0 +1,511 @@
+{
+  "testId": "Test8",
+  "title": "IELTS Academic Reading Practice Test 8",
+  "duration": 60,
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "The Science of Honeybees",
+      "passage": {
+        "passageId": "T8P1",
+        "title": "The Science of Honeybees",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Honeybees are among the most closely studied insects in the world, partly because of their importance as pollinators and partly because of the complexity of their social behaviour. A colony contains thousands of individuals that perform different tasks. Rather than acting independently, the bees respond to information from their surroundings and from other members of the colony."
+          },
+          {
+            "id": "B",
+            "text": "A honeybee colony is organised around a queen, workers and drones. The queen's principal biological function is reproduction. Worker bees are females that perform most of the tasks required to maintain the colony, including caring for young bees, cleaning the nest and collecting food. Drones are males whose primary role is associated with reproduction."
+          },
+          {
+            "id": "C",
+            "text": "One of the most remarkable behaviours of worker bees is the waggle dance. A returning bee can communicate information about a food source by moving across the surface of the honeycomb in a particular pattern. The direction and duration of the movement provide information that other bees can use when searching for the reported location."
+          },
+          {
+            "id": "D",
+            "text": "Honeybees also depend heavily on smell. Flowers produce distinctive chemical signals, and bees can learn to associate particular scents with rewarding food sources. Within a colony, workers may also exchange food with one another. This process can help spread information about the characteristics of available resources."
+          },
+          {
+            "id": "E",
+            "text": "Temperature control is another important part of colony life. Bees can regulate the temperature of the brood area by clustering together, moving within the nest and using their wings to circulate air. During hot weather, some bees collect water and distribute it around the colony. Evaporation then helps remove heat."
+          },
+          {
+            "id": "F",
+            "text": "Honeybees face several environmental pressures. Pesticides, parasites, habitat loss and changes in flowering patterns can affect colonies. Scientists do not attribute every decline in bee populations to a single cause. Instead, they often examine how several pressures interact and how their effects differ between regions."
+          },
+          {
+            "id": "G",
+            "text": "Because bees visit many flowers while collecting food, they can transfer pollen between plants. This makes them important agricultural pollinators. However, not every crop depends equally on honeybees, and pollination requirements vary between plant species. Maintaining diverse habitats can therefore benefit bees as well as other pollinating insects."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "true_false_not_given",
+          "questionRange": "1-5",
+          "instructions": "Do the following statements agree with the information given in the passage? Write TRUE, FALSE or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 1,
+              "text": "Honeybees live in colonies in which different individuals perform different tasks.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 2,
+              "text": "Worker bees are responsible only for collecting food.",
+              "answer": "FALSE"
+            },
+            {
+              "number": 3,
+              "text": "The waggle dance can provide information about the location of food.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 4,
+              "text": "Honeybees can learn to associate particular smells with food sources.",
+              "answer": "TRUE"
+            },
+            {
+              "number": 5,
+              "text": "Every agricultural crop depends entirely on honeybees for pollination.",
+              "answer": "FALSE"
+            }
+          ]
+        },
+        {
+          "type": "fill_blank",
+          "questionRange": "6-9",
+          "instructions": "Complete the sentences. Write NO MORE THAN TWO WORDS from the passage for each answer.",
+          "questions": [
+            {
+              "number": 6,
+              "text": "The queen's main biological function is ______.",
+              "answer": "reproduction"
+            },
+            {
+              "number": 7,
+              "text": "Drones are ______ bees.",
+              "answer": "males"
+            },
+            {
+              "number": 8,
+              "text": "Bees can use ______ to help remove heat from the colony.",
+              "answer": "evaporation"
+            },
+            {
+              "number": 9,
+              "text": "Pesticides and parasites are examples of ______ pressures faced by honeybees.",
+              "answer": "environmental"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "10-13",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 10,
+              "text": "What information can the waggle dance communicate?",
+              "options": [
+                "A. The age of the queen",
+                "B. The location of a food source",
+                "C. The temperature of the nest",
+                "D. The number of drones in the colony"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 11,
+              "text": "Why is smell important to honeybees?",
+              "options": [
+                "A. It helps them identify rewarding food sources",
+                "B. It prevents parasites from entering the colony",
+                "C. It allows them to control the temperature of the nest",
+                "D. It determines the age of worker bees"
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 12,
+              "text": "How can bees help cool their colony during hot weather?",
+              "options": [
+                "A. By stopping all activity",
+                "B. By collecting and distributing water",
+                "C. By removing the queen",
+                "D. By covering the entrance with soil"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 13,
+              "text": "What does the passage suggest about declines in bee populations?",
+              "options": [
+                "A. They always have one clearly identified cause",
+                "B. They are caused only by pesticides",
+                "C. Several environmental pressures may interact",
+                "D. They occur equally in every region"
+              ],
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "The Changing Role of Museums",
+      "passage": {
+        "passageId": "T8P2",
+        "title": "The Changing Role of Museums",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Museums were once commonly associated with collections that visitors were expected to observe quietly. Their primary purpose was often described in terms of preserving and displaying objects. Although preservation remains central to museum work, many institutions now see themselves as places for education, discussion and community participation as well."
+          },
+          {
+            "id": "B",
+            "text": "The development of public museums was partly connected with the idea that collections should be made available to a wider population. During earlier periods, valuable collections were often accessible mainly to wealthy individuals or specialists. Public museums gradually created opportunities for people from different social backgrounds to encounter art, historical objects and scientific specimens."
+          },
+          {
+            "id": "C",
+            "text": "Museum education has also expanded. Traditional guided tours are now accompanied by workshops, lectures, interactive displays and programmes designed for particular age groups. Some museums work closely with schools, providing materials that teachers can use before or after a visit. The aim is not simply to provide information but to encourage visitors to interpret objects and ask questions."
+          },
+          {
+            "id": "D",
+            "text": "Digital technology has introduced another dimension. High-resolution images and three-dimensional scans can allow people to examine objects without physically travelling to a museum. Online collections can also make research materials easier to discover. Digital access does not completely replace visiting a museum, however, because physical objects have qualities such as scale, texture and material presence that images cannot fully reproduce."
+          },
+          {
+            "id": "E",
+            "text": "Museums are increasingly considering whose stories are represented in their collections and exhibitions. Some institutions have revised displays to include perspectives that were previously overlooked. This can involve working with community groups, consulting descendants or reconsidering how objects were acquired. Such changes can require difficult discussions about history and ownership."
+          },
+          {
+            "id": "F",
+            "text": "Another development is the use of museums as social spaces. Cafés, gardens, public events and temporary exhibitions can encourage people to visit even when they are not planning to study a particular collection. Some museums have also created spaces for local groups to meet. These activities can broaden the institution's audience, although they require additional resources."
+          },
+          {
+            "id": "G",
+            "text": "The modern museum therefore has several responsibilities that may sometimes compete. It must protect collections for the future while making them accessible in the present. It may need to serve specialists, schoolchildren, tourists and local communities at the same time. Rather than having one fixed role, museums increasingly adapt their activities according to the needs of the people they serve."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_headings",
+          "questionRange": "14-18",
+          "instructions": "Choose the correct heading for paragraphs B-F from the list of headings below.",
+          "headings": [
+            {
+              "value": "i",
+              "text": "Making collections available to a wider public"
+            },
+            {
+              "value": "ii",
+              "text": "New approaches to museum education"
+            },
+            {
+              "value": "iii",
+              "text": "The advantages and limitations of digital access"
+            },
+            {
+              "value": "iv",
+              "text": "Questions about representation and ownership"
+            },
+            {
+              "value": "v",
+              "text": "Museums as places for social activity"
+            },
+            {
+              "value": "vi",
+              "text": "Why museums should stop preserving objects"
+            },
+            {
+              "value": "vii",
+              "text": "The decline of scientific collections"
+            }
+          ],
+          "questions": [
+            {
+              "number": 14,
+              "text": "Paragraph B",
+              "answer": "i"
+            },
+            {
+              "number": 15,
+              "text": "Paragraph C",
+              "answer": "ii"
+            },
+            {
+              "number": 16,
+              "text": "Paragraph D",
+              "answer": "iii"
+            },
+            {
+              "number": 17,
+              "text": "Paragraph E",
+              "answer": "iv"
+            },
+            {
+              "number": 18,
+              "text": "Paragraph F",
+              "answer": "v"
+            }
+          ]
+        },
+        {
+          "type": "summary_completion",
+          "questionRange": "19-22",
+          "instructions": "Complete the summary. Choose NO MORE THAN TWO WORDS from the box for each answer.",
+          "options": [
+            "specialists",
+            "workshops",
+            "schools",
+            "images",
+            "texture",
+            "community groups",
+            "cafés",
+            "collections"
+          ],
+          "summary": "Modern museums use several methods to engage visitors. Educational programmes can include ______ and lectures, while museums may cooperate with ______ to support learning. Digital technology allows people to examine high-resolution ______ without travelling to the museum. However, physical objects can provide qualities such as scale and ______ that digital images cannot fully reproduce.",
+          "blanks": [
+            {
+              "number": 19,
+              "answer": "workshops"
+            },
+            {
+              "number": 20,
+              "answer": "schools"
+            },
+            {
+              "number": 21,
+              "answer": "images"
+            },
+            {
+              "number": 22,
+              "answer": "texture"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "questionRange": "23-27",
+          "instructions": "Choose the correct letter, A, B, C or D.",
+          "questions": [
+            {
+              "number": 23,
+              "text": "What was one purpose of public museums?",
+              "options": [
+                "A. To restrict access to specialists",
+                "B. To make collections available to a wider population",
+                "C. To replace private collections completely",
+                "D. To prevent people from studying historical objects"
+              ],
+              "answer": "B"
+            },
+            {
+              "number": 24,
+              "text": "What is one aim of modern museum education?",
+              "options": [
+                "A. To encourage visitors to interpret objects",
+                "B. To prevent visitors from asking questions",
+                "C. To eliminate guided tours",
+                "D. To focus only on professional researchers"
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 25,
+              "text": "What limitation of digital access is mentioned?",
+              "options": [
+                "A. Digital collections cannot contain photographs",
+                "B. Digital access is always more expensive",
+                "C. Images cannot fully reproduce the physical qualities of objects",
+                "D. Researchers cannot use digital materials"
+              ],
+              "answer": "C"
+            },
+            {
+              "number": 26,
+              "text": "Why might museums work with community groups?",
+              "options": [
+                "A. To reconsider whose perspectives are represented",
+                "B. To reduce the number of exhibitions",
+                "C. To eliminate historical research",
+                "D. To replace museum staff"
+              ],
+              "answer": "A"
+            },
+            {
+              "number": 27,
+              "text": "What does the final paragraph suggest about modern museums?",
+              "options": [
+                "A. They now have only one responsibility",
+                "B. They should serve specialists exclusively",
+                "C. They may need to balance several different responsibilities",
+                "D. They no longer need to preserve collections"
+              ],
+              "answer": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "The Science of Urban Noise",
+      "passage": {
+        "passageId": "T8P3",
+        "title": "The Science of Urban Noise",
+        "paragraphs": [
+          {
+            "id": "A",
+            "text": "Noise is one of the most common environmental features of modern cities. Traffic, construction, aircraft, public transport and commercial activity all contribute to the sound environment. Unlike a single loud event, urban noise is often continuous or repeated, which can make it difficult for people to avoid exposure."
+          },
+          {
+            "id": "B",
+            "text": "The effects of noise depend on more than volume. The timing, predictability and meaning of a sound can influence how people respond to it. A sudden unfamiliar noise may attract attention even if it is relatively quiet, while a predictable background sound may become less noticeable. Individual differences also matter, so people do not all respond to the same sound in identical ways."
+          },
+          {
+            "id": "C",
+            "text": "Sleep is particularly sensitive to environmental noise. Sounds can cause people to wake briefly or move between stages of sleep without fully remembering the disturbance. Repeated interruptions may affect the continuity of sleep. Researchers therefore examine not only the highest sound levels but also how often potentially disruptive sounds occur during the night."
+          },
+          {
+            "id": "D",
+            "text": "Noise can also affect communication. When background sound is high, people may need to speak louder or repeat themselves. In classrooms, offices and public spaces, this can make conversations more demanding. The problem is especially significant when listeners need to understand speech accurately, because competing sounds can make particular words harder to distinguish."
+          },
+          {
+            "id": "E",
+            "text": "Urban planners have several ways of reducing unwanted sound. Barriers can block or redirect noise, while building materials can reduce the transmission of sound into indoor spaces. Road design can also influence noise levels. For example, traffic speed, vehicle composition and the condition of road surfaces can affect the sound produced by vehicles."
+          },
+          {
+            "id": "F",
+            "text": "Not every urban sound is necessarily undesirable. Parks, fountains and other natural or designed sounds can contribute to people's experience of a place. Researchers sometimes distinguish between the physical measurement of sound and the subjective experience of a soundscape. A quieter environment is not automatically experienced as more pleasant if it removes sounds that people find meaningful."
+          },
+          {
+            "id": "G",
+            "text": "Effective noise management therefore involves more than simply making cities quieter. Authorities may need to identify which sounds cause the greatest disruption, when they occur and who is exposed to them. Combining measurements with information about residents' experiences can help planners design interventions that address particular problems rather than treating every urban sound as equally harmful."
+          }
+        ]
+      },
+      "questionGroups": [
+        {
+          "type": "matching_features",
+          "questionRange": "28-32",
+          "instructions": "Match each statement with the correct paragraph, A-G. You may use any letter more than once.",
+          "options": [
+            {
+              "value": "A",
+              "text": "A"
+            },
+            {
+              "value": "B",
+              "text": "B"
+            },
+            {
+              "value": "C",
+              "text": "C"
+            },
+            {
+              "value": "D",
+              "text": "D"
+            },
+            {
+              "value": "E",
+              "text": "E"
+            },
+            {
+              "value": "F",
+              "text": "F"
+            },
+            {
+              "value": "G",
+              "text": "G"
+            }
+          ],
+          "questions": [
+            {
+              "number": 28,
+              "text": "an explanation of why the timing of sounds can influence their effect on people",
+              "answer": "B"
+            },
+            {
+              "number": 29,
+              "text": "a discussion of how noise can interfere with people's ability to understand speech",
+              "answer": "D"
+            },
+            {
+              "number": 30,
+              "text": "examples of physical measures that can reduce unwanted sound",
+              "answer": "E"
+            },
+            {
+              "number": 31,
+              "text": "an explanation of why nighttime noise research considers repeated disturbances",
+              "answer": "C"
+            },
+            {
+              "number": 32,
+              "text": "a distinction between measuring sound and judging the experience of a soundscape",
+              "answer": "F"
+            }
+          ]
+        },
+        {
+          "type": "yes_no_not_given",
+          "questionRange": "33-36",
+          "instructions": "Do the following statements agree with the views of the writer? Write YES, NO or NOT GIVEN.",
+          "questions": [
+            {
+              "number": 33,
+              "text": "The loudness of a sound is the only factor that determines how people respond to it.",
+              "answer": "NO"
+            },
+            {
+              "number": 34,
+              "text": "Repeated nighttime noise can affect the continuity of sleep.",
+              "answer": "YES"
+            },
+            {
+              "number": 35,
+              "text": "Road surfaces can influence the amount of noise produced by vehicles.",
+              "answer": "YES"
+            },
+            {
+              "number": 36,
+              "text": "All residents prefer cities with almost no sound.",
+              "answer": "NOT GIVEN"
+            }
+          ]
+        },
+        {
+          "type": "matching_information",
+          "questionRange": "37-40",
+          "instructions": "Which paragraph contains the following information? Choose the correct letter, A-G.",
+          "questions": [
+            {
+              "number": 37,
+              "text": "a statement that people may react differently to the same sound",
+              "answer": "B"
+            },
+            {
+              "number": 38,
+              "text": "a reference to several sources that contribute to the urban sound environment",
+              "answer": "A"
+            },
+            {
+              "number": 39,
+              "text": "an explanation of why making a city quieter does not automatically make it more pleasant",
+              "answer": "F"
+            },
+            {
+              "number": 40,
+              "text": "a recommendation to combine sound measurements with residents' experiences",
+              "answer": "G"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

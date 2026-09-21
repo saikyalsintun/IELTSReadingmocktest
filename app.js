@@ -1,13 +1,35 @@
 /* =========================================================
    IELTS READING PRACTICE WEBSITE
    COMPLETE app.js
-   Compatible with Test1.json - Test5.json
-   ========================================================= */
+   ---------------------------------------------------------
+   Supports:
+
+   - true_false_not_given
+   - yes_no_not_given
+   - fill_blank
+   - summary_completion
+   - multiple_choice
+   - multiple_choice_multiple
+   - matching_headings
+   - matching_information
+   - matching_features
+   - answer_box
+
+   NEW:
+
+   SUMMARY COMPLETION
+   -> Drag and drop word bank into blanks
+
+   MATCHING FEATURES
+   -> Drag and drop A-G/topic into each question
+
+   Also supports click-to-select on mobile.
+========================================================= */
 
 
 /* =========================================================
    CONFIGURATION
-   ========================================================= */
+========================================================= */
 
 const CONFIG = {
 
@@ -25,12 +47,13 @@ const CONFIG = {
 
     DEFAULT_DURATION:
         60
+
 };
 
 
 /* =========================================================
    GLOBAL STATE
-   ========================================================= */
+========================================================= */
 
 let currentUser = null;
 
@@ -38,34 +61,42 @@ let currentTest = null;
 
 let currentTestNumber = null;
 
-let vocabulary = {};
+let currentPartIndex = 0;
 
 let studentAnswers = {};
 
-let currentPartIndex = 0;
+let vocabulary = {};
 
 let timerInterval = null;
 
 let remainingSeconds = 0;
 
-let testStarted = false;
-
-let testSubmitted = false;
-
 let testStartTime = null;
 
 let testElapsedSeconds = 0;
 
+let testStarted = false;
+
+let testSubmitted = false;
+
 let scoreData = null;
+
+
+/*
+ * Used for click-to-place drag/drop.
+ */
+let selectedDragOption = null;
 
 
 /* =========================================================
    DOM READY
-   ========================================================= */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
     async function () {
+
+        injectDragDropStyles();
 
         setupGlobalEvents();
 
@@ -79,14 +110,17 @@ document.addEventListener(
 
 /* =========================================================
    GLOBAL EVENTS
-   ========================================================= */
+========================================================= */
 
 function setupGlobalEvents() {
 
     const loginForm =
-        document.querySelector("#loginForm") ||
-        document.querySelector('form[action*="login"]') ||
-        document.querySelector("form");
+        document.querySelector(
+            "#loginForm"
+        ) ||
+        document.querySelector(
+            'form[action*="login"]'
+        );
 
 
     if (loginForm) {
@@ -202,7 +236,9 @@ function setupGlobalEvents() {
             if (
                 popup &&
                 popup.style.display !== "none" &&
-                !popup.contains(event.target)
+                !popup.contains(
+                    event.target
+                )
             ) {
 
                 closeVocabularyPopup();
@@ -217,7 +253,7 @@ function setupGlobalEvents() {
 
 /* =========================================================
    ADD CLICK
-   ========================================================= */
+========================================================= */
 
 function addClick(
     id,
@@ -225,7 +261,9 @@ function addClick(
 ) {
 
     const element =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
 
 
     if (element) {
@@ -242,27 +280,33 @@ function addClick(
 
 /* =========================================================
    LOGIN INPUTS
-   ========================================================= */
+========================================================= */
 
 function findUsernameInput() {
 
     const selectors = [
 
         "#username",
+
         "#Username",
+
         "#userName",
+
         "#loginUsername",
+
         "#loginUser",
+
         "#studentUsername",
 
         'input[name="username"]',
+
         'input[name="Username"]',
+
         'input[name="user"]',
+
         'input[name="userName"]',
 
-        'input[autocomplete="username"]',
-
-        'input[type="text"]'
+        'input[autocomplete="username"]'
 
     ];
 
@@ -287,6 +331,7 @@ function findUsernameInput() {
 
 
     return null;
+
 }
 
 
@@ -295,12 +340,17 @@ function findPasswordInput() {
     const selectors = [
 
         "#password",
+
         "#Password",
+
         "#loginPassword",
+
         "#studentPassword",
 
         'input[name="password"]',
+
         'input[name="Password"]',
+
         'input[name="pass"]',
 
         'input[type="password"]',
@@ -330,14 +380,17 @@ function findPasswordInput() {
 
 
     return null;
+
 }
 
 
 /* =========================================================
    LOGIN
-   ========================================================= */
+========================================================= */
 
-async function handleLogin(event) {
+async function handleLogin(
+    event
+) {
 
     if (event) {
 
@@ -491,7 +544,9 @@ async function handleLogin(event) {
 
     } finally {
 
-        setLoading(false);
+        setLoading(
+            false
+        );
 
     }
 
@@ -500,7 +555,7 @@ async function handleLogin(event) {
 
 /* =========================================================
    RESTORE LOGIN
-   ========================================================= */
+========================================================= */
 
 function restoreLogin() {
 
@@ -552,12 +607,11 @@ function restoreLogin() {
 
 /* =========================================================
    LOGOUT
-   ========================================================= */
+========================================================= */
 
 function logout() {
 
     stopTimer();
-
 
     currentUser = null;
 
@@ -566,6 +620,12 @@ function logout() {
     currentTestNumber = null;
 
     studentAnswers = {};
+
+    currentPartIndex = 0;
+
+    testStarted = false;
+
+    testSubmitted = false;
 
 
     localStorage.removeItem(
@@ -610,12 +670,11 @@ function logout() {
 
 /* =========================================================
    DASHBOARD
-   ========================================================= */
+========================================================= */
 
 async function showDashboard() {
 
     stopTimer();
-
 
     testStarted = false;
 
@@ -637,17 +696,21 @@ async function showDashboard() {
 
 
 /* =========================================================
-   UPDATE USERNAME
-   ========================================================= */
+   UPDATE DASHBOARD USER
+========================================================= */
 
 function updateDashboardUser() {
 
     const ids = [
 
         "dashboardUsername",
+
         "studentName",
+
         "loggedInUsername",
+
         "welcomeUsername",
+
         "currentUsername"
 
     ];
@@ -678,7 +741,7 @@ function updateDashboardUser() {
 
 /* =========================================================
    TEST CARDS
-   ========================================================= */
+========================================================= */
 
 function renderTestCards() {
 
@@ -764,7 +827,7 @@ function renderTestCards() {
 
 /* =========================================================
    OPEN TEST
-   ========================================================= */
+========================================================= */
 
 async function openTest(
     testNumber
@@ -820,13 +883,12 @@ async function openTest(
 
         studentAnswers = {};
 
-
-        loadSavedAnswers();
-
-
         currentPartIndex = 0;
 
         testSubmitted = false;
+
+
+        loadSavedAnswers();
 
 
         showTestIntroduction();
@@ -848,7 +910,9 @@ async function openTest(
 
     } finally {
 
-        setLoading(false);
+        setLoading(
+            false
+        );
 
     }
 
@@ -857,13 +921,17 @@ async function openTest(
 
 /* =========================================================
    VALIDATE TEST
-   ========================================================= */
+========================================================= */
 
-function validateTest(test) {
+function validateTest(
+    test
+) {
 
     if (
         !test ||
-        !Array.isArray(test.parts) ||
+        !Array.isArray(
+            test.parts
+        ) ||
         !test.parts.length
     ) {
 
@@ -875,7 +943,10 @@ function validateTest(test) {
 
 
     test.parts.forEach(
-        function (part, index) {
+        function (
+            part,
+            index
+        ) {
 
             if (!part.passage) {
 
@@ -892,7 +963,8 @@ function validateTest(test) {
                 )
             ) {
 
-                part.questionGroups = [];
+                part.questionGroups =
+                    [];
 
             }
 
@@ -900,27 +972,17 @@ function validateTest(test) {
             part.questionGroups.forEach(
                 function (group) {
 
-                    /*
-                     * Normal question groups.
-                     */
-
                     if (
                         !Array.isArray(
                             group.questions
                         )
                     ) {
 
-                        group.questions = [];
+                        group.questions =
+                            [];
 
                     }
 
-
-                    /*
-                     * Summary completion uses
-                     * "blanks" in your JSON.
-                     *
-                     * DO NOT delete them.
-                     */
 
                     if (
                         !Array.isArray(
@@ -928,7 +990,8 @@ function validateTest(test) {
                         )
                     ) {
 
-                        group.blanks = [];
+                        group.blanks =
+                            [];
 
                     }
 
@@ -942,8 +1005,8 @@ function validateTest(test) {
 
 
 /* =========================================================
-   TEST INTRO
-   ========================================================= */
+   TEST INTRODUCTION
+========================================================= */
 
 function showTestIntroduction() {
 
@@ -988,7 +1051,7 @@ function showTestIntroduction() {
 
 /* =========================================================
    START TEST
-   ========================================================= */
+========================================================= */
 
 function startTest() {
 
@@ -999,16 +1062,7 @@ function startTest() {
     }
 
 
-    /*
-     * Clear current memory.
-     */
-
     studentAnswers = {};
-
-
-    /*
-     * Restore saved answers for this test.
-     */
 
     loadSavedAnswers();
 
@@ -1049,12 +1103,11 @@ function startTest() {
 
 /* =========================================================
    TIMER
-   ========================================================= */
+========================================================= */
 
 function startTimer() {
 
     stopTimer();
-
 
     updateTimerDisplay();
 
@@ -1065,7 +1118,6 @@ function startTimer() {
 
                 remainingSeconds--;
 
-
                 updateTimerDisplay();
 
 
@@ -1075,9 +1127,7 @@ function startTimer() {
 
                     remainingSeconds = 0;
 
-
                     stopTimer();
-
 
                     autoSubmitTest();
 
@@ -1098,7 +1148,6 @@ function stopTimer() {
             timerInterval
         );
 
-
         timerInterval = null;
 
     }
@@ -1111,7 +1160,9 @@ function updateTimerDisplay() {
     const ids = [
 
         "timer",
+
         "timerDisplay",
+
         "testTimer"
 
     ];
@@ -1134,7 +1185,6 @@ function updateTimerDisplay() {
                     remainingSeconds
                 );
 
-
             break;
 
         }
@@ -1145,8 +1195,8 @@ function updateTimerDisplay() {
 
 
 /* =========================================================
-   RENDER CURRENT PART
-   ========================================================= */
+   CURRENT PART
+========================================================= */
 
 function renderCurrentPart() {
 
@@ -1204,7 +1254,11 @@ function renderCurrentPart() {
 
     setText(
         "questionsPartLabel",
-        `Questions ${questionRangeForPart(part)}`
+        `Questions ${
+            questionRangeForPart(
+                part
+            )
+        }`
     );
 
 
@@ -1230,9 +1284,7 @@ function renderCurrentPart() {
 
     renderQuestionNavigator();
 
-
     updatePartButtons();
-
 
     scrollTestPanelsToTop();
 
@@ -1241,7 +1293,8 @@ function renderCurrentPart() {
 
 /* =========================================================
    QUESTION RANGE
-   ========================================================= */
+   Includes both questions AND blanks.
+========================================================= */
 
 function questionRangeForPart(
     part
@@ -1285,8 +1338,9 @@ function questionRangeForPart(
 
 
             /*
-             * VERY IMPORTANT:
-             * Summary Completion uses blanks.
+             * SUMMARY COMPLETION
+             *
+             * Q23-26 are stored here.
              */
 
             (
@@ -1333,8 +1387,8 @@ function questionRangeForPart(
 
 
 /* =========================================================
-   RENDER PASSAGE
-   ========================================================= */
+   PASSAGE
+========================================================= */
 
 function renderPassage(
     passage
@@ -1416,7 +1470,7 @@ function renderPassage(
 
 /* =========================================================
    VOCABULARY
-   ========================================================= */
+========================================================= */
 
 async function loadVocabulary() {
 
@@ -1467,7 +1521,9 @@ function highlightVocabulary(
 
     if (
         !vocabulary ||
-        !Object.keys(vocabulary).length
+        !Object.keys(
+            vocabulary
+        ).length
     ) {
 
         return escapeHTML(
@@ -1488,7 +1544,10 @@ function highlightVocabulary(
             vocabulary
         )
         .sort(
-            function (a, b) {
+            function (
+                a,
+                b
+            ) {
 
                 return (
                     b.length -
@@ -1519,7 +1578,9 @@ function highlightVocabulary(
 
                         <span
                             class="vocabulary-word"
-                            data-word="${escapeAttribute(match)}"
+                            data-word="${escapeAttribute(
+                                match
+                            )}"
                         >
                             ${match}
                         </span>
@@ -1543,7 +1604,9 @@ function showVocabularyPopup(
 
     if (
         !vocabulary ||
-        !Object.keys(vocabulary).length
+        !Object.keys(
+            vocabulary
+        ).length
     ) {
 
         return;
@@ -1640,7 +1703,7 @@ function closeVocabularyPopup() {
 
 /* =========================================================
    RENDER QUESTIONS
-   ========================================================= */
+========================================================= */
 
 function renderQuestions(
     part
@@ -1680,17 +1743,17 @@ function renderQuestions(
 
             wrapper.innerHTML = `
 
-                <h3 class="question-group-title">
-
-                    ${
-                        group.questionRange
-                            ? `Questions ${escapeHTML(
-                                group.questionRange
-                            )}`
-                            : ""
-                    }
-
-                </h3>
+                ${
+                    group.questionRange
+                        ? `
+                            <h3 class="question-group-title">
+                                Questions ${escapeHTML(
+                                    group.questionRange
+                                )}
+                            </h3>
+                        `
+                        : ""
+                }
 
                 ${
                     group.instructions
@@ -1833,6 +1896,8 @@ function renderQuestions(
                         group
                     );
 
+                    break;
+
             }
 
 
@@ -1850,8 +1915,8 @@ function renderQuestions(
 
 
 /* =========================================================
-   NORMALIZE TYPE
-   ========================================================= */
+   NORMALIZE QUESTION TYPE
+========================================================= */
 
 function normalizeQuestionType(
     type
@@ -1876,7 +1941,7 @@ function normalizeQuestionType(
 
 /* =========================================================
    TRUE / FALSE / NOT GIVEN
-   ========================================================= */
+========================================================= */
 
 function renderTrueFalseNotGiven(
     box,
@@ -1908,7 +1973,7 @@ function renderTrueFalseNotGiven(
 
 /* =========================================================
    YES / NO / NOT GIVEN
-   ========================================================= */
+========================================================= */
 
 function renderYesNoNotGiven(
     box,
@@ -1940,7 +2005,7 @@ function renderYesNoNotGiven(
 
 /* =========================================================
    FILL BLANK
-   ========================================================= */
+========================================================= */
 
 function renderFillBlank(
     box,
@@ -1996,12 +2061,238 @@ function renderFillBlank(
 
 /* =========================================================
    SUMMARY COMPLETION
-   ========================================================= */
+   ---------------------------------------------------------
+   NEW:
+   Drag words into blanks.
+========================================================= */
 
 function renderSummaryCompletion(
     box,
     group
 ) {
+
+    const container =
+        document.createElement(
+            "div"
+        );
+
+
+    container.className =
+        "drag-summary-container";
+
+
+    /*
+     * Your JSON uses:
+     *
+     * "blanks": [...]
+     */
+
+    const blanks =
+        group.blanks &&
+        group.blanks.length
+            ? group.blanks
+            : group.questions || [];
+
+
+    /*
+     * -----------------------------------------------------
+     * WORD BANK
+     * -----------------------------------------------------
+     *
+     * Preferred:
+     *
+     * group.options
+     *
+     * or:
+     *
+     * group.words
+     *
+     * or:
+     *
+     * group.wordBank
+     *
+     *
+     * If none exists, the answer values are used as a
+     * fallback so your current Test1.json still works.
+     *
+     * For a proper IELTS-style test, put distractors
+     * inside "options" in the JSON.
+     */
+
+    let options =
+        getQuestionOptions(
+            null,
+            group,
+            [
+                "options",
+                "choices",
+                "answerOptions",
+                "words",
+                "wordBank"
+            ]
+        );
+
+
+    /*
+     * If there is no word bank, create one from
+     * the answers in blanks.
+     */
+
+    if (!options.length) {
+
+        options =
+            blanks
+                .map(
+                    function (blank) {
+
+                        return blank.answer;
+
+                    }
+                )
+                .filter(
+                    function (answer) {
+
+                        return (
+                            answer !==
+                            undefined &&
+                            answer !==
+                            null &&
+                            String(
+                                answer
+                            ).trim() !== ""
+                        );
+
+                    }
+                );
+
+    }
+
+
+    /*
+     * Remove duplicate words.
+     */
+
+    options =
+        uniqueOptions(
+            options
+        );
+
+
+    /*
+     * -----------------------------------------------------
+     * WORD BANK UI
+     * -----------------------------------------------------
+     */
+
+    const bank =
+        document.createElement(
+            "div"
+        );
+
+
+    bank.className =
+        "drag-summary-bank";
+
+
+    bank.innerHTML = `
+
+        <div class="drag-bank-title">
+            Given words:
+        </div>
+
+    `;
+
+
+    const optionContainer =
+        document.createElement(
+            "div"
+        );
+
+
+    optionContainer.className =
+        "drag-summary-options";
+
+
+    options.forEach(
+        function (
+            option,
+            index
+        ) {
+
+            const normalized =
+                normalizeOption(
+                    option
+                );
+
+
+            if (
+                !normalized.text
+            ) {
+
+                return;
+
+            }
+
+
+            const word =
+                document.createElement(
+                    "div"
+                );
+
+
+            word.className =
+                "summary-drag-word";
+
+
+            word.draggable =
+                true;
+
+
+            word.dataset.value =
+                normalized.value ||
+                normalized.text;
+
+
+            word.dataset.text =
+                normalized.text;
+
+
+            word.dataset.dragId =
+                `summary-word-${Date.now()}-${index}`;
+
+
+            word.textContent =
+                normalized.text;
+
+
+            setupDragOption(
+                word
+            );
+
+
+            optionContainer.appendChild(
+                word
+            );
+
+        }
+    );
+
+
+    bank.appendChild(
+        optionContainer
+    );
+
+
+    container.appendChild(
+        bank
+    );
+
+
+    /*
+     * -----------------------------------------------------
+     * SUMMARY
+     * -----------------------------------------------------
+     */
 
     const summary =
         document.createElement(
@@ -2010,21 +2301,7 @@ function renderSummaryCompletion(
 
 
     summary.className =
-        "summary-box";
-
-
-    /*
-     * YOUR JSON USES:
-     *
-     * "blanks": [...]
-     *
-     * not "questions".
-     */
-
-    const questions =
-        group.questions ||
-        group.blanks ||
-        [];
+        "drag-summary-text";
 
 
     let text =
@@ -2066,13 +2343,13 @@ function renderSummaryCompletion(
                     );
 
 
-                const question =
-                    questions.find(
-                        function (q) {
+                const blank =
+                    blanks.find(
+                        function (item) {
 
                             return (
                                 Number(
-                                    q.number
+                                    item.number
                                 ) ===
                                 number
                             );
@@ -2081,15 +2358,15 @@ function renderSummaryCompletion(
                     );
 
 
-                if (!question) {
+                if (!blank) {
 
                     return match;
 
                 }
 
 
-                return createSummaryInput(
-                    question.number
+                return createSummaryDropZone(
+                    number
                 );
 
             }
@@ -2097,7 +2374,7 @@ function renderSummaryCompletion(
 
 
     /*
-     * YOUR JSON USES:
+     * Support normal:
      *
      * ________
      */
@@ -2110,8 +2387,8 @@ function renderSummaryCompletion(
             /_{2,}/g,
             function () {
 
-                const question =
-                    questions[
+                const blank =
+                    blanks[
                         blankIndex
                     ];
 
@@ -2119,15 +2396,15 @@ function renderSummaryCompletion(
                 blankIndex++;
 
 
-                if (!question) {
+                if (!blank) {
 
                     return "________";
 
                 }
 
 
-                return createSummaryInput(
-                    question.number
+                return createSummaryDropZone(
+                    blank.number
                 );
 
             }
@@ -2138,34 +2415,42 @@ function renderSummaryCompletion(
         html;
 
 
+    container.appendChild(
+        summary
+    );
+
+
     /*
-     * If no input was created,
-     * create the boxes below the summary.
+     * -----------------------------------------------------
+     * FALLBACK
+     *
+     * If no blanks were detected in summary.
+     * -----------------------------------------------------
      */
 
-    const existingInputs =
+    const zones =
         summary.querySelectorAll(
-            "[data-question-number]"
+            ".summary-drop-zone"
         );
 
 
     if (
-        existingInputs.length === 0 &&
-        questions.length > 0
+        zones.length === 0 &&
+        blanks.length
     ) {
 
-        const answerArea =
+        const fallback =
             document.createElement(
                 "div"
             );
 
 
-        answerArea.className =
-            "summary-answer-area";
+        fallback.className =
+            "summary-fallback";
 
 
-        questions.forEach(
-            function (question) {
+        blanks.forEach(
+            function (blank) {
 
                 const row =
                     document.createElement(
@@ -2174,32 +2459,23 @@ function renderSummaryCompletion(
 
 
                 row.className =
-                    "summary-answer-row";
+                    "summary-fallback-row";
 
 
                 row.innerHTML = `
 
-                    <label>
+                    <strong>
+                        ${blank.number}.
+                    </strong>
 
-                        <strong>
-                            ${question.number}.
-                        </strong>
-
-                        <input
-                            type="text"
-                            class="summary-answer-input"
-                            data-question-number="${question.number}"
-                            autocomplete="off"
-                            spellcheck="false"
-                            placeholder="Type your answer"
-                        >
-
-                    </label>
+                    ${createSummaryDropZone(
+                        blank.number
+                    )}
 
                 `;
 
 
-                answerArea.appendChild(
+                fallback.appendChild(
                     row
                 );
 
@@ -2207,44 +2483,65 @@ function renderSummaryCompletion(
         );
 
 
-        summary.appendChild(
-            answerArea
+        container.appendChild(
+            fallback
         );
 
     }
 
 
-    attachInputListener(
-        summary
-    );
-
-
     box.appendChild(
-        summary
+        container
     );
+
+
+    /*
+     * Setup drop zones AFTER they are inserted.
+     */
+
+    container
+        .querySelectorAll(
+            ".summary-drop-zone"
+        )
+        .forEach(
+            function (zone) {
+
+                setupDropZone(
+                    zone,
+                    Number(
+                        zone.dataset.questionNumber
+                    )
+                );
+
+            }
+        );
+
+
+    restoreDragDropAnswers();
 
 }
 
 
 /* =========================================================
-   SUMMARY INPUT
-   ========================================================= */
+   CREATE SUMMARY DROP ZONE
+========================================================= */
 
-function createSummaryInput(
+function createSummaryDropZone(
     questionNumber
 ) {
 
     return `
 
-        <input
-            type="text"
-            class="summary-answer-input"
+        <span
+            class="summary-drop-zone"
             data-question-number="${questionNumber}"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="Answer"
-            aria-label="Answer for question ${questionNumber}"
         >
+
+            <span class="summary-drop-placeholder">
+                Drop answer
+            </span>
+
+        </span>
 
     `;
 
@@ -2253,7 +2550,7 @@ function createSummaryInput(
 
 /* =========================================================
    MULTIPLE CHOICE
-   ========================================================= */
+========================================================= */
 
 function renderMultipleChoice(
     box,
@@ -2279,15 +2576,9 @@ function renderMultipleChoice(
 
 
             const options =
-                getQuestionOptions(
-                    question,
-                    group,
-                    [
-                        "options",
-                        "choices",
-                        "answerOptions"
-                    ]
-                );
+                question.options ||
+                group.options ||
+                [];
 
 
             control.innerHTML =
@@ -2328,24 +2619,19 @@ function renderMultipleChoice(
 
 /* =========================================================
    MULTIPLE CHOICE MULTIPLE
-   ========================================================= */
+========================================================= */
 
 function renderMultipleChoiceMultiple(
     box,
     group
 ) {
 
-    const options =
-        getQuestionOptions(
-            null,
-            group,
-            [
-                "options",
-                "choices",
-                "answerOptions"
-            ]
-        );
-
+    /*
+     * Your current JSON represents Q27 and Q28
+     * as two separate answer slots.
+     *
+     * This keeps that format.
+     */
 
     (
         group.questions ||
@@ -2363,6 +2649,12 @@ function renderMultipleChoiceMultiple(
                 item.querySelector(
                     ".question-control"
                 );
+
+
+            const options =
+                question.options ||
+                group.options ||
+                [];
 
 
             control.innerHTML =
@@ -2403,7 +2695,7 @@ function renderMultipleChoiceMultiple(
 
 /* =========================================================
    MATCHING HEADINGS
-   ========================================================= */
+========================================================= */
 
 function renderMatchingHeadings(
     box,
@@ -2411,33 +2703,25 @@ function renderMatchingHeadings(
 ) {
 
     let options =
-        getQuestionOptions(
-            null,
-            group,
-            [
-                "options",
-                "choices",
-                "answerOptions",
-                "headings"
-            ]
-        );
+        group.options ||
+        group.headings ||
+        [];
 
 
     /*
-     * If options are not directly in JSON,
-     * try group.items.
+     * Some JSON uses:
+     *
+     * headings: [
+     *   {
+     *      id: "i",
+     *      text: "..."
+     *   }
+     * ]
      */
 
-    if (!options.length) {
+    if (!Array.isArray(options)) {
 
-        options =
-            getQuestionOptions(
-                null,
-                group,
-                [
-                    "items"
-                ]
-            );
+        options = [];
 
     }
 
@@ -2453,7 +2737,7 @@ function renderMatchingHeadings(
 
 /* =========================================================
    MATCHING INFORMATION
-   ========================================================= */
+========================================================= */
 
 function renderMatchingInformation(
     box,
@@ -2461,21 +2745,21 @@ function renderMatchingInformation(
 ) {
 
     let options =
-        getQuestionOptions(
-            null,
-            group,
-            [
-                "options",
-                "choices",
-                "answerOptions",
-                "paragraphs",
-                "letters"
-            ]
-        );
+        group.options ||
+        group.letters ||
+        group.paragraphs ||
+        [];
+
+
+    if (!Array.isArray(options)) {
+
+        options = [];
+
+    }
 
 
     /*
-     * If no options are supplied,
+     * If no options exist,
      * use current passage paragraph IDs.
      */
 
@@ -2498,15 +2782,46 @@ function renderMatchingInformation(
 
 /* =========================================================
    MATCHING FEATURES
-   ========================================================= */
+   ---------------------------------------------------------
+   NEW:
+   DRAG & DROP
+========================================================= */
 
 function renderMatchingFeatures(
     box,
     group
 ) {
 
+    const container =
+        document.createElement(
+            "div"
+        );
+
+
+    container.className =
+        "drag-matching-container";
+
+
     /*
-     * First try explicit options.
+     * -----------------------------------------------------
+     * OPTIONS
+     * -----------------------------------------------------
+     *
+     * Preferred:
+     *
+     * group.options
+     *
+     * Example:
+     *
+     * [
+     *   {
+     *      "letter": "B",
+     *      "text": "B. History Comparison"
+     *   }
+     * ]
+     *
+     * If options don't exist, A-G are automatically created
+     * from passage paragraphs.
      */
 
     let options =
@@ -2523,19 +2838,6 @@ function renderMatchingFeatures(
         );
 
 
-    /*
-     * YOUR TEST1 JSON DOES NOT HAVE
-     * group.options for Q29-32.
-     *
-     * It says:
-     *
-     * Match each statement with
-     * paragraph A-G.
-     *
-     * Therefore automatically get
-     * A-G from the passage.
-     */
-
     if (!options.length) {
 
         options =
@@ -2544,110 +2846,758 @@ function renderMatchingFeatures(
     }
 
 
-    renderMatchingSelects(
-        box,
-        group,
-        options
-    );
-
-}
+    options =
+        uniqueOptions(
+            options
+        );
 
 
-/* =========================================================
-   GET CURRENT PASSAGE OPTIONS
-   ========================================================= */
+    /*
+     * -----------------------------------------------------
+     * OPTION BANK
+     * -----------------------------------------------------
+     */
 
-function getCurrentPassageOptions() {
-
-    if (!currentTest) {
-
-        return [];
-
-    }
-
-
-    const part =
-        currentTest.parts[
-            currentPartIndex
-        ];
+    const bank =
+        document.createElement(
+            "div"
+        );
 
 
-    if (!part) {
-
-        return [];
-
-    }
+    bank.className =
+        "drag-option-bank";
 
 
-    const paragraphs =
-        part.passage?.paragraphs ||
-        [];
+    bank.innerHTML = `
+
+        <div class="drag-bank-title">
+            Drag the correct paragraph/topic:
+        </div>
+
+    `;
 
 
-    const options = [];
+    const optionsContainer =
+        document.createElement(
+            "div"
+        );
 
 
-    paragraphs.forEach(
-        function (paragraph) {
-
-            const id =
-                String(
-                    paragraph.id ||
-                    ""
-                ).trim();
+    optionsContainer.className =
+        "drag-options";
 
 
-            if (!id) {
+    options.forEach(
+        function (
+            option,
+            index
+        ) {
+
+            const normalized =
+                normalizeOption(
+                    option
+                );
+
+
+            if (
+                !normalized.text
+            ) {
 
                 return;
 
             }
 
 
-            options.push({
+            const draggable =
+                document.createElement(
+                    "div"
+                );
 
-                letter:
-                    id,
 
-                text:
-                    id
+            draggable.className =
+                "drag-option";
 
-            });
+
+            draggable.draggable =
+                true;
+
+
+            draggable.dataset.value =
+                normalized.value;
+
+
+            draggable.dataset.text =
+                normalized.text;
+
+
+            draggable.dataset.dragId =
+                `feature-${Date.now()}-${index}`;
+
+
+            draggable.innerHTML = `
+
+                <span class="drag-option-handle">
+                    ☰
+                </span>
+
+                <span>
+                    ${escapeHTML(
+                        normalized.text
+                    )}
+                </span>
+
+            `;
+
+
+            setupDragOption(
+                draggable
+            );
+
+
+            optionsContainer.appendChild(
+                draggable
+            );
+
+        }
+    );
+
+
+    bank.appendChild(
+        optionsContainer
+    );
+
+
+    container.appendChild(
+        bank
+    );
+
+
+    /*
+     * -----------------------------------------------------
+     * QUESTIONS
+     * -----------------------------------------------------
+     */
+
+    const questionsContainer =
+        document.createElement(
+            "div"
+        );
+
+
+    questionsContainer.className =
+        "drag-questions";
+
+
+    (
+        group.questions ||
+        []
+    ).forEach(
+        function (question) {
+
+            const questionBox =
+                document.createElement(
+                    "div"
+                );
+
+
+            questionBox.className =
+                "drag-question";
+
+
+            questionBox.dataset.questionNumber =
+                question.number;
+
+
+            /*
+             * DROP AREA ABOVE QUESTION
+             */
+
+            const dropZone =
+                document.createElement(
+                    "div"
+                );
+
+
+            dropZone.className =
+                "drag-drop-zone";
+
+
+            dropZone.dataset.questionNumber =
+                question.number;
+
+
+            dropZone.innerHTML = `
+
+                <span class="drop-placeholder">
+                    Drag and drop answer here
+                </span>
+
+            `;
+
+
+            setupDropZone(
+                dropZone,
+                question.number
+            );
+
+
+            /*
+             * QUESTION
+             */
+
+            const questionText =
+                document.createElement(
+                    "div"
+                );
+
+
+            questionText.className =
+                "drag-question-text";
+
+
+            questionText.innerHTML = `
+
+                <span class="question-number">
+                    ${question.number}.
+                </span>
+
+                ${escapeHTML(
+                    question.text ||
+                    question.question ||
+                    ""
+                )}
+
+            `;
+
+
+            questionBox.appendChild(
+                dropZone
+            );
+
+
+            questionBox.appendChild(
+                questionText
+            );
+
+
+            questionsContainer.appendChild(
+                questionBox
+            );
+
+        }
+    );
+
+
+    container.appendChild(
+        questionsContainer
+    );
+
+
+    box.appendChild(
+        container
+    );
+
+
+    restoreDragDropAnswers();
+
+}
+
+
+/* =========================================================
+   SETUP DRAG OPTION
+========================================================= */
+
+function setupDragOption(
+    element
+) {
+
+    element.addEventListener(
+        "dragstart",
+        function (event) {
+
+            selectedDragOption =
+                element;
+
+
+            event.dataTransfer.effectAllowed =
+                "copy";
+
+
+            event.dataTransfer.setData(
+                "text/plain",
+                JSON.stringify({
+
+                    value:
+                        element.dataset.value,
+
+                    text:
+                        element.dataset.text
+
+                })
+            );
+
+
+            element.classList.add(
+                "dragging"
+            );
+
+        }
+    );
+
+
+    element.addEventListener(
+        "dragend",
+        function () {
+
+            element.classList.remove(
+                "dragging"
+            );
 
         }
     );
 
 
     /*
-     * Remove duplicate paragraph IDs.
+     * Click support.
+     *
+     * Very useful on mobile.
+     *
+     * Student clicks a word/topic,
+     * then clicks the destination.
      */
 
-    return [
-        ...new Map(
-            options.map(
-                function (option) {
+    element.addEventListener(
+        "click",
+        function () {
 
-                    return [
-                        option.letter,
-                        option
+            document
+                .querySelectorAll(
+                    ".drag-option.selected, .summary-drag-word.selected"
+                )
+                .forEach(
+                    function (item) {
+
+                        item.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+            element.classList.add(
+                "selected"
+            );
+
+
+            selectedDragOption =
+                element;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SETUP DROP ZONE
+========================================================= */
+
+function setupDropZone(
+    zone,
+    questionNumber
+) {
+
+    /*
+     * DESKTOP DRAG
+     */
+
+    zone.addEventListener(
+        "dragover",
+        function (event) {
+
+            event.preventDefault();
+
+            event.dataTransfer.dropEffect =
+                "copy";
+
+
+            zone.classList.add(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    zone.addEventListener(
+        "dragleave",
+        function () {
+
+            zone.classList.remove(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    zone.addEventListener(
+        "drop",
+        function (event) {
+
+            event.preventDefault();
+
+
+            zone.classList.remove(
+                "drag-over"
+            );
+
+
+            const raw =
+                event.dataTransfer.getData(
+                    "text/plain"
+                );
+
+
+            if (!raw) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const data =
+                    JSON.parse(
+                        raw
+                    );
+
+
+                placeDragAnswer(
+                    zone,
+                    questionNumber,
+                    data.value,
+                    data.text
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Drag/drop error:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+     * MOBILE CLICK
+     */
+
+    zone.addEventListener(
+        "click",
+        function () {
+
+            if (!selectedDragOption) {
+
+                return;
+
+            }
+
+
+            const option =
+                selectedDragOption;
+
+
+            placeDragAnswer(
+                zone,
+                questionNumber,
+                option.dataset.value,
+                option.dataset.text
+            );
+
+
+            option.classList.remove(
+                "selected"
+            );
+
+
+            selectedDragOption =
+                null;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   PLACE DRAG ANSWER
+========================================================= */
+
+function placeDragAnswer(
+    zone,
+    questionNumber,
+    value,
+    text
+) {
+
+    if (!zone) {
+
+        return;
+
+    }
+
+
+    /*
+     * Save answer.
+     */
+
+    studentAnswers[
+        questionNumber
+    ] =
+        value;
+
+
+    /*
+     * Show answer.
+     */
+
+    zone.innerHTML = `
+
+        <div class="dropped-answer">
+
+            <span class="dropped-answer-text">
+                ${escapeHTML(
+                    text
+                )}
+            </span>
+
+            <button
+                type="button"
+                class="remove-dropped-answer"
+                aria-label="Remove answer"
+            >
+                ×
+            </button>
+
+        </div>
+
+    `;
+
+
+    zone.classList.add(
+        "has-answer"
+    );
+
+
+    /*
+     * Remove answer.
+     */
+
+    const removeButton =
+        zone.querySelector(
+            ".remove-dropped-answer"
+        );
+
+
+    if (removeButton) {
+
+        removeButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.stopPropagation();
+
+
+                delete studentAnswers[
+                    questionNumber
+                ];
+
+
+                zone.classList.remove(
+                    "has-answer"
+                );
+
+
+                zone.innerHTML = `
+
+                    <span class="drop-placeholder">
+                        Drag and drop answer here
+                    </span>
+
+                `;
+
+
+                saveAnswersToStorage();
+
+                updateQuestionNavigator();
+
+            }
+        );
+
+    }
+
+
+    saveAnswersToStorage();
+
+    updateQuestionNavigator();
+
+}
+
+
+/* =========================================================
+   RESTORE DRAG/DROP ANSWERS
+========================================================= */
+
+function restoreDragDropAnswers() {
+
+    document
+        .querySelectorAll(
+            ".drag-drop-zone, .summary-drop-zone"
+        )
+        .forEach(
+            function (zone) {
+
+                const number =
+                    Number(
+                        zone.dataset.questionNumber
+                    );
+
+
+                const saved =
+                    studentAnswers[
+                        number
                     ];
 
+
+                if (
+                    saved === undefined ||
+                    saved === null ||
+                    String(
+                        saved
+                    ).trim() === ""
+                ) {
+
+                    return;
+
                 }
-            )
-        ).values()
-    ];
+
+
+                const option =
+                    findVisibleOption(
+                        saved
+                    );
+
+
+                if (option) {
+
+                    placeDragAnswer(
+                        zone,
+                        number,
+                        option.value,
+                        option.text
+                    );
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   FIND VISIBLE OPTION
+========================================================= */
+
+function findVisibleOption(
+    value
+) {
+
+    const target =
+        normalizeAnswer(
+            value
+        );
+
+
+    const elements =
+        document.querySelectorAll(
+            ".drag-option, .summary-drag-word"
+        );
+
+
+    for (
+        const element of elements
+    ) {
+
+        const elementValue =
+            normalizeAnswer(
+                element.dataset.value
+            );
+
+
+        const elementText =
+            normalizeAnswer(
+                element.dataset.text ||
+                element.textContent
+            );
+
+
+        if (
+            elementValue === target ||
+            elementText === target
+        ) {
+
+            return {
+
+                value:
+                    element.dataset.value ||
+                    element.dataset.text,
+
+                text:
+                    element.dataset.text ||
+                    element.textContent.trim()
+
+            };
+
+        }
+
+    }
+
+
+    /*
+     * Fallback.
+     */
+
+    return {
+
+        value:
+            String(value),
+
+        text:
+            String(value)
+
+    };
 
 }
 
 
 /* =========================================================
    MATCHING SELECTS
-   ========================================================= */
+   For older matching question types.
+========================================================= */
 
 function renderMatchingSelects(
     box,
     group,
-    groupOptions
+    options
 ) {
 
     (
@@ -2666,31 +3616,6 @@ function renderMatchingSelects(
                 item.querySelector(
                     ".question-control"
                 );
-
-
-            /*
-             * Question-level options first.
-             */
-
-            const questionOptions =
-                getQuestionOptions(
-                    question,
-                    null,
-                    [
-                        "options",
-                        "choices",
-                        "answerOptions",
-                        "headings",
-                        "features",
-                        "letters"
-                    ]
-                );
-
-
-            const options =
-                questionOptions.length
-                    ? questionOptions
-                    : groupOptions;
 
 
             control.innerHTML =
@@ -2731,7 +3656,7 @@ function renderMatchingSelects(
 
 /* =========================================================
    ANSWER BOX
-   ========================================================= */
+========================================================= */
 
 function renderAnswerBox(
     box,
@@ -2763,7 +3688,6 @@ function renderAnswerBox(
                     class="answer-input"
                     data-question-number="${question.number}"
                     autocomplete="off"
-                    spellcheck="false"
                 >
 
             `;
@@ -2785,8 +3709,8 @@ function renderAnswerBox(
 
 
 /* =========================================================
-   UNSUPPORTED
-   ========================================================= */
+   UNSUPPORTED GROUP
+========================================================= */
 
 function renderUnsupportedGroup(
     box,
@@ -2824,7 +3748,6 @@ function renderUnsupportedGroup(
                     class="answer-input"
                     data-question-number="${question.number}"
                     autocomplete="off"
-                    spellcheck="false"
                 >
 
             `;
@@ -2847,7 +3770,7 @@ function renderUnsupportedGroup(
 
 /* =========================================================
    CREATE QUESTION ITEM
-   ========================================================= */
+========================================================= */
 
 function createQuestionItem(
     question,
@@ -2899,20 +3822,13 @@ function createQuestionItem(
     if (
         Array.isArray(
             radioOptions
-        ) &&
-        radioOptions.length
+        )
     ) {
 
         control.innerHTML =
             radioOptions
                 .map(
                     function (option) {
-
-                        const normalized =
-                            normalizeOption(
-                                option
-                            );
-
 
                         return `
 
@@ -2922,14 +3838,14 @@ function createQuestionItem(
                                     type="radio"
                                     name="q${question.number}"
                                     value="${escapeAttribute(
-                                        normalized.value
+                                        option
                                     )}"
                                     data-question-number="${question.number}"
                                 >
 
                                 <span>
                                     ${escapeHTML(
-                                        normalized.text
+                                        option
                                     )}
                                 </span>
 
@@ -2966,17 +3882,17 @@ function createQuestionItem(
 
 
 /* =========================================================
-   GET QUESTION OPTIONS
-   ========================================================= */
+   QUESTION OPTIONS
+========================================================= */
 
 function getQuestionOptions(
     question,
     group,
-    keys = []
+    keys
 ) {
 
     /*
-     * QUESTION LEVEL
+     * Question-level options.
      */
 
     if (question) {
@@ -2998,39 +3914,11 @@ function getQuestionOptions(
 
         }
 
-
-        const questionFallbacks = [
-
-            "optionList",
-            "answerChoices",
-            "items",
-            "choicesList"
-
-        ];
-
-
-        for (
-            const key of questionFallbacks
-        ) {
-
-            if (
-                Array.isArray(
-                    question[key]
-                ) &&
-                question[key].length
-            ) {
-
-                return question[key];
-
-            }
-
-        }
-
     }
 
 
     /*
-     * GROUP LEVEL
+     * Group-level options.
      */
 
     if (group) {
@@ -3052,117 +3940,6 @@ function getQuestionOptions(
 
         }
 
-
-        const groupFallbacks = [
-
-            "optionList",
-            "answerChoices",
-            "items",
-            "choicesList"
-
-        ];
-
-
-        for (
-            const key of groupFallbacks
-        ) {
-
-            if (
-                Array.isArray(
-                    group[key]
-                ) &&
-                group[key].length
-            ) {
-
-                return group[key];
-
-            }
-
-        }
-
-    }
-
-
-    /*
-     * COLLECT OPTIONS FROM QUESTIONS
-     */
-
-    if (
-        group &&
-        Array.isArray(
-            group.questions
-        )
-    ) {
-
-        const found = [];
-
-
-        group.questions.forEach(
-            function (q) {
-
-                const allKeys = [
-
-                    ...keys,
-
-                    "optionList",
-                    "answerChoices",
-                    "items",
-                    "choicesList"
-
-                ];
-
-
-                allKeys.forEach(
-                    function (key) {
-
-                        if (
-                            Array.isArray(
-                                q[key]
-                            )
-                        ) {
-
-                            q[key].forEach(
-                                function (option) {
-
-                                    const exists =
-                                        found.some(
-                                            function (existing) {
-
-                                                return (
-                                                    JSON.stringify(
-                                                        existing
-                                                    ) ===
-                                                    JSON.stringify(
-                                                        option
-                                                    )
-                                                );
-
-                                            }
-                                        );
-
-
-                                    if (!exists) {
-
-                                        found.push(
-                                            option
-                                        );
-
-                                    }
-
-                                }
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-        return found;
-
     }
 
 
@@ -3173,15 +3950,15 @@ function getQuestionOptions(
 
 /* =========================================================
    NORMALIZE OPTION
-   ========================================================= */
+========================================================= */
 
 function normalizeOption(
     option
 ) {
 
     if (
-        option === null ||
-        option === undefined
+        option === undefined ||
+        option === null
     ) {
 
         return {
@@ -3217,8 +3994,8 @@ function normalizeOption(
     ) {
 
         const value =
-            option.letter ??
             option.value ??
+            option.letter ??
             option.id ??
             option.key ??
             option.code ??
@@ -3265,8 +4042,134 @@ function normalizeOption(
 
 
 /* =========================================================
+   UNIQUE OPTIONS
+========================================================= */
+
+function uniqueOptions(
+    options
+) {
+
+    const seen =
+        new Set();
+
+
+    const result = [];
+
+
+    (
+        options ||
+        []
+    ).forEach(
+        function (option) {
+
+            const normalized =
+                normalizeOption(
+                    option
+                );
+
+
+            const key =
+                normalizeAnswer(
+                    normalized.value ||
+                    normalized.text
+                );
+
+
+            if (!key) {
+
+                return;
+
+            }
+
+
+            if (
+                seen.has(
+                    key
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            seen.add(
+                key
+            );
+
+
+            result.push(
+                option
+            );
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   CURRENT PASSAGE OPTIONS
+========================================================= */
+
+function getCurrentPassageOptions() {
+
+    if (!currentTest) {
+
+        return [];
+
+    }
+
+
+    const part =
+        currentTest.parts[
+            currentPartIndex
+        ];
+
+
+    if (!part) {
+
+        return [];
+
+    }
+
+
+    const paragraphs =
+        part.passage?.paragraphs ||
+        [];
+
+
+    return paragraphs.map(
+        function (paragraph) {
+
+            return {
+
+                value:
+                    String(
+                        paragraph.id ||
+                        ""
+                    ),
+
+                text:
+                    String(
+                        paragraph.id ||
+                        ""
+                    )
+
+            };
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    CREATE SELECT OPTIONS
-   ========================================================= */
+========================================================= */
 
 function createSelectOptions(
     options
@@ -3285,18 +4188,10 @@ function createSelectOptions(
     `;
 
 
-    if (
-        !Array.isArray(
-            options
-        )
-    ) {
-
-        options = [];
-
-    }
-
-
-    options.forEach(
+    (
+        options ||
+        []
+    ).forEach(
         function (option) {
 
             const normalized =
@@ -3347,7 +4242,7 @@ function createSelectOptions(
 
 /* =========================================================
    INPUT LISTENER
-   ========================================================= */
+========================================================= */
 
 function attachInputListener(
     container
@@ -3379,7 +4274,7 @@ function attachInputListener(
 
 /* =========================================================
    ANSWER CHANGE
-   ========================================================= */
+========================================================= */
 
 function handleAnswerChange(
     event
@@ -3429,8 +4324,8 @@ function handleAnswerChange(
 
 
 /* =========================================================
-   SAVE VISIBLE ANSWERS
-   ========================================================= */
+   SAVE ALL VISIBLE ANSWERS
+========================================================= */
 
 function saveAllVisibleAnswers() {
 
@@ -3468,12 +4363,23 @@ function saveAllVisibleAnswers() {
                     }
 
                 } else if (
-                    element.tagName === "SELECT" ||
-                    element.tagName === "INPUT"
+                    element.tagName === "INPUT" ||
+                    element.tagName === "SELECT"
                 ) {
 
-                    studentAnswers[number] =
-                        element.value;
+                    /*
+                     * Don't overwrite a drag/drop answer
+                     * with an empty value.
+                     */
+
+                    if (
+                        element.value !== ""
+                    ) {
+
+                        studentAnswers[number] =
+                            element.value;
+
+                    }
 
                 }
 
@@ -3487,14 +4393,14 @@ function saveAllVisibleAnswers() {
 
 
 /* =========================================================
-   RESTORE ANSWERS
-   ========================================================= */
+   RESTORE NORMAL ANSWERS
+========================================================= */
 
 function restoreAnswers() {
 
     document
         .querySelectorAll(
-            "[data-question-number]"
+            "input[data-question-number], select[data-question-number]"
         )
         .forEach(
             function (element) {
@@ -3506,7 +4412,9 @@ function restoreAnswers() {
 
 
                 const value =
-                    studentAnswers[number];
+                    studentAnswers[
+                        number
+                    ];
 
 
                 if (
@@ -3541,14 +4449,20 @@ function restoreAnswers() {
         );
 
 
+    /*
+     * Restore drag/drop after normal controls.
+     */
+
+    restoreDragDropAnswers();
+
     updateQuestionNavigator();
 
 }
 
 
 /* =========================================================
-   LOCAL STORAGE
-   ========================================================= */
+   LOCAL STORAGE KEY
+========================================================= */
 
 function getAnswerStorageKey() {
 
@@ -3568,6 +4482,10 @@ function getAnswerStorageKey() {
 
 }
 
+
+/* =========================================================
+   SAVE ANSWERS
+========================================================= */
 
 function saveAnswersToStorage() {
 
@@ -3598,6 +4516,10 @@ function saveAnswersToStorage() {
 
 }
 
+
+/* =========================================================
+   LOAD SAVED ANSWERS
+========================================================= */
 
 function loadSavedAnswers() {
 
@@ -3632,7 +4554,7 @@ function loadSavedAnswers() {
     } catch (error) {
 
         console.warn(
-            "Could not load saved answers:",
+            "Could not load answers:",
             error
         );
 
@@ -3646,7 +4568,7 @@ function loadSavedAnswers() {
 
 /* =========================================================
    QUESTION NAVIGATOR
-   ========================================================= */
+========================================================= */
 
 function renderQuestionNavigator() {
 
@@ -3663,8 +4585,12 @@ function renderQuestionNavigator() {
     }
 
 
+    const numbers =
+        getAllQuestionNumbers();
+
+
     nav.innerHTML =
-        getAllQuestionNumbers()
+        numbers
             .map(
                 function (number) {
 
@@ -3716,7 +4642,19 @@ function renderQuestionNavigator() {
 
 /* =========================================================
    GET ALL QUESTION NUMBERS
-   ========================================================= */
+   ---------------------------------------------------------
+   IMPORTANT:
+   Includes group.blanks.
+   This fixes the old:
+
+   1 2 3 ... 22 27 28...
+
+   problem.
+
+   It now shows:
+
+   1 2 3 ... 22 23 24 25 26 27 28...
+========================================================= */
 
 function getAllQuestionNumbers() {
 
@@ -3734,10 +4672,6 @@ function getAllQuestionNumbers() {
                 []
             ).forEach(
                 function (group) {
-
-                    /*
-                     * NORMAL QUESTIONS
-                     */
 
                     (
                         group.questions ||
@@ -3769,10 +4703,6 @@ function getAllQuestionNumbers() {
 
                     /*
                      * SUMMARY COMPLETION
-                     *
-                     * Q23-26 are stored in:
-                     *
-                     * group.blanks
                      */
 
                     (
@@ -3813,8 +4743,12 @@ function getAllQuestionNumbers() {
         ...new Set(
             numbers
         )
-    ].sort(
-        function (a, b) {
+    ]
+    .sort(
+        function (
+            a,
+            b
+        ) {
 
             return a - b;
 
@@ -3826,7 +4760,7 @@ function getAllQuestionNumbers() {
 
 /* =========================================================
    UPDATE NAVIGATOR
-   ========================================================= */
+========================================================= */
 
 function updateQuestionNavigator() {
 
@@ -3871,14 +4805,16 @@ function updateQuestionNavigator() {
 
 /* =========================================================
    IS ANSWERED
-   ========================================================= */
+========================================================= */
 
 function isQuestionAnswered(
     number
 ) {
 
     const value =
-        studentAnswers[number];
+        studentAnswers[
+            number
+        ];
 
 
     return (
@@ -3894,7 +4830,7 @@ function isQuestionAnswered(
 
 /* =========================================================
    JUMP TO QUESTION
-   ========================================================= */
+========================================================= */
 
 function jumpToQuestion(
     number
@@ -3915,7 +4851,7 @@ function jumpToQuestion(
 
     const question =
         element.closest(
-            ".question"
+            ".question, .drag-question"
         );
 
 
@@ -3936,8 +4872,8 @@ function jumpToQuestion(
 
 
 /* =========================================================
-   PART NAVIGATION
-   ========================================================= */
+   NEXT PART
+========================================================= */
 
 function nextPart() {
 
@@ -3962,6 +4898,10 @@ function nextPart() {
 }
 
 
+/* =========================================================
+   PREVIOUS PART
+========================================================= */
+
 function previousPart() {
 
     saveAllVisibleAnswers();
@@ -3979,6 +4919,10 @@ function previousPart() {
 
 }
 
+
+/* =========================================================
+   PART BUTTONS
+========================================================= */
 
 function updatePartButtons() {
 
@@ -4025,8 +4969,8 @@ function updatePartButtons() {
 
 
 /* =========================================================
-   SCROLL
-   ========================================================= */
+   SCROLL PANELS
+========================================================= */
 
 function scrollTestPanelsToTop() {
 
@@ -4056,8 +5000,8 @@ function scrollTestPanelsToTop() {
 
 
 /* =========================================================
-   SUBMIT CONFIRM
-   ========================================================= */
+   CONFIRM SUBMIT
+========================================================= */
 
 function confirmSubmitTest() {
 
@@ -4072,6 +5016,10 @@ function confirmSubmitTest() {
 
 }
 
+
+/* =========================================================
+   CONFIRM EXIT
+========================================================= */
 
 function confirmExitTest() {
 
@@ -4106,7 +5054,7 @@ function confirmExitTest() {
 
 /* =========================================================
    MODAL
-   ========================================================= */
+========================================================= */
 
 function openConfirmModal() {
 
@@ -4146,7 +5094,7 @@ function closeConfirmModal() {
 
 /* =========================================================
    AUTO SUBMIT
-   ========================================================= */
+========================================================= */
 
 function autoSubmitTest() {
 
@@ -4169,7 +5117,7 @@ function autoSubmitTest() {
 
 /* =========================================================
    SUBMIT TEST
-   ========================================================= */
+========================================================= */
 
 async function submitTest() {
 
@@ -4211,7 +5159,7 @@ async function submitTest() {
 
 /* =========================================================
    TIME USED
-   ========================================================= */
+========================================================= */
 
 function calculateTimeUsed() {
 
@@ -4237,7 +5185,7 @@ function calculateTimeUsed() {
 
 /* =========================================================
    SCORE
-   ========================================================= */
+========================================================= */
 
 function calculateScore() {
 
@@ -4262,19 +5210,21 @@ function calculateScore() {
                 function (group) {
 
                     /*
-                     * IMPORTANT:
+                     * Normal:
                      *
-                     * Normal questions:
                      * group.questions
                      *
-                     * Summary completion:
+                     * Summary:
+                     *
                      * group.blanks
                      */
 
                     const questions =
-                        group.questions ||
-                        group.blanks ||
-                        [];
+                        group.questions &&
+                        group.questions.length
+                            ? group.questions
+                            : group.blanks ||
+                              [];
 
 
                     questions.forEach(
@@ -4343,8 +5293,8 @@ function calculateScore() {
 
 
 /* =========================================================
-   COUNT TOTAL QUESTIONS
-   ========================================================= */
+   COUNT QUESTIONS
+========================================================= */
 
 function countTotalQuestions() {
 
@@ -4355,8 +5305,8 @@ function countTotalQuestions() {
 
 
 /* =========================================================
-   ANSWER MATCH
-   ========================================================= */
+   ANSWERS MATCH
+========================================================= */
 
 function answersMatch(
     given,
@@ -4375,6 +5325,12 @@ function answersMatch(
     }
 
 
+    const normalizedGiven =
+        normalizeAnswer(
+            given
+        );
+
+
     /*
      * Multiple accepted answers.
      */
@@ -4390,11 +5346,9 @@ function answersMatch(
 
                 return (
                     normalizeAnswer(
-                        given
-                    ) ===
-                    normalizeAnswer(
                         answer
-                    )
+                    ) ===
+                    normalizedGiven
                 );
 
             }
@@ -4404,9 +5358,7 @@ function answersMatch(
 
 
     return (
-        normalizeAnswer(
-            given
-        ) ===
+        normalizedGiven ===
         normalizeAnswer(
             correct
         )
@@ -4417,7 +5369,7 @@ function answersMatch(
 
 /* =========================================================
    NORMALIZE ANSWER
-   ========================================================= */
+========================================================= */
 
 function normalizeAnswer(
     value
@@ -4438,43 +5390,59 @@ function normalizeAnswer(
 
 /* =========================================================
    IELTS BAND
-   ========================================================= */
+========================================================= */
 
 function calculateIELTSBand(
     score
 ) {
 
-    if (score >= 39) return 9.0;
+    if (score >= 39)
+        return 9.0;
 
-    if (score >= 37) return 8.5;
+    if (score >= 37)
+        return 8.5;
 
-    if (score >= 35) return 8.0;
+    if (score >= 35)
+        return 8.0;
 
-    if (score >= 33) return 7.5;
+    if (score >= 33)
+        return 7.5;
 
-    if (score >= 30) return 7.0;
+    if (score >= 30)
+        return 7.0;
 
-    if (score >= 27) return 6.5;
+    if (score >= 27)
+        return 6.5;
 
-    if (score >= 23) return 6.0;
+    if (score >= 23)
+        return 6.0;
 
-    if (score >= 19) return 5.5;
+    if (score >= 19)
+        return 5.5;
 
-    if (score >= 15) return 5.0;
+    if (score >= 15)
+        return 5.0;
 
-    if (score >= 13) return 4.5;
+    if (score >= 13)
+        return 4.5;
 
-    if (score >= 10) return 4.0;
+    if (score >= 10)
+        return 4.0;
 
-    if (score >= 8) return 3.5;
+    if (score >= 8)
+        return 3.5;
 
-    if (score >= 6) return 3.0;
+    if (score >= 6)
+        return 3.0;
 
-    if (score >= 4) return 2.5;
+    if (score >= 4)
+        return 2.5;
 
-    if (score >= 2) return 2.0;
+    if (score >= 2)
+        return 2.0;
 
-    if (score === 1) return 1.0;
+    if (score === 1)
+        return 1.0;
 
     return 0;
 
@@ -4482,8 +5450,8 @@ function calculateIELTSBand(
 
 
 /* =========================================================
-   SAVE RESULT
-   ========================================================= */
+   SAVE RESULT TO API
+========================================================= */
 
 async function saveResultToAPI() {
 
@@ -4568,7 +5536,7 @@ async function saveResultToAPI() {
     } catch (error) {
 
         console.error(
-            "Result save error:",
+            "SAVE RESULT ERROR:",
             error
         );
 
@@ -4579,7 +5547,7 @@ async function saveResultToAPI() {
 
 /* =========================================================
    RESULT SCREEN
-   ========================================================= */
+========================================================= */
 
 function renderResult() {
 
@@ -4628,7 +5596,7 @@ function renderResult() {
 
 /* =========================================================
    PART SCORES
-   ========================================================= */
+========================================================= */
 
 function renderPartScores() {
 
@@ -4677,8 +5645,8 @@ function renderPartScores() {
 
 
 /* =========================================================
-   CLEAR CURRENT ANSWERS
-   ========================================================= */
+   CLEAR ANSWERS
+========================================================= */
 
 function clearCurrentTestAnswers() {
 
@@ -4691,7 +5659,7 @@ function clearCurrentTestAnswers() {
     } catch (error) {
 
         console.warn(
-            "Could not clear answers:",
+            "Could not clear saved answers:",
             error
         );
 
@@ -4705,7 +5673,7 @@ function clearCurrentTestAnswers() {
 
 /* =========================================================
    HISTORY
-   ========================================================= */
+========================================================= */
 
 async function loadHistory() {
 
@@ -4793,7 +5761,7 @@ async function loadHistory() {
 
 /* =========================================================
    RENDER HISTORY
-   ========================================================= */
+========================================================= */
 
 function renderHistory(
     history
@@ -4913,7 +5881,7 @@ function renderHistory(
 
 /* =========================================================
    API REQUEST
-   ========================================================= */
+========================================================= */
 
 async function apiRequest(
     action,
@@ -4921,7 +5889,7 @@ async function apiRequest(
 ) {
 
     /*
-     * GET
+     * First try GET.
      */
 
     try {
@@ -4939,7 +5907,7 @@ async function apiRequest(
         params.set(
             "data",
             JSON.stringify(
-                data || {}
+                data
             )
         );
 
@@ -4961,51 +5929,41 @@ async function apiRequest(
             await response.text();
 
 
-        let json;
-
-
-        try {
-
-            json =
-                JSON.parse(
-                    text
-                );
-
-        } catch (error) {
-
-            throw new Error(
-                "The API returned invalid JSON."
+        const json =
+            JSON.parse(
+                text
             );
 
-        }
+
+        return json;
 
 
-        if (
-            json &&
-            json.message !==
-                "Unknown action"
-        ) {
-
-            return json;
-
-        }
-
-
-    } catch (error) {
+    } catch (getError) {
 
         console.warn(
-            "GET API failed:",
-            error
+            "GET API failed. Trying POST...",
+            getError
         );
 
     }
 
 
     /*
-     * POST fallback
+     * POST fallback.
      */
 
     try {
+
+        const body = {
+
+            action:
+                action,
+
+            data:
+                data
+
+        };
+
 
         const response =
             await fetch(
@@ -5023,15 +5981,9 @@ async function apiRequest(
                     },
 
                     body:
-                        JSON.stringify({
-
-                            action:
-                                action,
-
-                            data:
-                                data || {}
-
-                        })
+                        JSON.stringify(
+                            body
+                        )
 
                 }
             );
@@ -5041,32 +5993,15 @@ async function apiRequest(
             await response.text();
 
 
-        let json;
-
-
-        try {
-
-            json =
-                JSON.parse(
-                    text
-                );
-
-        } catch (error) {
-
-            throw new Error(
-                "The API returned invalid JSON."
-            );
-
-        }
-
-
-        return json;
+        return JSON.parse(
+            text
+        );
 
 
     } catch (error) {
 
         console.error(
-            "POST API failed:",
+            "POST API request failed:",
             error
         );
 
@@ -5080,7 +6015,7 @@ async function apiRequest(
 
 /* =========================================================
    SCREEN
-   ========================================================= */
+========================================================= */
 
 function showScreen(
     id
@@ -5118,7 +6053,8 @@ function showScreen(
 
 
     if (
-        id === "loginScreen"
+        id ===
+        "loginScreen"
     ) {
 
         element.style.display =
@@ -5136,7 +6072,7 @@ function showScreen(
 
 /* =========================================================
    LOADING
-   ========================================================= */
+========================================================= */
 
 function setLoading(
     show,
@@ -5177,7 +6113,7 @@ function setLoading(
 
 /* =========================================================
    LOGIN MESSAGE
-   ========================================================= */
+========================================================= */
 
 function showLoginMessage(
     message,
@@ -5187,7 +6123,9 @@ function showLoginMessage(
     const ids = [
 
         "loginMessage",
+
         "loginError",
+
         "errorMessage"
 
     ];
@@ -5242,7 +6180,7 @@ function showLoginMessage(
 
 /* =========================================================
    TOAST
-   ========================================================= */
+========================================================= */
 
 function showToast(
     message
@@ -5255,10 +6193,6 @@ function showToast(
 
 
     if (!element) {
-
-        /*
-         * Fallback if HTML has no toast.
-         */
 
         console.log(
             message
@@ -5292,7 +6226,7 @@ function showToast(
 
 /* =========================================================
    FORMAT TIME
-   ========================================================= */
+========================================================= */
 
 function formatTime(
     seconds
@@ -5380,7 +6314,7 @@ function formatTime(
 
 /* =========================================================
    FORMAT DATE
-   ========================================================= */
+========================================================= */
 
 function formatDate(
     value
@@ -5419,7 +6353,7 @@ function formatDate(
 
 /* =========================================================
    SET TEXT
-   ========================================================= */
+========================================================= */
 
 function setText(
     id,
@@ -5444,7 +6378,7 @@ function setText(
 
 /* =========================================================
    ESCAPE HTML
-   ========================================================= */
+========================================================= */
 
 function escapeHTML(
     value
@@ -5479,7 +6413,7 @@ function escapeHTML(
 
 /* =========================================================
    ESCAPE ATTRIBUTE
-   ========================================================= */
+========================================================= */
 
 function escapeAttribute(
     value
@@ -5494,7 +6428,7 @@ function escapeAttribute(
 
 /* =========================================================
    ESCAPE REGEX
-   ========================================================= */
+========================================================= */
 
 function escapeRegExp(
     value
@@ -5512,8 +6446,493 @@ function escapeRegExp(
 
 
 /* =========================================================
-   DEBUG / PUBLIC API
-   ========================================================= */
+   INJECT DRAG/DROP CSS
+   ---------------------------------------------------------
+   You do NOT need to put this CSS into style.css.
+   This app.js automatically adds it.
+========================================================= */
+
+function injectDragDropStyles() {
+
+    if (
+        document.getElementById(
+            "dragDropStyles"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.id =
+        "dragDropStyles";
+
+
+    style.textContent = `
+
+        /* =============================================
+           DRAG/DROP GENERAL
+        ============================================= */
+
+        .drag-matching-container,
+        .drag-summary-container {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* =============================================
+           OPTION BANK
+        ============================================= */
+
+        .drag-option-bank,
+        .drag-summary-bank {
+
+            background: #f7f8fa;
+
+            border: 1px solid #d8dde5;
+
+            border-radius: 12px;
+
+            padding: 16px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .drag-bank-title {
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            color: #20242a;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .drag-options,
+        .drag-summary-options {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+        }
+
+
+        /* =============================================
+           MATCHING OPTION
+        ============================================= */
+
+        .drag-option,
+        .summary-drag-word {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            background: #ffffff;
+
+            border: 1px solid #cbd2db;
+
+            border-radius: 8px;
+
+            padding: 10px 13px;
+
+            cursor: grab;
+
+            user-select: none;
+
+            font-size: 14px;
+
+            line-height: 1.4;
+
+            transition:
+                background .15s ease,
+                border-color .15s ease,
+                transform .15s ease;
+
+        }
+
+
+        .drag-option:hover,
+        .summary-drag-word:hover {
+
+            border-color: #2563eb;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        .drag-option.dragging,
+        .summary-drag-word.dragging {
+
+            opacity: .45;
+
+        }
+
+
+        .drag-option.selected,
+        .summary-drag-word.selected {
+
+            border-color: #2563eb;
+
+            background: #eff6ff;
+
+            box-shadow:
+                0 0 0 2px rgba(
+                    37,
+                    99,
+                    235,
+                    .12
+                );
+
+        }
+
+
+        .drag-option-handle {
+
+            opacity: .5;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =============================================
+           MATCHING QUESTION
+        ============================================= */
+
+        .drag-question {
+
+            background: #ffffff;
+
+            border: 1px solid #e1e5ea;
+
+            border-radius: 12px;
+
+            padding: 16px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        /* =============================================
+           DROP ZONE
+        ============================================= */
+
+        .drag-drop-zone {
+
+            width: 100%;
+
+            min-height: 50px;
+
+            box-sizing: border-box;
+
+            border: 2px dashed #b8c1cc;
+
+            border-radius: 8px;
+
+            background: #fafbfc;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 8px 12px;
+
+            margin-bottom: 13px;
+
+            transition:
+                border-color .15s ease,
+                background .15s ease;
+
+        }
+
+
+        .drag-drop-zone.drag-over {
+
+            border-color: #2563eb;
+
+            background: #eff6ff;
+
+        }
+
+
+        .drag-drop-zone.has-answer {
+
+            border-style: solid;
+
+            border-color: #9aa4b2;
+
+            background: #f8fafc;
+
+        }
+
+
+        .drop-placeholder {
+
+            color: #8a95a3;
+
+            font-size: 14px;
+
+        }
+
+
+        .drag-question-text {
+
+            font-size: 16px;
+
+            line-height: 1.6;
+
+        }
+
+
+        /* =============================================
+           DROPPED ANSWER
+        ============================================= */
+
+        .dropped-answer {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+        }
+
+
+        .dropped-answer-text {
+
+            font-weight: 600;
+
+            color: #20242a;
+
+            line-height: 1.4;
+
+        }
+
+
+        .remove-dropped-answer {
+
+            flex-shrink: 0;
+
+            border: none;
+
+            background: transparent;
+
+            color: #b42318;
+
+            font-size: 21px;
+
+            line-height: 1;
+
+            cursor: pointer;
+
+            padding: 3px 7px;
+
+        }
+
+
+        /* =============================================
+           SUMMARY
+        ============================================= */
+
+        .drag-summary-text {
+
+            font-size: 16px;
+
+            line-height: 2.3;
+
+            color: #20242a;
+
+        }
+
+
+        .summary-drop-zone {
+
+            display: inline-flex;
+
+            vertical-align: middle;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 125px;
+
+            min-height: 38px;
+
+            box-sizing: border-box;
+
+            margin:
+                0 5px;
+
+            padding:
+                3px 8px;
+
+            border:
+                2px dashed #adb7c3;
+
+            border-radius: 7px;
+
+            background: #fafbfc;
+
+            cursor: pointer;
+
+        }
+
+
+        .summary-drop-zone.drag-over {
+
+            border-color: #2563eb;
+
+            background: #eff6ff;
+
+        }
+
+
+        .summary-drop-zone.has-answer {
+
+            border-style: solid;
+
+            border-color: #9aa4b2;
+
+            background: #f8fafc;
+
+        }
+
+
+        .summary-drop-placeholder {
+
+            color: #8a95a3;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .summary-drop-zone
+        .dropped-answer-text {
+
+            font-size: 14px;
+
+        }
+
+
+        .summary-fallback {
+
+            margin-top: 20px;
+
+        }
+
+
+        .summary-fallback-row {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        /* =============================================
+           MOBILE
+        ============================================= */
+
+        @media (
+            max-width: 700px
+        ) {
+
+            .drag-options,
+            .drag-summary-options {
+
+                display: grid;
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .drag-option,
+            .summary-drag-word {
+
+                width: 100%;
+
+                box-sizing: border-box;
+
+            }
+
+
+            .drag-summary-text {
+
+                font-size: 15px;
+
+                line-height: 2.1;
+
+            }
+
+
+            .summary-drop-zone {
+
+                min-width: 100px;
+
+            }
+
+
+            .drag-question-text {
+
+                font-size: 15px;
+
+            }
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+}
+
+
+/* =========================================================
+   PUBLIC DEBUG API
+========================================================= */
 
 window.IELTSReading = {
 
@@ -5567,5 +6986,5 @@ window.IELTSReading = {
 
 
 /* =========================================================
-   END
-   ========================================================= */
+   END OF app.js
+========================================================= */

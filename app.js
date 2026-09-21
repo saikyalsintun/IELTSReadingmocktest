@@ -1,4362 +1,5025 @@
-/* ============================================================
-   IELTS READING WEBSITE
+/* =========================================================
+   IELTS READING PRACTICE WEBSITE
    app.js
-   ============================================================
-
-   GOOGLE APPS SCRIPT API
-   ============================================================ */
-
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbzkYktZQFtycRgG3K6Hi6MsvUtP8RsqOq6QxB598FVYefGmpe_oS3R518GZ0821bNbYtw/exec";
+========================================================= */
 
 
-/* ============================================================
+/* =========================================================
    CONFIGURATION
-   ============================================================ */
+========================================================= */
 
 const CONFIG = {
-  testFolder: "./tests/",
-  vocabularyFile: "./data/vocabulary.json",
+    API_URL:
+        "https://script.google.com/macros/s/AKfycbzkYktZQFtycRgG3K6Hi6MsvUtP8RsqOq6QxB598FVYefGmpe_oS3R518GZ0821bNbYtw/exec",
 
-  testCount: 20,
+    TEST_FOLDER: "./tests/",
+    VOCABULARY_FILE: "./data/vocabulary.json",
 
-  durationMinutes: 60,
+    TEST_COUNT: 20,
 
-  storageKeys: {
-    user: "ieltsReadingUser",
-    currentTest: "ieltsReadingCurrentTest",
-    answers: "ieltsReadingAnswers",
-    startTime: "ieltsReadingStartTime",
-    remainingTime: "ieltsReadingRemainingTime"
-  }
+    DEFAULT_DURATION: 60
 };
 
 
-/* ============================================================
+/* =========================================================
    GLOBAL STATE
-   ============================================================ */
+========================================================= */
 
 let currentUser = null;
+
 let currentTest = null;
 let currentTestNumber = null;
 
 let vocabulary = {};
+
 let studentAnswers = {};
 
+let currentPartIndex = 0;
+
 let timerInterval = null;
-let remainingSeconds = CONFIG.durationMinutes * 60;
+let remainingSeconds = 0;
 
 let testStarted = false;
 let testSubmitted = false;
 
-let scoreData = {
-  part1: 0,
-  part2: 0,
-  part3: 0,
-  part4: 0,
-  total: 0,
-  totalQuestions: 0,
-  band: 0
-};
+let testStartTime = null;
+let testElapsedSeconds = 0;
+
+let scoreData = null;
+
+let vocabularyPopupTimeout = null;
 
 
-/* ============================================================
-   INITIALIZATION
-   ============================================================ */
+/* =========================================================
+   DOM READY
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await loadVocabulary();
 
-  restoreLogin();
+    setupGlobalEvents();
 
-  setupGlobalEvents();
+    await loadVocabulary();
+
+    restoreLogin();
+
 });
 
 
-/* ============================================================
+/* =========================================================
    GLOBAL EVENTS
-   ============================================================ */
+========================================================= */
 
 function setupGlobalEvents() {
 
-  document.addEventListener("click", event => {
+    /* Login */
 
-    const testButton = event.target.closest("[data-test-number]");
+    const loginForm =
+        document.getElementById("loginForm");
 
-    if (testButton) {
-      const number = Number(testButton.dataset.testNumber);
+    if (loginForm) {
 
-      if (number) {
-        openTest(number);
-      }
+        loginForm.addEventListener(
+            "submit",
+            handleLogin
+        );
+
     }
 
-    const logoutButton = event.target.closest("[data-action='logout']");
+
+    /* Logout */
+
+    const logoutButton =
+        document.getElementById("logoutButton");
 
     if (logoutButton) {
-      logout();
+
+        logoutButton.addEventListener(
+            "click",
+            logout
+        );
+
     }
 
-    const historyButton = event.target.closest("[data-action='history']");
 
-    if (historyButton) {
-      showHistory();
+    /* Start test */
+
+    const startTestButton =
+        document.getElementById("startTestButton");
+
+    if (startTestButton) {
+
+        startTestButton.addEventListener(
+            "click",
+            startTest
+        );
+
     }
 
-    const dashboardButton =
-      event.target.closest("[data-action='dashboard']");
 
-    if (dashboardButton) {
-      showDashboard();
+    /* Back dashboard */
+
+    const backDashboard =
+        document.getElementById(
+            "backToDashboardButton"
+        );
+
+    if (backDashboard) {
+
+        backDashboard.addEventListener(
+            "click",
+            showDashboard
+        );
+
     }
 
-    const startButton =
-      event.target.closest("[data-action='start-test']");
 
-    if (startButton) {
-      startCurrentTest();
+    /* Exit test */
+
+    const exitTestButton =
+        document.getElementById(
+            "exitTestButton"
+        );
+
+    if (exitTestButton) {
+
+        exitTestButton.addEventListener(
+            "click",
+            confirmExitTest
+        );
+
     }
 
-    const submitButton =
-      event.target.closest("[data-action='submit-test']");
 
-    if (submitButton) {
-      submitTest();
+    /* Submit */
+
+    const submitTestButton =
+        document.getElementById(
+            "submitTestButton"
+        );
+
+    if (submitTestButton) {
+
+        submitTestButton.addEventListener(
+            "click",
+            confirmSubmitTest
+        );
+
     }
 
-    const nextButton =
-      event.target.closest("[data-action='next-part']");
 
-    if (nextButton) {
-      goToNextPart();
+    /* Confirm cancel */
+
+    const confirmCancelButton =
+        document.getElementById(
+            "confirmCancelButton"
+        );
+
+    if (confirmCancelButton) {
+
+        confirmCancelButton.addEventListener(
+            "click",
+            closeConfirmModal
+        );
+
     }
+
+
+    /* Confirm submit */
+
+    const confirmSubmitButton =
+        document.getElementById(
+            "confirmSubmitButton"
+        );
+
+    if (confirmSubmitButton) {
+
+        confirmSubmitButton.addEventListener(
+            "click",
+            () => {
+
+                closeConfirmModal();
+
+                submitTest();
+
+            }
+        );
+
+    }
+
+
+    /* Result dashboard */
+
+    const returnDashboardButton =
+        document.getElementById(
+            "returnDashboardButton"
+        );
+
+    if (returnDashboardButton) {
+
+        returnDashboardButton.addEventListener(
+            "click",
+            showDashboard
+        );
+
+    }
+
+
+    /* Previous */
 
     const previousButton =
-      event.target.closest("[data-action='previous-part']");
+        document.getElementById(
+            "previousPartButton"
+        );
 
     if (previousButton) {
-      goToPreviousPart();
+
+        previousButton.addEventListener(
+            "click",
+            previousPart
+        );
+
     }
 
-    const vocabularyWord =
-      event.target.closest("[data-vocabulary-word]");
 
-    if (vocabularyWord) {
-      showVocabulary(
-        vocabularyWord.dataset.vocabularyWord
-      );
+    /* Next */
+
+    const nextButton =
+        document.getElementById(
+            "nextPartButton"
+        );
+
+    if (nextButton) {
+
+        nextButton.addEventListener(
+            "click",
+            nextPart
+        );
+
     }
 
-  });
+
+    /* Vocabulary close */
+
+    const closeVocabularyButton =
+        document.getElementById(
+            "closeVocabularyButton"
+        );
+
+    if (closeVocabularyButton) {
+
+        closeVocabularyButton.addEventListener(
+            "click",
+            closeVocabularyPopup
+        );
+
+    }
 
 
-  document.addEventListener("change", event => {
+    /* Click outside vocabulary */
 
-    const answerElement =
-      event.target.closest("[data-question-number]");
+    document.addEventListener(
+        "click",
+        (event) => {
 
-    if (!answerElement) return;
+            const popup =
+                document.getElementById(
+                    "vocabularyPopup"
+                );
 
-    const number =
-      answerElement.dataset.questionNumber;
+            if (!popup) return;
 
-    saveAnswerFromElement(answerElement, number);
-  });
+            if (
+                !popup.classList.contains("hidden") &&
+                !popup.contains(event.target) &&
+                !event.target.classList.contains(
+                    "vocabulary-word"
+                )
+            ) {
+
+                closeVocabularyPopup();
+
+            }
+
+        }
+    );
 
 
-  document.addEventListener("input", event => {
+    /* Save answers whenever user changes an input */
 
-    const answerElement =
-      event.target.closest("[data-question-number]");
+    document.addEventListener(
+        "change",
+        handleAnswerChange
+    );
 
-    if (!answerElement) return;
-
-    const number =
-      answerElement.dataset.questionNumber;
-
-    saveAnswerFromElement(answerElement, number);
-  });
+    document.addEventListener(
+        "input",
+        handleAnswerChange
+    );
 
 }
 
 
-/* ============================================================
+/* =========================================================
    LOGIN
-   ============================================================ */
+========================================================= */
 
-async function login(username, password) {
+async function handleLogin(event) {
 
-  username = String(username || "").trim();
-  password = String(password || "");
+    event.preventDefault();
 
-  if (!username || !password) {
-    showMessage("Please enter your username and password.", "error");
-    return false;
-  }
+    const username =
+        document.getElementById(
+            "username"
+        ).value.trim();
 
-  setLoading(true);
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
 
-  try {
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
 
-    const response = await apiRequest("login", {
-      username: username,
-      password: password
-    });
+    if (!username || !password) {
 
-    if (!response || response.success === false) {
-      showMessage(
-        response?.message || "Invalid username or password.",
-        "error"
-      );
+        showLoginMessage(
+            "Please enter your username and password.",
+            "error"
+        );
 
-      setLoading(false);
-      return false;
+        return;
     }
 
-    currentUser = {
-      studentId:
-        response.studentId ||
-        response.StudentID ||
-        response.data?.studentId ||
-        "",
-
-      username:
-        response.username ||
-        response.Username ||
-        response.data?.username ||
-        username
-    };
-
-    localStorage.setItem(
-      CONFIG.storageKeys.user,
-      JSON.stringify(currentUser)
+    setLoading(
+        true,
+        "Logging in..."
     );
 
-    setLoading(false);
+    try {
 
-    showDashboard();
+        const response =
+            await apiRequest(
+                "login",
+                {
+                    username,
+                    password
+                }
+            );
 
-    return true;
+        if (
+            !response ||
+            response.success !== true
+        ) {
 
-  } catch (error) {
+            throw new Error(
+                response?.message ||
+                "Login failed."
+            );
 
-    console.error("Login error:", error);
+        }
 
-    showMessage(
-      "Unable to connect to the server.",
-      "error"
-    );
+        currentUser =
+            response.student ||
+            response.user ||
+            response.data;
 
-    setLoading(false);
+        if (!currentUser) {
 
-    return false;
-  }
+            currentUser = {
+                username
+            };
+
+        }
+
+        localStorage.setItem(
+            "ieltsReadingUser",
+            JSON.stringify(currentUser)
+        );
+
+        showLoginMessage(
+            "",
+            ""
+        );
+
+        await showDashboard();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showLoginMessage(
+            error.message ||
+            "Unable to login.",
+            "error"
+        );
+
+    } finally {
+
+        setLoading(false);
+
+    }
+
 }
 
 
-/* ============================================================
-   LOGOUT
-   ============================================================ */
-
-function logout() {
-
-  stopTimer();
-
-  currentUser = null;
-  currentTest = null;
-  currentTestNumber = null;
-
-  studentAnswers = {};
-
-  localStorage.removeItem(
-    CONFIG.storageKeys.user
-  );
-
-  localStorage.removeItem(
-    CONFIG.storageKeys.currentTest
-  );
-
-  localStorage.removeItem(
-    CONFIG.storageKeys.answers
-  );
-
-  localStorage.removeItem(
-    CONFIG.storageKeys.startTime
-  );
-
-  localStorage.removeItem(
-    CONFIG.storageKeys.remainingTime
-  );
-
-  showLoginScreen();
-}
-
-
-/* ============================================================
+/* =========================================================
    RESTORE LOGIN
-   ============================================================ */
+========================================================= */
 
 function restoreLogin() {
 
-  const saved =
-    localStorage.getItem(
-      CONFIG.storageKeys.user
-    );
-
-  if (!saved) {
-    showLoginScreen();
-    return;
-  }
-
-  try {
-
-    currentUser = JSON.parse(saved);
-
-    if (
-      currentUser &&
-      currentUser.username
-    ) {
-      showDashboard();
-    } else {
-      showLoginScreen();
-    }
-
-  } catch {
-
-    localStorage.removeItem(
-      CONFIG.storageKeys.user
-    );
-
-    showLoginScreen();
-  }
-}
-
-
-/* ============================================================
-   LOGIN SCREEN
-   ============================================================ */
-
-function showLoginScreen() {
-
-  stopTimer();
-
-  const app =
-    document.querySelector("#app");
-
-  if (!app) return;
-
-  app.innerHTML = `
-    <div class="login-page">
-
-      <div class="login-card">
-
-        <h1>IELTS Reading</h1>
-
-        <p class="login-subtitle">
-          Reading Practice Platform
-        </p>
-
-        <form id="loginForm">
-
-          <div class="form-group">
-            <label>Username</label>
-
-            <input
-              id="loginUsername"
-              type="text"
-              autocomplete="username"
-              placeholder="Enter username"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Password</label>
-
-            <input
-              id="loginPassword"
-              type="password"
-              autocomplete="current-password"
-              placeholder="Enter password"
-              required
-            >
-          </div>
-
-          <button
-            type="submit"
-            class="primary-button"
-          >
-            Login
-          </button>
-
-        </form>
-
-        <div id="loginMessage"></div>
-
-      </div>
-
-    </div>
-  `;
-
-  const form =
-    document.querySelector("#loginForm");
-
-  if (form) {
-
-    form.addEventListener("submit", async event => {
-
-      event.preventDefault();
-
-      const username =
-        document.querySelector("#loginUsername").value;
-
-      const password =
-        document.querySelector("#loginPassword").value;
-
-      await login(username, password);
-    });
-
-  }
-
-}
-
-
-/* ============================================================
-   DASHBOARD
-   ============================================================ */
-
-async function showDashboard() {
-
-  stopTimer();
-
-  const app =
-    document.querySelector("#app");
-
-  if (!app) return;
-
-  app.innerHTML = `
-    <div class="dashboard">
-
-      <header class="dashboard-header">
-
-        <div>
-          <h1>IELTS Reading</h1>
-
-          <p>
-            Welcome,
-            <strong>
-              ${escapeHTML(currentUser?.username || "")}
-            </strong>
-          </p>
-        </div>
-
-        <div class="dashboard-actions">
-
-          <button
-            data-action="history"
-            class="secondary-button"
-          >
-            Score History
-          </button>
-
-          <button
-            data-action="logout"
-            class="secondary-button"
-          >
-            Logout
-          </button>
-
-        </div>
-
-      </header>
-
-      <main>
-
-        <div class="dashboard-title">
-          <h2>Choose a Reading Test</h2>
-
-          <p>
-            Select a test to begin your IELTS Reading practice.
-          </p>
-        </div>
-
-        <div
-          id="testGrid"
-          class="test-grid"
-        >
-          ${createTestCards()}
-        </div>
-
-      </main>
-
-    </div>
-  `;
-
-  loadTestHistoryForDashboard();
-}
-
-
-/* ============================================================
-   TEST CARDS
-   ============================================================ */
-
-function createTestCards() {
-
-  let html = "";
-
-  for (
-    let i = 1;
-    i <= CONFIG.testCount;
-    i++
-  ) {
-
-    html += `
-      <div class="test-card">
-
-        <div class="test-card-number">
-          TEST ${i}
-        </div>
-
-        <div class="test-card-status"
-             id="test-status-${i}">
-          Not Started
-        </div>
-
-        <button
-          data-test-number="${i}"
-          class="primary-button"
-        >
-          Start Test
-        </button>
-
-      </div>
-    `;
-  }
-
-  return html;
-}
-
-
-/* ============================================================
-   DASHBOARD HISTORY
-   ============================================================ */
-
-async function loadTestHistoryForDashboard() {
-
-  if (!currentUser) return;
-
-  try {
-
-    const response =
-      await apiRequest("getHistory", {
-        studentId: currentUser.studentId,
-        username: currentUser.username
-      });
-
-    const results =
-      normalizeResults(response);
-
-    results.forEach(result => {
-
-      const testNumber =
-        extractTestNumber(result.testName);
-
-      if (!testNumber) return;
-
-      const status =
-        document.querySelector(
-          `#test-status-${testNumber}`
+    const savedUser =
+        localStorage.getItem(
+            "ieltsReadingUser"
         );
 
-      if (!status) return;
+    if (!savedUser) {
 
-      status.innerHTML = `
-        Completed<br>
-        ${result.totalScore}/${result.totalQuestions || 40}
-        <br>
-        Band ${result.band}
-      `;
+        showScreen("loginScreen");
 
-    });
+        return;
 
-  } catch (error) {
+    }
 
-    console.warn(
-      "Unable to load dashboard history:",
-      error
-    );
+    try {
 
-  }
+        currentUser =
+            JSON.parse(savedUser);
+
+        showDashboard();
+
+    } catch (error) {
+
+        console.error(error);
+
+        localStorage.removeItem(
+            "ieltsReadingUser"
+        );
+
+        showScreen("loginScreen");
+
+    }
 
 }
 
 
-/* ============================================================
-   OPEN TEST
-   ============================================================ */
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-async function openTest(testNumber) {
+function logout() {
 
-  if (!currentUser) {
-    showLoginScreen();
-    return;
-  }
+    stopTimer();
 
-  currentTestNumber = testNumber;
+    currentUser = null;
 
-  showLoadingScreen(
-    `Loading Test ${testNumber}...`
-  );
+    currentTest = null;
 
-  try {
-
-    const response =
-      await fetch(
-        `${CONFIG.testFolder}Test${testNumber}.json`,
-        {
-          cache: "no-cache"
-        }
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        `Test${testNumber}.json not found`
-      );
-    }
-
-    currentTest =
-      await response.json();
-
-    validateTestJSON(currentTest);
-
-    localStorage.setItem(
-      CONFIG.storageKeys.currentTest,
-      String(testNumber)
-    );
+    currentTestNumber = null;
 
     studentAnswers = {};
 
     localStorage.removeItem(
-      CONFIG.storageKeys.answers
+        "ieltsReadingUser"
     );
 
-    showTestIntroduction();
-
-  } catch (error) {
-
-    console.error(error);
-
-    showErrorScreen(
-      `Unable to load Test ${testNumber}.json`
+    localStorage.removeItem(
+        "ieltsReadingAnswers"
     );
-  }
+
+    showScreen("loginScreen");
 
 }
 
 
-/* ============================================================
-   TEST VALIDATION
-   ============================================================ */
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
-function validateTestJSON(test) {
+async function showDashboard() {
 
-  if (!test) {
-    throw new Error("Test JSON is empty.");
-  }
+    stopTimer();
 
-  if (!test.testId) {
-    throw new Error("Missing testId.");
-  }
+    testStarted = false;
+    testSubmitted = false;
 
-  if (!Array.isArray(test.parts)) {
-    throw new Error(
-      "Test JSON must contain a parts array."
+    showScreen(
+        "dashboardScreen"
     );
-  }
 
-  test.parts.forEach(part => {
+    updateDashboardUser();
 
-    if (!part.passage) {
-      throw new Error(
-        `Part ${part.partNumber} has no passage.`
-      );
-    }
+    renderTestCards();
 
-    if (!Array.isArray(part.questionGroups)) {
-      throw new Error(
-        `Part ${part.partNumber} has no questionGroups.`
-      );
-    }
-
-  });
+    await loadHistory();
 
 }
 
 
-/* ============================================================
+/* =========================================================
+   DASHBOARD USER
+========================================================= */
+
+function updateDashboardUser() {
+
+    const usernameElement =
+        document.getElementById(
+            "dashboardUsername"
+        );
+
+    if (!usernameElement) return;
+
+    usernameElement.textContent =
+        currentUser?.username ||
+        currentUser?.Username ||
+        "-";
+
+}
+
+
+/* =========================================================
+   TEST CARDS
+========================================================= */
+
+function renderTestCards() {
+
+    const container =
+        document.getElementById(
+            "testList"
+        );
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    for (
+        let i = 1;
+        i <= CONFIG.TEST_COUNT;
+        i++
+    ) {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+        card.className =
+            "test-card";
+
+        card.dataset.testNumber = i;
+
+        card.innerHTML = `
+            <div class="test-card-top">
+                <div class="test-number">
+                    ${i}
+                </div>
+
+                <span class="test-status">
+                    Reading
+                </span>
+            </div>
+
+            <div>
+                <h3>
+                    IELTS Reading Test ${i}
+                </h3>
+
+                <p>
+                    Academic Reading Practice
+                </p>
+            </div>
+
+            <div class="test-card-footer">
+                <span>
+                    60 minutes
+                </span>
+
+                <span class="test-start">
+                    Start →
+                </span>
+            </div>
+        `;
+
+        card.addEventListener(
+            "click",
+            () => openTest(i)
+        );
+
+        container.appendChild(card);
+
+    }
+
+
+    const countLabel =
+        document.getElementById(
+            "testCountLabel"
+        );
+
+    if (countLabel) {
+
+        countLabel.textContent =
+            `${CONFIG.TEST_COUNT} Tests`;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD TEST
+========================================================= */
+
+async function openTest(testNumber) {
+
+    setLoading(
+        true,
+        `Loading Test ${testNumber}...`
+    );
+
+    try {
+
+        const url =
+            `${CONFIG.TEST_FOLDER}Test${testNumber}.json`;
+
+        const response =
+            await fetch(
+                `${url}?t=${Date.now()}`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Test${testNumber}.json could not be loaded.`
+            );
+
+        }
+
+        const testData =
+            await response.json();
+
+        validateTest(testData);
+
+        currentTest =
+            testData;
+
+        currentTestNumber =
+            testNumber;
+
+        studentAnswers = {};
+
+        currentPartIndex = 0;
+
+        testSubmitted = false;
+
+        testStarted = false;
+
+        scoreData = null;
+
+        saveAnswersToStorage();
+
+        showTestIntroduction();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Unable to load the test.",
+            "error"
+        );
+
+    } finally {
+
+        setLoading(false);
+
+    }
+
+}
+
+
+/* =========================================================
+   VALIDATE TEST
+========================================================= */
+
+function validateTest(test) {
+
+    if (!test) {
+
+        throw new Error(
+            "Test JSON is empty."
+        );
+
+    }
+
+    if (!test.testId) {
+
+        throw new Error(
+            "Test JSON is missing testId."
+        );
+
+    }
+
+    if (!Array.isArray(test.parts)) {
+
+        throw new Error(
+            "Test JSON is missing parts."
+        );
+
+    }
+
+    if (test.parts.length === 0) {
+
+        throw new Error(
+            "Test has no parts."
+        );
+
+    }
+
+    test.parts.forEach(
+        (part, index) => {
+
+            if (!part.passage) {
+
+                throw new Error(
+                    `Part ${index + 1} has no passage.`
+                );
+
+            }
+
+            if (
+                !Array.isArray(
+                    part.passage.paragraphs
+                )
+            ) {
+
+                throw new Error(
+                    `Part ${index + 1} has no paragraphs.`
+                );
+
+            }
+
+            if (
+                !Array.isArray(
+                    part.questionGroups
+                )
+            ) {
+
+                throw new Error(
+                    `Part ${index + 1} has no questionGroups.`
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    TEST INTRODUCTION
-   ============================================================ */
+========================================================= */
 
 function showTestIntroduction() {
 
-  const app =
-    document.querySelector("#app");
+    const title =
+        document.getElementById(
+            "introTestTitle"
+        );
 
-  if (!app) return;
+    const description =
+        document.getElementById(
+            "introTestDescription"
+        );
 
-  app.innerHTML = `
+    const duration =
+        document.getElementById(
+            "introDuration"
+        );
 
-    <div class="test-introduction">
+    const questionCount =
+        document.getElementById(
+            "introQuestionCount"
+        );
 
-      <div class="intro-card">
+    const partCount =
+        document.getElementById(
+            "introPartCount"
+        );
 
-        <h1>
-          ${escapeHTML(currentTest.title)}
-        </h1>
+    if (title) {
 
-        <div class="intro-information">
+        title.textContent =
+            currentTest.title ||
+            `IELTS Reading Test ${currentTestNumber}`;
 
-          <div>
-            <strong>Duration</strong>
-            <span>
-              ${currentTest.duration || 60} minutes
-            </span>
-          </div>
+    }
 
-          <div>
-            <strong>Parts</strong>
-            <span>
-              ${currentTest.parts.length}
-            </span>
-          </div>
+    if (description) {
 
-          <div>
-            <strong>Questions</strong>
-            <span>
-              ${countQuestions(currentTest)}
-            </span>
-          </div>
+        description.textContent =
+            "Complete the IELTS Reading practice test within the allocated time.";
 
-        </div>
+    }
 
-        <div class="intro-instructions">
+    if (duration) {
 
-          <h3>Before you begin</h3>
+        duration.textContent =
+            `${currentTest.duration || CONFIG.DEFAULT_DURATION} minutes`;
 
-          <ul>
-            <li>You have ${currentTest.duration || 60} minutes.</li>
-            <li>Read each passage carefully.</li>
-            <li>Answer all questions.</li>
-            <li>Your answers will be marked automatically.</li>
-            <li>The test will submit automatically when time reaches zero.</li>
-          </ul>
+    }
 
-        </div>
+    if (questionCount) {
 
-        <button
-          data-action="start-test"
-          class="primary-button start-button"
-        >
-          START TEST
-        </button>
+        questionCount.textContent =
+            countTotalQuestions();
 
-        <button
-          data-action="dashboard"
-          class="secondary-button"
-        >
-          Back to Dashboard
-        </button>
+    }
 
-      </div>
+    if (partCount) {
 
-    </div>
-  `;
+        partCount.textContent =
+            currentTest.parts.length;
+
+    }
+
+    showScreen(
+        "testIntroScreen"
+    );
+
 }
 
 
-/* ============================================================
+/* =========================================================
    START TEST
-   ============================================================ */
+========================================================= */
 
-function startCurrentTest() {
+function startTest() {
 
-  if (!currentTest) return;
+    if (!currentTest) return;
 
-  testStarted = true;
-  testSubmitted = false;
+    testStarted = true;
 
-  studentAnswers = {};
+    testSubmitted = false;
 
-  const savedAnswers =
-    localStorage.getItem(
-      CONFIG.storageKeys.answers
-    );
+    testStartTime =
+        Date.now();
 
-  if (savedAnswers) {
+    testElapsedSeconds = 0;
 
-    try {
-      studentAnswers =
-        JSON.parse(savedAnswers);
-    } catch {
-      studentAnswers = {};
-    }
-
-  }
-
-  remainingSeconds =
-    (currentTest.duration || CONFIG.durationMinutes) * 60;
-
-  localStorage.setItem(
-    CONFIG.storageKeys.startTime,
-    String(Date.now())
-  );
-
-  localStorage.setItem(
-    CONFIG.storageKeys.remainingTime,
-    String(remainingSeconds)
-  );
-
-  renderTest();
-
-  startTimer();
-}
-
-
-/* ============================================================
-   RENDER TEST
-   ============================================================ */
-
-function renderTest() {
-
-  const app =
-    document.querySelector("#app");
-
-  if (!app || !currentTest) return;
-
-  const totalQuestions =
-    countQuestions(currentTest);
-
-  app.innerHTML = `
-
-    <div class="exam-container">
-
-      <header class="exam-header">
-
-        <div class="exam-title">
-          <strong>
-            ${escapeHTML(currentTest.title)}
-          </strong>
-        </div>
-
-        <div
-          id="timer"
-          class="exam-timer"
-        >
-          ${formatTime(remainingSeconds)}
-        </div>
-
-        <button
-          data-action="submit-test"
-          class="submit-button"
-        >
-          Submit Test
-        </button>
-
-      </header>
-
-
-      <div class="exam-body">
-
-        <section
-          id="passagePanel"
-          class="passage-panel"
-        >
-
-          <div class="panel-header">
-            <span id="passagePartTitle">
-              Reading Passage
-            </span>
-          </div>
-
-          <div
-            id="passageContent"
-            class="passage-content"
-          ></div>
-
-        </section>
-
-
-        <section
-          id="questionPanel"
-          class="question-panel"
-        >
-
-          <div class="panel-header">
-            <span>Questions</span>
-          </div>
-
-          <div
-            id="questionContent"
-            class="question-content"
-          ></div>
-
-        </section>
-
-      </div>
-
-
-      <footer class="exam-footer">
-
-        <div
-          id="questionNavigator"
-          class="question-navigator"
-        ></div>
-
-        <div class="part-navigation">
-
-          <button
-            data-action="previous-part"
-            class="secondary-button"
-          >
-            Previous
-          </button>
-
-          <span id="partIndicator"></span>
-
-          <button
-            data-action="next-part"
-            class="secondary-button"
-          >
-            Next
-          </button>
-
-        </div>
-
-      </footer>
-
-    </div>
-  `;
-
-  renderPart(0);
-
-  createQuestionNavigator();
-
-  updateQuestionNavigator();
-}
-
-
-/* ============================================================
-   CURRENT PART
-   ============================================================ */
-
-let currentPartIndex = 0;
-
-
-function renderPart(partIndex) {
-
-  if (!currentTest) return;
-
-  if (
-    partIndex < 0 ||
-    partIndex >= currentTest.parts.length
-  ) {
-    return;
-  }
-
-  currentPartIndex = partIndex;
-
-  const part =
-    currentTest.parts[partIndex];
-
-  renderPassage(part);
-
-  renderQuestionGroups(part);
-
-  updatePartIndicator();
-
-  updatePartNavigation();
-
-  updateQuestionNavigator();
-}
-
-
-/* ============================================================
-   RENDER PASSAGE
-   ============================================================ */
-
-function renderPassage(part) {
-
-  const title =
-    document.querySelector(
-      "#passagePartTitle"
-    );
-
-  const content =
-    document.querySelector(
-      "#passageContent"
-    );
-
-  if (!content) return;
-
-  if (title) {
-
-    title.textContent =
-      `Part ${part.partNumber}: ${part.title || ""}`;
-
-  }
-
-  const passage =
-    part.passage;
-
-  let html = "";
-
-  if (passage.title) {
-
-    html += `
-      <h2 class="passage-title">
-        ${escapeHTML(passage.title)}
-      </h2>
-    `;
-
-  }
-
-  if (
-    Array.isArray(passage.paragraphs)
-  ) {
-
-    passage.paragraphs.forEach(
-      paragraph => {
-
-        html += `
-          <div
-            class="passage-paragraph"
-            data-paragraph="${escapeHTML(paragraph.id)}"
-          >
-
-            ${
-              paragraph.id
-                ? `
-                  <div class="paragraph-label">
-                    ${escapeHTML(paragraph.id)}
-                  </div>
-                `
-                : ""
-            }
-
-            <p>
-              ${processVocabulary(
-                paragraph.text
-              )}
-            </p>
-
-          </div>
-        `;
-
-      }
-    );
-
-  } else if (passage.text) {
-
-    html += `
-      <div class="passage-text">
-        ${processVocabulary(passage.text)}
-      </div>
-    `;
-
-  }
-
-  content.innerHTML = html;
-
-}
-
-
-/* ============================================================
-   VOCABULARY PROCESSING
-   ============================================================ */
-
-function processVocabulary(text) {
-
-  if (!text) return "";
-
-  let escaped =
-    escapeHTML(text);
-
-  const words =
-    Object.keys(vocabulary);
-
-  if (!words.length) {
-    return escaped;
-  }
-
-  words.sort(
-    (a, b) =>
-      b.length - a.length
-  );
-
-  words.forEach(word => {
-
-    const safeWord =
-      escapeRegExp(word);
-
-    const regex =
-      new RegExp(
-        `\\b(${safeWord})\\b`,
-        "gi"
-      );
-
-    escaped =
-      escaped.replace(
-        regex,
-        match => `
-          <span
-            class="vocabulary-word"
-            data-vocabulary-word="${escapeAttribute(word)}"
-          >
-            ${match}
-          </span>
-        `
-      );
-
-  });
-
-  return escaped;
-}
-
-
-/* ============================================================
-   VOCABULARY LOADING
-   ============================================================ */
-
-async function loadVocabulary() {
-
-  try {
-
-    const response =
-      await fetch(
-        CONFIG.vocabularyFile,
-        {
-          cache: "no-cache"
-        }
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        "Vocabulary file not found."
-      );
-    }
-
-    const data =
-      await response.json();
-
-    vocabulary =
-      data.words || {};
-
-  } catch (error) {
-
-    console.warn(
-      "Vocabulary could not be loaded:",
-      error
-    );
-
-    vocabulary = {};
-  }
-
-}
-
-
-/* ============================================================
-   VOCABULARY POPUP
-   ============================================================ */
-
-function showVocabulary(word) {
-
-  const key =
-    findVocabularyKey(word);
-
-  if (!key) return;
-
-  const item =
-    vocabulary[key];
-
-  removeVocabularyPopup();
-
-  const popup =
-    document.createElement("div");
-
-  popup.id =
-    "vocabularyPopup";
-
-  popup.className =
-    "vocabulary-popup";
-
-  popup.innerHTML = `
-
-    <div class="vocabulary-popup-header">
-
-      <strong>
-        ${escapeHTML(
-          item.word || key
-        )}
-      </strong>
-
-      <button
-        type="button"
-        id="closeVocabulary"
-      >
-        ×
-      </button>
-
-    </div>
-
-    ${
-      item.simpleMeaning
-        ? `
-          <div class="vocabulary-simple">
-            ${escapeHTML(
-              item.simpleMeaning
-            )}
-          </div>
-        `
-        : ""
-    }
-
-    ${
-      item.meaning
-        ? `
-          <div class="vocabulary-meaning">
-            ${escapeHTML(
-              item.meaning
-            )}
-          </div>
-        `
-        : ""
-    }
-
-  `;
-
-  document.body.appendChild(popup);
-
-  document
-    .querySelector("#closeVocabulary")
-    ?.addEventListener(
-      "click",
-      removeVocabularyPopup
-    );
-
-}
-
-
-function removeVocabularyPopup() {
-
-  document
-    .querySelector(
-      "#vocabularyPopup"
-    )
-    ?.remove();
-
-}
-
-
-function findVocabularyKey(word) {
-
-  const lower =
-    String(word)
-      .toLowerCase();
-
-  return Object.keys(vocabulary)
-    .find(
-      key =>
-        key.toLowerCase() === lower
-    );
-}
-
-
-/* ============================================================
-   RENDER QUESTION GROUPS
-   ============================================================ */
-
-function renderQuestionGroups(part) {
-
-  const container =
-    document.querySelector(
-      "#questionContent"
-    );
-
-  if (!container) return;
-
-  let html = "";
-
-  part.questionGroups.forEach(
-    (group, index) => {
-
-      html += `
-        <section
-          class="question-group"
-          data-group-index="${index}"
-        >
-
-          <div class="question-group-header">
-
-            <h3>
-              ${formatQuestionType(
-                group.type
-              )}
-            </h3>
-
-            ${
-              group.questionRange
-                ? `
-                  <span>
-                    Questions ${escapeHTML(
-                      group.questionRange
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-          </div>
-
-          ${
-            group.instructions
-              ? `
-                <div class="question-instructions">
-                  ${escapeHTML(
-                    group.instructions
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-          ${renderQuestionGroup(group)}
-
-        </section>
-      `;
-
-    }
-  );
-
-  container.innerHTML = html;
-
-  restoreAnswersToUI();
-
-}
-
-
-/* ============================================================
-   QUESTION TYPE
-   ============================================================ */
-
-function formatQuestionType(type) {
-
-  const names = {
-
-    true_false_not_given:
-      "TRUE / FALSE / NOT GIVEN",
-
-    yes_no_not_given:
-      "YES / NO / NOT GIVEN",
-
-    fill_blank:
-      "Complete the Sentences",
-
-    summary_completion:
-      "Summary Completion",
-
-    multiple_choice:
-      "Multiple Choice",
-
-    multiple_choice_multiple:
-      "Multiple Choice",
-
-    matching_headings:
-      "Matching Headings",
-
-    matching_information:
-      "Matching Information",
-
-    matching_features:
-      "Matching Features",
-
-    answer_box:
-      "Choose the Correct Answer from the Box"
-
-  };
-
-  return (
-    names[type] ||
-    type
-      .replaceAll("_", " ")
-      .toUpperCase()
-  );
-}
-
-
-/* ============================================================
-   QUESTION GROUP RENDERER
-   ============================================================ */
-
-function renderQuestionGroup(group) {
-
-  switch (group.type) {
-
-    case "true_false_not_given":
-      return renderTrueFalseNotGiven(group);
-
-    case "yes_no_not_given":
-      return renderYesNoNotGiven(group);
-
-    case "fill_blank":
-      return renderFillBlank(group);
-
-    case "summary_completion":
-      return renderSummaryCompletion(group);
-
-    case "multiple_choice":
-      return renderMultipleChoice(group);
-
-    case "multiple_choice_multiple":
-      return renderMultipleChoiceMultiple(group);
-
-    case "matching_headings":
-      return renderMatchingHeadings(group);
-
-    case "matching_information":
-      return renderMatchingInformation(group);
-
-    case "matching_features":
-      return renderMatchingFeatures(group);
-
-    case "answer_box":
-      return renderAnswerBox(group);
-
-    default:
-      return `
-        <div class="unsupported-question">
-          Unsupported question type:
-          ${escapeHTML(group.type)}
-        </div>
-      `;
-  }
-
-}
-
-
-/* ============================================================
-   TRUE / FALSE / NOT GIVEN
-   ============================================================ */
-
-function renderTrueFalseNotGiven(group) {
-
-  return group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${escapeHTML(question.text)}
-
-        </div>
-
-        <div class="question-options">
-
-          ${renderRadio(
-            question.number,
-            "TRUE"
-          )}
-
-          ${renderRadio(
-            question.number,
-            "FALSE"
-          )}
-
-          ${renderRadio(
-            question.number,
-            "NOT GIVEN"
-          )}
-
-        </div>
-
-      </div>
-
-    `)
-    .join("");
-
-}
-
-
-/* ============================================================
-   YES / NO / NOT GIVEN
-   ============================================================ */
-
-function renderYesNoNotGiven(group) {
-
-  return group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${escapeHTML(question.text)}
-
-        </div>
-
-        <div class="question-options">
-
-          ${renderRadio(
-            question.number,
-            "YES"
-          )}
-
-          ${renderRadio(
-            question.number,
-            "NO"
-          )}
-
-          ${renderRadio(
-            question.number,
-            "NOT GIVEN"
-          )}
-
-        </div>
-
-      </div>
-
-    `)
-    .join("");
-
-}
-
-
-/* ============================================================
-   FILL BLANK
-   ============================================================ */
-
-function renderFillBlank(group) {
-
-  return group.questions
-    .map(question => `
-
-      <div
-        class="question fill-blank-question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${renderBlankText(
-            question.text,
-            question.number
-          )}
-
-        </div>
-
-      </div>
-
-    `)
-    .join("");
-
-}
-
-
-function renderBlankText(text, number) {
-
-  const safeText =
-    escapeHTML(text);
-
-  const blankRegex =
-    /_{2,}|<blank>|<BLANK>/gi;
-
-  if (blankRegex.test(safeText)) {
-
-    return safeText.replace(
-      blankRegex,
-      `
-        <input
-          type="text"
-          class="blank-input"
-          data-question-number="${number}"
-          autocomplete="off"
-        >
-      `
-    );
-
-  }
-
-  return `
-    ${safeText}
-
-    <input
-      type="text"
-      class="blank-input"
-      data-question-number="${number}"
-      autocomplete="off"
-    >
-  `;
-
-}
-
-
-/* ============================================================
-   SUMMARY COMPLETION
-   ============================================================ */
-
-function renderSummaryCompletion(group) {
-
-  let html = "";
-
-  if (group.summary) {
-
-    html += `
-      <div class="summary-text">
-
-        ${renderSummaryWithInputs(
-          group.summary,
-          group.questions
-        )}
-
-      </div>
-    `;
-
-  } else {
-
-    html += group.questions
-      .map(question => `
-
-        <div class="question">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${renderBlankText(
-            question.text,
-            question.number
-          )}
-
-        </div>
-
-      `)
-      .join("");
-
-  }
-
-  return html;
-
-}
-
-
-function renderSummaryWithInputs(
-  text,
-  questions
-) {
-
-  let result =
-    escapeHTML(text);
-
-  questions.forEach(
-    question => {
-
-      const patterns = [
-        `\\[${question.number}\\]`,
-        `\\{${question.number}\\}`,
-        `\\bQ${question.number}\\b`,
-        `_{2,}`
-      ];
-
-      for (
-        const pattern of patterns
-      ) {
-
-        const regex =
-          new RegExp(
-            pattern
-          );
-
-        if (regex.test(result)) {
-
-          result =
-            result.replace(
-              regex,
-              `
-                <input
-                  type="text"
-                  class="blank-input"
-                  data-question-number="${question.number}"
-                  autocomplete="off"
-                >
-              `
-            );
-
-          break;
-        }
-      }
-
-    }
-  );
-
-  return result;
-
-}
-
-
-/* ============================================================
-   MULTIPLE CHOICE
-   ============================================================ */
-
-function renderMultipleChoice(group) {
-
-  return group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${escapeHTML(question.text)}
-
-        </div>
-
-        <div class="multiple-choice-options">
-
-          ${question.options
-            .map(option => `
-
-              <label class="choice-option">
-
-                <input
-                  type="radio"
-                  name="question-${question.number}"
-                  value="${escapeAttribute(option.letter)}"
-                  data-question-number="${question.number}"
-                >
-
-                <span class="choice-letter">
-                  ${escapeHTML(option.letter)}
-                </span>
-
-                <span>
-                  ${escapeHTML(option.text)}
-                </span>
-
-              </label>
-
-            `)
-            .join("")}
-
-        </div>
-
-      </div>
-
-    `)
-    .join("");
-
-}
-
-
-/* ============================================================
-   MULTIPLE CHOICE - MULTIPLE ANSWERS
-   ============================================================ */
-
-function renderMultipleChoiceMultiple(group) {
-
-  return group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${escapeHTML(question.text)}
-
-        </div>
-
-        <div class="multiple-choice-options">
-
-          ${question.options
-            .map(option => `
-
-              <label class="choice-option">
-
-                <input
-                  type="checkbox"
-                  name="question-${question.number}"
-                  value="${escapeAttribute(option.letter)}"
-                  data-question-number="${question.number}"
-                >
-
-                <span class="choice-letter">
-                  ${escapeHTML(option.letter)}
-                </span>
-
-                <span>
-                  ${escapeHTML(option.text)}
-                </span>
-
-              </label>
-
-            `)
-            .join("")}
-
-        </div>
-
-      </div>
-
-    `)
-    .join("");
-
-}
-
-
-/* ============================================================
-   MATCHING HEADINGS
-   ============================================================ */
-
-function renderMatchingHeadings(group) {
-
-  let html = "";
-
-  if (Array.isArray(group.headings)) {
-
-    html += `
-      <div class="heading-list">
-
-        <h4>List of Headings</h4>
-
-        ${group.headings
-          .map(heading => `
-            <div class="heading-item">
-
-              <strong>
-                ${escapeHTML(heading.id)}
-              </strong>
-
-              <span>
-                ${escapeHTML(heading.text)}
-              </span>
-
-            </div>
-          `)
-          .join("")}
-
-      </div>
-    `;
-
-  }
-
-  html += group.questions
-    .map(question => `
-
-      <div
-        class="question matching-question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          Paragraph
-          <strong>
-            ${escapeHTML(question.paragraph)}
-          </strong>
-
-        </div>
-
-        <select
-          data-question-number="${question.number}"
-        >
-
-          <option value="">
-            Select heading
-          </option>
-
-          ${
-            group.headings
-              .map(heading => `
-                <option
-                  value="${escapeAttribute(heading.id)}"
-                >
-                  ${escapeHTML(heading.id)} -
-                  ${escapeHTML(heading.text)}
-                </option>
-              `)
-              .join("")
-          }
-
-        </select>
-
-      </div>
-
-    `)
-    .join("");
-
-  return html;
-
-}
-
-
-/* ============================================================
-   MATCHING INFORMATION
-   ============================================================ */
-
-function renderMatchingInformation(group) {
-
-  const paragraphs =
-    currentTest
-      ?.parts?.[currentPartIndex]
-      ?.passage
-      ?.paragraphs || [];
-
-  let html = "";
-
-  if (paragraphs.length) {
-
-    html += `
-      <div class="paragraph-options">
-
-        <strong>
-          Paragraphs:
-        </strong>
-
-        ${paragraphs
-          .map(p => `
-            <span>
-              ${escapeHTML(p.id)}
-            </span>
-          `)
-          .join("")}
-
-      </div>
-    `;
-
-  }
-
-  html += group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${escapeHTML(question.text)}
-
-        </div>
-
-        <select
-          data-question-number="${question.number}"
-        >
-
-          <option value="">
-            Select paragraph
-          </option>
-
-          ${paragraphs
-            .map(p => `
-              <option value="${escapeAttribute(p.id)}">
-                ${escapeHTML(p.id)}
-              </option>
-            `)
-            .join("")}
-
-        </select>
-
-      </div>
-
-    `)
-    .join("");
-
-  return html;
-
-}
-
-
-/* ============================================================
-   MATCHING FEATURES
-   ============================================================ */
-
-function renderMatchingFeatures(group) {
-
-  let html = "";
-
-  if (Array.isArray(group.features)) {
-
-    html += `
-      <div class="feature-list">
-
-        ${group.features
-          .map(feature => `
-            <div class="feature-item">
-
-              <strong>
-                ${escapeHTML(feature.id)}
-              </strong>
-
-              <span>
-                ${escapeHTML(feature.text)}
-              </span>
-
-            </div>
-          `)
-          .join("")}
-
-      </div>
-    `;
-
-  }
-
-  html += group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${escapeHTML(question.text)}
-
-        </div>
-
-        <select
-          data-question-number="${question.number}"
-        >
-
-          <option value="">
-            Select answer
-          </option>
-
-          ${group.features
-            .map(feature => `
-              <option value="${escapeAttribute(feature.id)}">
-                ${escapeHTML(feature.id)} -
-                ${escapeHTML(feature.text)}
-              </option>
-            `)
-            .join("")}
-
-        </select>
-
-      </div>
-
-    `)
-    .join("");
-
-  return html;
-
-}
-
-
-/* ============================================================
-   ANSWER BOX
-   ============================================================ */
-
-function renderAnswerBox(group) {
-
-  let html = "";
-
-  if (Array.isArray(group.options)) {
-
-    html += `
-      <div class="answer-box">
-
-        <h4>
-          Choose from the box
-        </h4>
-
-        <div class="answer-box-options">
-
-          ${group.options
-            .map(option => `
-              <span class="answer-box-item">
-                ${escapeHTML(option)}
-              </span>
-            `)
-            .join("")}
-
-        </div>
-
-      </div>
-    `;
-
-  }
-
-  html += group.questions
-    .map(question => `
-
-      <div
-        class="question"
-        data-question-number="${question.number}"
-      >
-
-        <div class="question-text">
-
-          <span class="question-number">
-            ${question.number}.
-          </span>
-
-          ${renderBlankText(
-            question.text,
-            question.number
-          )}
-
-        </div>
-
-        <select
-          class="answer-box-select"
-          data-question-number="${question.number}"
-        >
-
-          <option value="">
-            Select answer
-          </option>
-
-          ${group.options
-            .map(option => `
-              <option value="${escapeAttribute(option)}">
-                ${escapeHTML(option)}
-              </option>
-            `)
-            .join("")}
-
-        </select>
-
-      </div>
-
-    `)
-    .join("");
-
-  return html;
-
-}
-
-
-/* ============================================================
-   RADIO HELPER
-   ============================================================ */
-
-function renderRadio(number, value) {
-
-  return `
-    <label class="choice-option">
-
-      <input
-        type="radio"
-        name="question-${number}"
-        value="${escapeAttribute(value)}"
-        data-question-number="${number}"
-      >
-
-      <span>
-        ${escapeHTML(value)}
-      </span>
-
-    </label>
-  `;
-
-}
-
-
-/* ============================================================
-   SAVE ANSWER
-   ============================================================ */
-
-function saveAnswerFromElement(
-  element,
-  number
-) {
-
-  if (!number) return;
-
-  if (
-    element.type === "radio"
-  ) {
-
-    if (!element.checked) return;
-
-    studentAnswers[number] =
-      element.value;
-
-  }
-
-  else if (
-    element.type === "checkbox"
-  ) {
-
-    const checked =
-      document.querySelectorAll(
-        `input[name="question-${number}"]:checked`
-      );
-
-    studentAnswers[number] =
-      Array.from(checked)
-        .map(input => input.value);
-
-  }
-
-  else {
-
-    studentAnswers[number] =
-      element.value;
-
-  }
-
-  localStorage.setItem(
-    CONFIG.storageKeys.answers,
-    JSON.stringify(studentAnswers)
-  );
-
-  updateQuestionNavigator();
-
-}
-
-
-/* ============================================================
-   RESTORE ANSWERS
-   ============================================================ */
-
-function restoreAnswersToUI() {
-
-  Object.entries(
-    studentAnswers
-  ).forEach(
-    ([number, answer]) => {
-
-      if (Array.isArray(answer)) {
-
-        answer.forEach(value => {
-
-          const input =
-            document.querySelector(
-              `input[data-question-number="${number}"][value="${CSS.escape(value)}"]`
-            );
-
-          if (input) {
-            input.checked = true;
-          }
-
-        });
-
-        return;
-      }
-
-      const radio =
-        document.querySelector(
-          `input[type="radio"][data-question-number="${number}"][value="${CSS.escape(answer)}"]`
-        );
-
-      if (radio) {
-        radio.checked = true;
-        return;
-      }
-
-      const checkbox =
-        document.querySelector(
-          `input[type="checkbox"][data-question-number="${number}"][value="${CSS.escape(answer)}"]`
-        );
-
-      if (checkbox) {
-        checkbox.checked = true;
-        return;
-      }
-
-      const input =
-        document.querySelector(
-          `[data-question-number="${number}"]`
-        );
-
-      if (input) {
-        input.value = answer;
-      }
-
-    }
-  );
-
-}
-
-
-/* ============================================================
-   QUESTION NAVIGATOR
-   ============================================================ */
-
-function createQuestionNavigator() {
-
-  const navigator =
-    document.querySelector(
-      "#questionNavigator"
-    );
-
-  if (!navigator) return;
-
-  const questions =
-    getAllQuestions(currentTest);
-
-  navigator.innerHTML =
-    questions
-      .map(question => `
-
-        <button
-          type="button"
-          class="question-number-button"
-          data-jump-question="${question.number}"
-        >
-          ${question.number}
-        </button>
-
-      `)
-      .join("");
-
-  navigator.addEventListener(
-    "click",
-    event => {
-
-      const button =
-        event.target.closest(
-          "[data-jump-question]"
-        );
-
-      if (!button) return;
-
-      const number =
+    const duration =
         Number(
-          button.dataset.jumpQuestion
+            currentTest.duration ||
+            CONFIG.DEFAULT_DURATION
         );
 
-      jumpToQuestion(number);
+    remainingSeconds =
+        duration * 60;
 
-    }
-  );
+    showScreen(
+        "testScreen"
+    );
+
+    renderCurrentPart();
+
+    renderQuestionNavigator();
+
+    startTimer();
 
 }
 
 
-function updateQuestionNavigator() {
-
-  const buttons =
-    document.querySelectorAll(
-      "[data-jump-question]"
-    );
-
-  buttons.forEach(button => {
-
-    const number =
-      Number(
-        button.dataset.jumpQuestion
-      );
-
-    const answer =
-      studentAnswers[number];
-
-    button.classList.toggle(
-      "answered",
-      hasAnswer(answer)
-    );
-
-  });
-
-}
-
-
-/* ============================================================
-   JUMP TO QUESTION
-   ============================================================ */
-
-function jumpToQuestion(number) {
-
-  const question =
-    document.querySelector(
-      `[data-question-number="${number}"]`
-    );
-
-  if (!question) {
-
-    const allParts =
-      currentTest.parts;
-
-    for (
-      let i = 0;
-      i < allParts.length;
-      i++
-    ) {
-
-      const contains =
-        partContainsQuestion(
-          allParts[i],
-          number
-        );
-
-      if (contains) {
-
-        renderPart(i);
-
-        setTimeout(
-          () => jumpToQuestion(number),
-          50
-        );
-
-        return;
-      }
-
-    }
-
-    return;
-  }
-
-  const wrapper =
-    question.closest(".question") ||
-    question;
-
-  wrapper.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-  wrapper.classList.add(
-    "question-highlight"
-  );
-
-  setTimeout(
-    () =>
-      wrapper.classList.remove(
-        "question-highlight"
-      ),
-    1200
-  );
-
-}
-
-
-/* ============================================================
-   NEXT / PREVIOUS PART
-   ============================================================ */
-
-function goToNextPart() {
-
-  if (!currentTest) return;
-
-  if (
-    currentPartIndex <
-    currentTest.parts.length - 1
-  ) {
-
-    renderPart(
-      currentPartIndex + 1
-    );
-
-  }
-
-}
-
-
-function goToPreviousPart() {
-
-  if (!currentTest) return;
-
-  if (
-    currentPartIndex > 0
-  ) {
-
-    renderPart(
-      currentPartIndex - 1
-    );
-
-  }
-
-}
-
-
-function updatePartIndicator() {
-
-  const element =
-    document.querySelector(
-      "#partIndicator"
-    );
-
-  if (!element || !currentTest) return;
-
-  element.textContent =
-    `Part ${currentPartIndex + 1} of ${currentTest.parts.length}`;
-
-}
-
-
-function updatePartNavigation() {
-
-  const previous =
-    document.querySelector(
-      "[data-action='previous-part']"
-    );
-
-  const next =
-    document.querySelector(
-      "[data-action='next-part']"
-    );
-
-  if (previous) {
-
-    previous.disabled =
-      currentPartIndex === 0;
-
-  }
-
-  if (next) {
-
-    next.disabled =
-      currentPartIndex ===
-      currentTest.parts.length - 1;
-
-  }
-
-}
-
-
-/* ============================================================
+/* =========================================================
    TIMER
-   ============================================================ */
+========================================================= */
 
 function startTimer() {
 
-  stopTimer();
+    stopTimer();
 
-  updateTimerDisplay();
+    updateTimerDisplay();
 
-  timerInterval =
-    setInterval(
-      () => {
+    timerInterval =
+        setInterval(
+            () => {
 
-        if (!testStarted) return;
+                if (
+                    testSubmitted ||
+                    !testStarted
+                ) {
 
-        remainingSeconds--;
+                    return;
 
-        localStorage.setItem(
-          CONFIG.storageKeys.remainingTime,
-          String(remainingSeconds)
+                }
+
+                remainingSeconds--;
+
+                testElapsedSeconds++;
+
+                updateTimerDisplay();
+
+                if (
+                    remainingSeconds <= 0
+                ) {
+
+                    remainingSeconds = 0;
+
+                    updateTimerDisplay();
+
+                    autoSubmitTest();
+
+                }
+
+            },
+            1000
         );
-
-        updateTimerDisplay();
-
-        if (
-          remainingSeconds <= 0
-        ) {
-
-          remainingSeconds = 0;
-
-          stopTimer();
-
-          autoSubmitTest();
-
-        }
-
-      },
-      1000
-    );
 
 }
 
+
+/* =========================================================
+   STOP TIMER
+========================================================= */
 
 function stopTimer() {
 
-  if (timerInterval) {
+    if (timerInterval) {
 
-    clearInterval(
-      timerInterval
-    );
+        clearInterval(
+            timerInterval
+        );
 
-    timerInterval = null;
+        timerInterval = null;
 
-  }
+    }
 
 }
 
+
+/* =========================================================
+   TIMER DISPLAY
+========================================================= */
 
 function updateTimerDisplay() {
 
-  const timer =
-    document.querySelector(
-      "#timer"
+    const timer =
+        document.getElementById(
+            "timer"
+        );
+
+    if (!timer) return;
+
+    const minutes =
+        Math.floor(
+            remainingSeconds / 60
+        );
+
+    const seconds =
+        remainingSeconds % 60;
+
+    timer.textContent =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    timer.classList.remove(
+        "warning",
+        "danger"
     );
 
-  if (!timer) return;
+    if (
+        remainingSeconds <= 300
+    ) {
 
-  timer.textContent =
-    formatTime(
-      remainingSeconds
-    );
+        timer.classList.add(
+            "danger"
+        );
 
-  timer.classList.toggle(
-    "warning",
-    remainingSeconds <= 300
-  );
+    } else if (
+        remainingSeconds <= 600
+    ) {
 
-  timer.classList.toggle(
-    "danger",
-    remainingSeconds <= 60
-  );
+        timer.classList.add(
+            "warning"
+        );
+
+    }
 
 }
 
 
-function formatTime(seconds) {
+/* =========================================================
+   RENDER CURRENT PART
+========================================================= */
 
-  seconds =
-    Math.max(
-      0,
-      Number(seconds) || 0
+function renderCurrentPart() {
+
+    if (!currentTest) return;
+
+    const part =
+        currentTest.parts[
+            currentPartIndex
+        ];
+
+    if (!part) return;
+
+    renderPassage(part);
+
+    renderQuestions(part);
+
+    updatePartButtons();
+
+    restoreAnswers();
+
+    updateQuestionNavigator();
+
+}
+
+
+/* =========================================================
+   RENDER PASSAGE
+========================================================= */
+
+function renderPassage(part) {
+
+    const title =
+        document.getElementById(
+            "passageTitle"
+        );
+
+    const content =
+        document.getElementById(
+            "passageContent"
+        );
+
+    if (!content) return;
+
+    if (title) {
+
+        title.textContent =
+            part.passage.title ||
+            part.title ||
+            "Reading Passage";
+
+    }
+
+    content.innerHTML = "";
+
+    const paragraphs =
+        part.passage.paragraphs ||
+        [];
+
+    paragraphs.forEach(
+        paragraph => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "passage-paragraph";
+
+            const label =
+                document.createElement(
+                    "span"
+                );
+
+            label.className =
+                "paragraph-label";
+
+            label.textContent =
+                paragraph.id;
+
+            div.appendChild(label);
+
+            const textContainer =
+                document.createElement(
+                    "span"
+                );
+
+            textContainer.innerHTML =
+                highlightVocabulary(
+                    escapeHTML(
+                        paragraph.text ||
+                        ""
+                    )
+                );
+
+            div.appendChild(
+                textContainer
+            );
+
+            content.appendChild(div);
+
+        }
     );
 
-  const minutes =
-    Math.floor(
-      seconds / 60
+
+    /* Vocabulary clicks */
+
+    content
+        .querySelectorAll(
+            ".vocabulary-word"
+        )
+        .forEach(
+            element => {
+
+                element.addEventListener(
+                    "click",
+                    event => {
+
+                        event.stopPropagation();
+
+                        const word =
+                            element.dataset.word;
+
+                        showVocabularyPopup(
+                            word,
+                            event
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   VOCABULARY HIGHLIGHT
+========================================================= */
+
+function highlightVocabulary(text) {
+
+    if (
+        !vocabulary ||
+        Object.keys(vocabulary).length === 0
+    ) {
+
+        return text;
+
+    }
+
+    const words =
+        Object.keys(vocabulary)
+            .sort(
+                (a, b) =>
+                    b.length - a.length
+            );
+
+    if (words.length === 0) {
+
+        return text;
+
+    }
+
+    const escapedWords =
+        words.map(
+            word =>
+                escapeRegExp(word)
+        );
+
+    const regex =
+        new RegExp(
+            `\\b(${escapedWords.join("|")})\\b`,
+            "gi"
+        );
+
+    return text.replace(
+        regex,
+        match => {
+
+            const key =
+                findVocabularyKey(
+                    match
+                );
+
+            if (!key) {
+
+                return match;
+
+            }
+
+            return `
+                <span
+                    class="vocabulary-word"
+                    data-word="${escapeAttribute(key)}"
+                >
+                    ${match}
+                </span>
+            `;
+
+        }
     );
 
-  const secs =
-    seconds % 60;
+}
 
-  return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+/* =========================================================
+   FIND VOCABULARY KEY
+========================================================= */
+
+function findVocabularyKey(word) {
+
+    const lower =
+        String(word)
+            .toLowerCase();
+
+    const key =
+        Object.keys(vocabulary)
+            .find(
+                item =>
+                    item.toLowerCase() === lower
+            );
+
+    return key || null;
 
 }
 
 
-/* ============================================================
-   SUBMIT TEST
-   ============================================================ */
+/* =========================================================
+   LOAD VOCABULARY
+========================================================= */
 
-async function submitTest() {
+async function loadVocabulary() {
 
-  if (testSubmitted) return;
+    try {
 
-  const unanswered =
-    countUnansweredQuestions();
+        const response =
+            await fetch(
+                `${CONFIG.VOCABULARY_FILE}?t=${Date.now()}`,
+                {
+                    cache: "no-store"
+                }
+            );
 
-  if (unanswered > 0) {
+        if (!response.ok) {
 
-    const confirmed =
-      window.confirm(
-        `You have ${unanswered} unanswered question(s).\n\nAre you sure you want to submit?`
-      );
+            console.warn(
+                "Vocabulary file could not be loaded."
+            );
 
-    if (!confirmed) return;
+            vocabulary = {};
 
-  } else {
+            return;
 
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to submit your test?"
-      );
+        }
 
-    if (!confirmed) return;
+        const data =
+            await response.json();
 
-  }
+        /*
+           Expected format:
 
-  await finalizeTest(false);
+           {
+             "words": {
+               "cultivation": {
+                 "meaning": "...",
+                 "simpleMeaning": "..."
+               }
+             }
+           }
+        */
 
-}
+        vocabulary =
+            data.words ||
+            {};
 
+    } catch (error) {
 
-/* ============================================================
-   AUTO SUBMIT
-   ============================================================ */
+        console.warn(
+            "Vocabulary loading failed:",
+            error
+        );
 
-async function autoSubmitTest() {
+        vocabulary = {};
 
-  if (testSubmitted) return;
-
-  alert(
-    "Time is up. Your test will now be submitted automatically."
-  );
-
-  await finalizeTest(true);
-
-}
-
-
-/* ============================================================
-   FINALIZE TEST
-   ============================================================ */
-
-async function finalizeTest(autoSubmitted) {
-
-  if (testSubmitted) return;
-
-  testSubmitted = true;
-  testStarted = false;
-
-  stopTimer();
-
-  saveAllVisibleAnswers();
-
-  const result =
-    calculateScore();
-
-  scoreData =
-    result;
-
-  showResultScreen(
-    result,
-    autoSubmitted
-  );
-
-  await saveResultToAPI(
-    result
-  );
+    }
 
 }
 
 
-/* ============================================================
-   SAVE VISIBLE ANSWERS
-   ============================================================ */
+/* =========================================================
+   VOCABULARY POPUP
+========================================================= */
 
-function saveAllVisibleAnswers() {
+function showVocabularyPopup(
+    word,
+    event
+) {
 
-  const elements =
-    document.querySelectorAll(
-      "[data-question-number]"
+    const entry =
+        vocabulary[word];
+
+    if (!entry) return;
+
+    const popup =
+        document.getElementById(
+            "vocabularyPopup"
+        );
+
+    const wordElement =
+        document.getElementById(
+            "vocabularyWord"
+        );
+
+    const meaning =
+        document.getElementById(
+            "vocabularyMeaning"
+        );
+
+    const simpleMeaning =
+        document.getElementById(
+            "vocabularySimpleMeaning"
+        );
+
+    if (!popup) return;
+
+    if (wordElement) {
+
+        wordElement.textContent =
+            word;
+
+    }
+
+    if (meaning) {
+
+        meaning.textContent =
+            entry.meaning ||
+            "";
+
+    }
+
+    if (simpleMeaning) {
+
+        simpleMeaning.textContent =
+            entry.simpleMeaning ||
+            "";
+
+    }
+
+    popup.classList.remove(
+        "hidden"
     );
 
-  elements.forEach(element => {
+    positionVocabularyPopup(
+        popup,
+        event
+    );
+
+}
+
+
+/* =========================================================
+   POSITION VOCABULARY POPUP
+========================================================= */
+
+function positionVocabularyPopup(
+    popup,
+    event
+) {
+
+    const margin = 12;
+
+    let left =
+        event.clientX + margin;
+
+    let top =
+        event.clientY + margin;
+
+    const rect =
+        popup.getBoundingClientRect();
+
+    if (
+        left + rect.width >
+        window.innerWidth - margin
+    ) {
+
+        left =
+            event.clientX -
+            rect.width -
+            margin;
+
+    }
+
+    if (
+        top + rect.height >
+        window.innerHeight - margin
+    ) {
+
+        top =
+            event.clientY -
+            rect.height -
+            margin;
+
+    }
+
+    left =
+        Math.max(
+            margin,
+            left
+        );
+
+    top =
+        Math.max(
+            margin,
+            top
+        );
+
+    popup.style.left =
+        `${left}px`;
+
+    popup.style.top =
+        `${top}px`;
+
+}
+
+
+/* =========================================================
+   CLOSE VOCABULARY
+========================================================= */
+
+function closeVocabularyPopup() {
+
+    const popup =
+        document.getElementById(
+            "vocabularyPopup"
+        );
+
+    if (popup) {
+
+        popup.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER QUESTIONS
+========================================================= */
+
+function renderQuestions(part) {
+
+    const content =
+        document.getElementById(
+            "questionContent"
+        );
+
+    const partTitle =
+        document.getElementById(
+            "questionPartTitle"
+        );
+
+    if (!content) return;
+
+    content.innerHTML = "";
+
+    if (partTitle) {
+
+        partTitle.textContent =
+            `Part ${part.partNumber}: ${part.title}`;
+
+    }
+
+    const groups =
+        part.questionGroups ||
+        [];
+
+    groups.forEach(
+        (group, groupIndex) => {
+
+            const groupElement =
+                document.createElement(
+                    "div"
+                );
+
+            groupElement.className =
+                "question-group";
+
+            groupElement.dataset.groupIndex =
+                groupIndex;
+
+            const instruction =
+                document.createElement(
+                    "div"
+                );
+
+            instruction.className =
+                "question-instructions";
+
+            instruction.innerHTML = `
+                <strong>
+                    Questions ${escapeHTML(
+                        group.questionRange || ""
+                    )}
+                </strong>
+                <br>
+                ${escapeHTML(
+                    group.instructions || ""
+                )}
+            `;
+
+            groupElement.appendChild(
+                instruction
+            );
+
+
+            switch (group.type) {
+
+                case "true_false_not_given":
+
+                    renderTrueFalseNotGiven(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "yes_no_not_given":
+
+                    renderYesNoNotGiven(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "fill_blank":
+
+                    renderFillBlank(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "summary_completion":
+
+                    renderSummaryCompletion(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "multiple_choice":
+
+                    renderMultipleChoice(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "multiple_choice_multiple":
+
+                    renderMultipleChoiceMultiple(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "matching_headings":
+
+                    renderMatchingHeadings(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "matching_information":
+
+                    renderMatchingInformation(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "matching_features":
+
+                    renderMatchingFeatures(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                case "answer_box":
+
+                    renderAnswerBox(
+                        group,
+                        groupElement
+                    );
+
+                    break;
+
+
+                default:
+
+                    renderUnsupportedGroup(
+                        group,
+                        groupElement
+                    );
+
+            }
+
+            content.appendChild(
+                groupElement
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TRUE / FALSE / NOT GIVEN
+========================================================= */
+
+function renderTrueFalseNotGiven(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const select =
+                createSelect(
+                    question.number,
+                    [
+                        "",
+                        "TRUE",
+                        "FALSE",
+                        "NOT GIVEN"
+                    ]
+                );
+
+            item.appendChild(
+                select
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   YES / NO / NOT GIVEN
+========================================================= */
+
+function renderYesNoNotGiven(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const select =
+                createSelect(
+                    question.number,
+                    [
+                        "",
+                        "YES",
+                        "NO",
+                        "NOT GIVEN"
+                    ]
+                );
+
+            item.appendChild(
+                select
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FILL BLANK
+========================================================= */
+
+function renderFillBlank(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const input =
+                document.createElement(
+                    "input"
+                );
+
+            input.type =
+                "text";
+
+            input.className =
+                "answer-input";
+
+            input.dataset.questionNumber =
+                question.number;
+
+            input.autocomplete =
+                "off";
+
+            input.placeholder =
+                "Type your answer";
+
+            item.appendChild(
+                input
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SUMMARY COMPLETION
+========================================================= */
+
+function renderSummaryCompletion(
+    group,
+    container
+) {
+
+    const summary =
+        group.summary || "";
+
+    const summaryElement =
+        document.createElement(
+            "div"
+        );
+
+    summaryElement.className =
+        "question-item summary-question";
+
+    let html =
+        escapeHTML(summary);
+
+    const blanks =
+        group.blanks || [];
+
+    blanks.forEach(
+        blank => {
+
+            const number =
+                blank.number;
+
+            const placeholder =
+                `___Q${number}___`;
+
+            /*
+               If summary uses ________, replace
+               each blank in sequence.
+            */
+
+        }
+    );
+
+
+    /*
+       Replace underscores one by one.
+    */
+
+    let blankIndex = 0;
+
+    html =
+        html.replace(
+            /_{3,}|\[number\]|\{number\}|Qnumber/gi,
+            () => {
+
+                if (
+                    blankIndex >=
+                    blanks.length
+                ) {
+
+                    return "________";
+
+                }
+
+                const number =
+                    blanks[
+                        blankIndex
+                    ].number;
+
+                blankIndex++;
+
+                return `
+                    <input
+                        type="text"
+                        class="inline-answer-input"
+                        data-question-number="${number}"
+                        autocomplete="off"
+                        aria-label="Answer ${number}"
+                    >
+                `;
+
+            }
+        );
+
+
+    /*
+       If the summary contains normal underscores,
+       the regex above handles them.
+    */
+
+    summaryElement.innerHTML =
+        `<div class="question-text">${html}</div>`;
+
+
+    /*
+       If there are blanks but no placeholders were
+       found, show the blanks below the summary.
+    */
+
+    if (
+        blanks.length > 0 &&
+        !summaryElement.querySelector(
+            "[data-question-number]"
+        )
+    ) {
+
+        const fallback =
+            document.createElement(
+                "div"
+            );
+
+        fallback.style.marginTop =
+            "15px";
+
+        blanks.forEach(
+            blank => {
+
+                const input =
+                    document.createElement(
+                        "input"
+                    );
+
+                input.type =
+                    "text";
+
+                input.className =
+                    "inline-answer-input";
+
+                input.dataset.questionNumber =
+                    blank.number;
+
+                input.placeholder =
+                    `${blank.number}`;
+
+                fallback.appendChild(
+                    input
+                );
+
+            }
+        );
+
+        summaryElement.appendChild(
+            fallback
+        );
+
+    }
+
+    container.appendChild(
+        summaryElement
+    );
+
+}
+
+
+/* =========================================================
+   MULTIPLE CHOICE
+========================================================= */
+
+function renderMultipleChoice(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const options =
+                document.createElement(
+                    "div"
+                );
+
+            options.className =
+                "options-list";
+
+            (question.options ||
+                group.options ||
+                []
+            ).forEach(
+                option => {
+
+                    const label =
+                        document.createElement(
+                            "label"
+                        );
+
+                    label.className =
+                        "option-item";
+
+                    label.innerHTML = `
+                        <input
+                            type="radio"
+                            name="question_${question.number}"
+                            value="${escapeAttribute(
+                                option.letter
+                            )}"
+                            data-question-number="${question.number}"
+                        >
+
+                        <span class="option-letter">
+                            ${escapeHTML(
+                                option.letter
+                            )}
+                        </span>
+
+                        <span class="option-text">
+                            ${escapeHTML(
+                                option.text
+                            )}
+                        </span>
+                    `;
+
+                    options.appendChild(
+                        label
+                    );
+
+                }
+            );
+
+            item.appendChild(
+                options
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MULTIPLE CHOICE - TWO ANSWERS
+=========================================================
+
+   IMPORTANT:
+
+   Your Test1.json has:
+
+   Question 27 = A
+   Question 28 = D
+
+   But the order should NOT matter.
+
+   Therefore:
+
+   27 A + 28 D = correct
+   27 D + 28 A = correct
+
+   The JSON structure stays unchanged.
+========================================================= */
+
+function renderMultipleChoiceMultiple(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    const options =
+        group.options || [];
+
+    questions.forEach(
+        (question, index) => {
+
+            const item =
+                createQuestionItem(
+                    question,
+                    false
+                );
+
+            const label =
+                document.createElement(
+                    "div"
+                );
+
+            label.className =
+                "question-text";
+
+            label.innerHTML = `
+                <strong>
+                    Answer ${index + 1}
+                </strong>
+            `;
+
+            item.insertBefore(
+                label,
+                item.firstChild
+            );
+
+
+            const select =
+                document.createElement(
+                    "select"
+                );
+
+            select.className =
+                "answer-select multiple-answer-select";
+
+            select.dataset.questionNumber =
+                question.number;
+
+            const blankOption =
+                document.createElement(
+                    "option"
+                );
+
+            blankOption.value = "";
+
+            blankOption.textContent =
+                "Select an answer";
+
+            select.appendChild(
+                blankOption
+            );
+
+
+            options.forEach(
+                option => {
+
+                    const optionElement =
+                        document.createElement(
+                            "option"
+                        );
+
+                    optionElement.value =
+                        option.letter;
+
+                    optionElement.textContent =
+                        `${option.letter}. ${option.text}`;
+
+                    select.appendChild(
+                        optionElement
+                    );
+
+                }
+            );
+
+
+            item.appendChild(
+                select
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MATCHING HEADINGS
+========================================================= */
+
+function renderMatchingHeadings(
+    group,
+    container
+) {
+
+    const headings =
+        group.headings || [];
+
+    const questions =
+        group.questions || [];
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const select =
+                document.createElement(
+                    "select"
+                );
+
+            select.className =
+                "answer-select";
+
+            select.dataset.questionNumber =
+                question.number;
+
+            addEmptyOption(
+                select,
+                "Select a heading"
+            );
+
+            headings.forEach(
+                heading => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        heading.id;
+
+                    option.textContent =
+                        `${heading.id}. ${heading.text}`;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+            item.appendChild(
+                select
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MATCHING INFORMATION
+========================================================= */
+
+function renderMatchingInformation(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    const letters =
+        getParagraphLetters();
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const select =
+                document.createElement(
+                    "select"
+                );
+
+            select.className =
+                "answer-select";
+
+            select.dataset.questionNumber =
+                question.number;
+
+            addEmptyOption(
+                select,
+                "Select paragraph"
+            );
+
+            letters.forEach(
+                letter => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        letter;
+
+                    option.textContent =
+                        `Paragraph ${letter}`;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+            item.appendChild(
+                select
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MATCHING FEATURES
+========================================================= */
+
+function renderMatchingFeatures(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    const letters =
+        getParagraphLetters();
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            const select =
+                document.createElement(
+                    "select"
+                );
+
+            select.className =
+                "answer-select";
+
+            select.dataset.questionNumber =
+                question.number;
+
+            addEmptyOption(
+                select,
+                "Select paragraph"
+            );
+
+            letters.forEach(
+                letter => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        letter;
+
+                    option.textContent =
+                        `Paragraph ${letter}`;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+            item.appendChild(
+                select
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ANSWER BOX
+========================================================= */
+
+function renderAnswerBox(
+    group,
+    container
+) {
+
+    const questions =
+        group.questions || [];
+
+    questions.forEach(
+        question => {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+            /*
+               IMPORTANT:
+               Only ONE input is created.
+
+               This fixes the duplicate-input problem
+               from the previous app.js.
+            */
+
+            const input =
+                document.createElement(
+                    "input"
+                );
+
+            input.type =
+                "text";
+
+            input.className =
+                "answer-input";
+
+            input.dataset.questionNumber =
+                question.number;
+
+            input.autocomplete =
+                "off";
+
+            input.placeholder =
+                "Enter your answer";
+
+            item.appendChild(
+                input
+            );
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   UNSUPPORTED QUESTION TYPE
+========================================================= */
+
+function renderUnsupportedGroup(
+    group,
+    container
+) {
+
+    const error =
+        document.createElement(
+            "div"
+        );
+
+    error.className =
+        "question-item";
+
+    error.innerHTML = `
+        <div class="question-text">
+            Unsupported question type:
+            <strong>
+                ${escapeHTML(
+                    group.type || "unknown"
+                )}
+            </strong>
+        </div>
+    `;
+
+    container.appendChild(
+        error
+    );
+
+}
+
+
+/* =========================================================
+   CREATE QUESTION ITEM
+========================================================= */
+
+function createQuestionItem(
+    question,
+    includeQuestionText = true
+) {
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+    item.className =
+        "question-item";
+
+    item.id =
+        `question-${question.number}`;
+
+    item.dataset.questionNumber =
+        question.number;
+
+
+    if (includeQuestionText) {
+
+        const text =
+            document.createElement(
+                "div"
+            );
+
+        text.className =
+            "question-text";
+
+        text.innerHTML = `
+            <span class="question-number-label">
+                ${question.number}.
+            </span>
+            ${escapeHTML(
+                question.text || ""
+            )}
+        `;
+
+        item.appendChild(
+            text
+        );
+
+    }
+
+    return item;
+
+}
+
+
+/* =========================================================
+   SELECT HELPERS
+========================================================= */
+
+function createSelect(
+    questionNumber,
+    values
+) {
+
+    const select =
+        document.createElement(
+            "select"
+        );
+
+    select.className =
+        "answer-select";
+
+    select.dataset.questionNumber =
+        questionNumber;
+
+    values.forEach(
+        value => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                value;
+
+            option.textContent =
+                value ||
+                "Select an answer";
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+    return select;
+
+}
+
+
+function addEmptyOption(
+    select,
+    text
+) {
+
+    const option =
+        document.createElement(
+            "option"
+        );
+
+    option.value = "";
+
+    option.textContent =
+        text;
+
+    select.appendChild(
+        option
+    );
+
+}
+
+
+/* =========================================================
+   GET PARAGRAPH LETTERS
+========================================================= */
+
+function getParagraphLetters() {
+
+    if (!currentTest) return [];
+
+    const part =
+        currentTest.parts[
+            currentPartIndex
+        ];
+
+    if (!part) return [];
+
+    return (
+        part.passage?.paragraphs ||
+        []
+    ).map(
+        paragraph =>
+            paragraph.id
+    );
+
+}
+
+
+/* =========================================================
+   ANSWER CHANGE
+========================================================= */
+
+function handleAnswerChange(event) {
+
+    const element =
+        event.target;
+
+    if (
+        !element.matches(
+            "[data-question-number]"
+        )
+    ) {
+
+        return;
+
+    }
 
     const number =
-      element.dataset.questionNumber;
+        Number(
+            element.dataset.questionNumber
+        );
 
     if (!number) return;
 
-    saveAnswerFromElement(
-      element,
-      number
-    );
+    let value = "";
 
-  });
+    if (
+        element.type ===
+        "radio"
+    ) {
+
+        if (!element.checked) {
+
+            return;
+
+        }
+
+        value =
+            element.value;
+
+    } else if (
+        element.type ===
+        "checkbox"
+    ) {
+
+        value =
+            element.checked
+                ? element.value
+                : "";
+
+    } else {
+
+        value =
+            element.value;
+
+    }
+
+    studentAnswers[number] =
+        value;
+
+    saveAnswersToStorage();
+
+    updateQuestionNavigator();
 
 }
 
 
-/* ============================================================
-   SCORE CALCULATION
-   ============================================================ */
+/* =========================================================
+   SAVE ALL VISIBLE ANSWERS
+========================================================= */
 
-function calculateScore() {
+function saveAllVisibleAnswers() {
 
-  let total = 0;
-
-  const partScores = {};
-
-  currentTest.parts.forEach(
-    part => {
-
-      let partScore = 0;
-
-      const questions =
-        getQuestionsFromPart(
-          part
+    const elements =
+        document.querySelectorAll(
+            "[data-question-number]"
         );
 
-      questions.forEach(
-        question => {
+    elements.forEach(
+        element => {
 
-          const studentAnswer =
-            studentAnswers[
-              question.number
-            ];
+            const number =
+                Number(
+                    element.dataset.questionNumber
+                );
 
-          if (
-            answersMatch(
-              studentAnswer,
-              question
-            )
-          ) {
+            if (!number) return;
 
-            partScore++;
 
-            total++;
+            if (
+                element.type ===
+                "radio"
+            ) {
 
-          }
+                if (
+                    element.checked
+                ) {
+
+                    studentAnswers[number] =
+                        element.value;
+
+                }
+
+                return;
+
+            }
+
+
+            if (
+                element.type ===
+                "checkbox"
+            ) {
+
+                if (
+                    element.checked
+                ) {
+
+                    studentAnswers[number] =
+                        element.value;
+
+                }
+
+                return;
+
+            }
+
+
+            studentAnswers[number] =
+                element.value;
 
         }
-      );
-
-      partScores[
-        `part${part.partNumber}`
-      ] = partScore;
-
-    }
-  );
-
-  const totalQuestions =
-    countQuestions(
-      currentTest
     );
 
-  const band =
-    calculateBand(
-      total
-    );
-
-  return {
-
-    part1:
-      partScores.part1 || 0,
-
-    part2:
-      partScores.part2 || 0,
-
-    part3:
-      partScores.part3 || 0,
-
-    part4:
-      partScores.part4 || 0,
-
-    total: total,
-
-    totalQuestions:
-      totalQuestions,
-
-    band: band,
-
-    timeUsed:
-      calculateTimeUsed()
-
-  };
+    saveAnswersToStorage();
 
 }
 
 
-/* ============================================================
-   ANSWER COMPARISON
-   ============================================================ */
+/* =========================================================
+   RESTORE ANSWERS
+========================================================= */
 
-function answersMatch(
-  studentAnswer,
-  question
-) {
+function restoreAnswers() {
 
-  if (
-    studentAnswer === undefined ||
-    studentAnswer === null
-  ) {
-    return false;
-  }
+    const elements =
+        document.querySelectorAll(
+            "[data-question-number]"
+        );
+
+    elements.forEach(
+        element => {
+
+            const number =
+                Number(
+                    element.dataset.questionNumber
+                );
+
+            const saved =
+                studentAnswers[number];
+
+            if (
+                saved === undefined ||
+                saved === null
+            ) {
+
+                return;
+
+            }
 
 
-  /* Multiple answer question */
+            if (
+                element.type ===
+                "radio"
+            ) {
 
-  if (
-    Array.isArray(
-      question.answers
-    )
-  ) {
+                element.checked =
+                    element.value ===
+                    saved;
+
+                return;
+
+            }
+
+
+            if (
+                element.type ===
+                "checkbox"
+            ) {
+
+                element.checked =
+                    element.value ===
+                    saved;
+
+                return;
+
+            }
+
+
+            element.value =
+                saved;
+
+        }
+    );
+
+    updateQuestionNavigator();
+
+}
+
+
+/* =========================================================
+   LOCAL STORAGE ANSWERS
+========================================================= */
+
+function saveAnswersToStorage() {
 
     if (
-      !Array.isArray(
-        studentAnswer
-      )
+        !currentTestNumber
     ) {
-      return false;
-    }
 
-    const correct =
-      normalizeArray(
-        question.answers
-      );
-
-    const student =
-      normalizeArray(
-        studentAnswer
-      );
-
-    if (
-      correct.length !==
-      student.length
-    ) {
-      return false;
-    }
-
-    return correct.every(
-      answer =>
-        student.includes(answer)
-    );
-
-  }
-
-
-  /* Normal answer */
-
-  const correct =
-    normalizeAnswer(
-      question.answer
-    );
-
-  const student =
-    normalizeAnswer(
-      studentAnswer
-    );
-
-  return (
-    correct === student
-  );
-
-}
-
-
-/* ============================================================
-   ANSWER NORMALIZATION
-   ============================================================ */
-
-function normalizeAnswer(answer) {
-
-  if (
-    answer === undefined ||
-    answer === null
-  ) {
-    return "";
-  }
-
-  return String(answer)
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
-
-}
-
-
-function normalizeArray(array) {
-
-  return array
-    .map(
-      item =>
-        normalizeAnswer(item)
-    )
-    .sort();
-
-}
-
-
-/* ============================================================
-   IELTS READING BAND
-   ============================================================ */
-
-function calculateBand(score) {
-
-  const table = [
-    {
-      min: 39,
-      band: 9.0
-    },
-    {
-      min: 37,
-      band: 8.5
-    },
-    {
-      min: 35,
-      band: 8.0
-    },
-    {
-      min: 33,
-      band: 7.5
-    },
-    {
-      min: 30,
-      band: 7.0
-    },
-    {
-      min: 27,
-      band: 6.5
-    },
-    {
-      min: 23,
-      band: 6.0
-    },
-    {
-      min: 19,
-      band: 5.5
-    },
-    {
-      min: 15,
-      band: 5.0
-    },
-    {
-      min: 13,
-      band: 4.5
-    },
-    {
-      min: 10,
-      band: 4.0
-    },
-    {
-      min: 8,
-      band: 3.5
-    },
-    {
-      min: 6,
-      band: 3.0
-    },
-    {
-      min: 4,
-      band: 2.5
-    },
-    {
-      min: 2,
-      band: 2.0
-    },
-    {
-      min: 1,
-      band: 1.0
-    }
-  ];
-
-  const result =
-    table.find(
-      item =>
-        score >= item.min
-    );
-
-  return result
-    ? result.band
-    : 0;
-
-}
-
-
-/* ============================================================
-   TIME USED
-   ============================================================ */
-
-function calculateTimeUsed() {
-
-  const duration =
-    (currentTest.duration ||
-      CONFIG.durationMinutes) *
-    60;
-
-  const used =
-    duration -
-    remainingSeconds;
-
-  return formatTime(
-    Math.max(
-      0,
-      used
-    )
-  );
-
-}
-
-
-/* ============================================================
-   RESULT SCREEN
-   ============================================================ */
-
-function showResultScreen(
-  result,
-  autoSubmitted
-) {
-
-  const app =
-    document.querySelector(
-      "#app"
-    );
-
-  if (!app) return;
-
-  app.innerHTML = `
-
-    <div class="result-page">
-
-      <div class="result-card">
-
-        <h1>Test Complete</h1>
-
-        ${
-          autoSubmitted
-            ? `
-              <div class="result-notice">
-                Time expired. Your answers were submitted automatically.
-              </div>
-            `
-            : ""
-        }
-
-        <div class="result-main-score">
-
-          <span class="score-number">
-            ${result.total}
-          </span>
-
-          <span class="score-total">
-            / ${result.totalQuestions}
-          </span>
-
-        </div>
-
-        <div class="result-band">
-
-          <span>
-            IELTS Reading Band
-          </span>
-
-          <strong>
-            ${result.band.toFixed(1)}
-          </strong>
-
-        </div>
-
-        <div class="result-parts">
-
-          ${renderPartScore(
-            "Part 1",
-            result.part1
-          )}
-
-          ${renderPartScore(
-            "Part 2",
-            result.part2
-          )}
-
-          ${renderPartScore(
-            "Part 3",
-            result.part3
-          )}
-
-          ${renderPartScore(
-            "Part 4",
-            result.part4
-          )}
-
-        </div>
-
-        <div class="result-time">
-
-          Time Used:
-          <strong>
-            ${result.timeUsed}
-          </strong>
-
-        </div>
-
-        <div class="result-actions">
-
-          <button
-            data-action="dashboard"
-            class="primary-button"
-          >
-            Back to Dashboard
-          </button>
-
-          <button
-            data-action="history"
-            class="secondary-button"
-          >
-            Score History
-          </button>
-
-        </div>
-
-        <div id="saveResultStatus">
-          Saving result...
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-}
-
-
-function renderPartScore(
-  title,
-  score
-) {
-
-  return `
-    <div class="part-score">
-
-      <span>
-        ${title}
-      </span>
-
-      <strong>
-        ${score}
-      </strong>
-
-    </div>
-  `;
-
-}
-
-
-/* ============================================================
-   SAVE RESULT TO GOOGLE APPS SCRIPT
-   ============================================================ */
-
-async function saveResultToAPI(
-  result
-) {
-
-  if (!currentUser) return;
-
-  const payload = {
-
-    resultId:
-      generateResultID(),
-
-    timestamp:
-      new Date().toISOString(),
-
-    studentId:
-      currentUser.studentId || "",
-
-    username:
-      currentUser.username,
-
-    testName:
-      currentTest.testId ||
-      `Test${currentTestNumber}`,
-
-    part1:
-      result.part1,
-
-    part2:
-      result.part2,
-
-    part3:
-      result.part3,
-
-    part4:
-      result.part4,
-
-    totalScore:
-      result.total,
-
-    totalQuestions:
-      result.totalQuestions,
-
-    band:
-      result.band,
-
-    timeUsed:
-      result.timeUsed,
-
-    submittedAt:
-      new Date().toISOString()
-
-  };
-
-  try {
-
-    const response =
-      await apiRequest(
-        "saveResult",
-        payload
-      );
-
-    const status =
-      document.querySelector(
-        "#saveResultStatus"
-      );
-
-    if (status) {
-
-      if (
-        response &&
-        response.success !== false
-      ) {
-
-        status.textContent =
-          "Result saved successfully.";
-
-        status.className =
-          "success-message";
-
-      } else {
-
-        status.textContent =
-          response?.message ||
-          "Result could not be saved.";
-
-        status.className =
-          "error-message";
-
-      }
+        return;
 
     }
 
-  } catch (error) {
+    const storageKey =
+        `ieltsAnswers_${currentTestNumber}`;
 
-    console.error(
-      "Save result error:",
-      error
-    );
-
-    const status =
-      document.querySelector(
-        "#saveResultStatus"
-      );
-
-    if (status) {
-
-      status.textContent =
-        "Result calculated, but could not be saved to the server.";
-
-      status.className =
-        "error-message";
-
-    }
-
-  }
-
-}
-
-
-/* ============================================================
-   SCORE HISTORY
-   ============================================================ */
-
-async function showHistory() {
-
-  if (!currentUser) {
-    showLoginScreen();
-    return;
-  }
-
-  showLoadingScreen(
-    "Loading score history..."
-  );
-
-  try {
-
-    const response =
-      await apiRequest(
-        "getHistory",
-        {
-          studentId:
-            currentUser.studentId,
-
-          username:
-            currentUser.username
-        }
-      );
-
-    const results =
-      normalizeResults(response);
-
-    renderHistory(
-      results
-    );
-
-  } catch (error) {
-
-    console.error(
-      "History error:",
-      error
-    );
-
-    showErrorScreen(
-      "Unable to load score history."
-    );
-
-  }
-
-}
-
-
-/* ============================================================
-   RENDER HISTORY
-   ============================================================ */
-
-function renderHistory(
-  results
-) {
-
-  const app =
-    document.querySelector(
-      "#app"
-    );
-
-  if (!app) return;
-
-  const sorted =
-    [...results].sort(
-      (a, b) =>
-        new Date(
-          b.timestamp
-        ) -
-        new Date(
-          a.timestamp
+    localStorage.setItem(
+        storageKey,
+        JSON.stringify(
+            studentAnswers
         )
     );
 
-  const totalTests =
-    sorted.length;
-
-  const averageScore =
-    totalTests
-      ? (
-          sorted.reduce(
-            (sum, item) =>
-              sum +
-              Number(
-                item.totalScore || 0
-              ),
-            0
-          ) /
-          totalTests
-        ).toFixed(1)
-      : "0.0";
-
-  const averageBand =
-    totalTests
-      ? (
-          sorted.reduce(
-            (sum, item) =>
-              sum +
-              Number(
-                item.band || 0
-              ),
-            0
-          ) /
-          totalTests
-        ).toFixed(1)
-      : "0.0";
+}
 
 
-  app.innerHTML = `
+/* =========================================================
+   LOAD SAVED ANSWERS
+========================================================= */
 
-    <div class="history-page">
+function loadSavedAnswers() {
 
-      <header class="dashboard-header">
+    if (
+        !currentTestNumber
+    ) {
 
-        <div>
+        return {};
 
-          <h1>
-            Score History
-          </h1>
+    }
 
-          <p>
-            ${escapeHTML(
-              currentUser.username
-            )}
-          </p>
+    const storageKey =
+        `ieltsAnswers_${currentTestNumber}`;
 
+    const saved =
+        localStorage.getItem(
+            storageKey
+        );
+
+    if (!saved) {
+
+        return {};
+
+    }
+
+    try {
+
+        return JSON.parse(
+            saved
+        );
+
+    } catch {
+
+        return {};
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER QUESTION NAVIGATOR
+========================================================= */
+
+function renderQuestionNavigator() {
+
+    const container =
+        document.getElementById(
+            "questionNavigator"
+        );
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const numbers =
+        getAllQuestionNumbers();
+
+    numbers.forEach(
+        number => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type =
+                "button";
+
+            button.className =
+                "question-number";
+
+            button.dataset.questionNumber =
+                number;
+
+            button.textContent =
+                number;
+
+            button.addEventListener(
+                "click",
+                () =>
+                    jumpToQuestion(
+                        number
+                    )
+            );
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+    updateQuestionNavigator();
+
+}
+
+
+/* =========================================================
+   UPDATE QUESTION NAVIGATOR
+========================================================= */
+
+function updateQuestionNavigator() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".question-number"
+        );
+
+    buttons.forEach(
+        button => {
+
+            const number =
+                Number(
+                    button.dataset.questionNumber
+                );
+
+            button.classList.remove(
+                "answered"
+            );
+
+            if (
+                isQuestionAnswered(
+                    number
+                )
+            ) {
+
+                button.classList.add(
+                    "answered"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   QUESTION ANSWER CHECK
+========================================================= */
+
+function isQuestionAnswered(
+    number
+) {
+
+    const answer =
+        studentAnswers[number];
+
+    if (
+        answer === undefined ||
+        answer === null
+    ) {
+
+        return false;
+
+    }
+
+    return String(
+        answer
+    ).trim() !== "";
+
+}
+
+
+/* =========================================================
+   JUMP TO QUESTION
+========================================================= */
+
+function jumpToQuestion(
+    number
+) {
+
+    const location =
+        findQuestionLocation(
+            number
+        );
+
+    if (!location) return;
+
+    if (
+        location.partIndex !==
+        currentPartIndex
+    ) {
+
+        currentPartIndex =
+            location.partIndex;
+
+        renderCurrentPart();
+
+    }
+
+    setTimeout(
+        () => {
+
+            const element =
+                document.getElementById(
+                    `question-${number}`
+                );
+
+            if (!element) return;
+
+            element.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+            document
+                .querySelectorAll(
+                    ".question-item"
+                )
+                .forEach(
+                    item =>
+                        item.classList.remove(
+                            "active-question"
+                        )
+                );
+
+            element.classList.add(
+                "active-question"
+            );
+
+        },
+        50
+    );
+
+}
+
+
+/* =========================================================
+   FIND QUESTION LOCATION
+========================================================= */
+
+function findQuestionLocation(
+    number
+) {
+
+    if (!currentTest) return null;
+
+    for (
+        let partIndex = 0;
+        partIndex <
+        currentTest.parts.length;
+        partIndex++
+    ) {
+
+        const part =
+            currentTest.parts[
+                partIndex
+            ];
+
+        for (
+            const group of
+            part.questionGroups || []
+        ) {
+
+            for (
+                const question of
+                group.questions || []
+            ) {
+
+                if (
+                    Number(
+                        question.number
+                    ) === Number(number)
+                ) {
+
+                    return {
+                        partIndex,
+                        group,
+                        question
+                    };
+
+                }
+
+            }
+
+            for (
+                const blank of
+                group.blanks || []
+            ) {
+
+                if (
+                    Number(
+                        blank.number
+                    ) === Number(number)
+                ) {
+
+                    return {
+                        partIndex,
+                        group,
+                        question: blank
+                    };
+
+                }
+
+            }
+
+        }
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   ALL QUESTION NUMBERS
+========================================================= */
+
+function getAllQuestionNumbers() {
+
+    if (!currentTest) return [];
+
+    const numbers = [];
+
+    currentTest.parts.forEach(
+        part => {
+
+            (part.questionGroups || [])
+                .forEach(
+                    group => {
+
+                        (group.questions || [])
+                            .forEach(
+                                question => {
+
+                                    numbers.push(
+                                        Number(
+                                            question.number
+                                        )
+                                    );
+
+                                }
+                            );
+
+
+                        (group.blanks || [])
+                            .forEach(
+                                blank => {
+
+                                    numbers.push(
+                                        Number(
+                                            blank.number
+                                        )
+                                    );
+
+                                }
+                            );
+
+                    }
+                );
+
+        }
+    );
+
+    return [
+        ...new Set(
+            numbers
+        )
+    ].sort(
+        (a, b) =>
+            a - b
+    );
+
+}
+
+
+/* =========================================================
+   COUNT QUESTIONS
+========================================================= */
+
+function countTotalQuestions() {
+
+    return getAllQuestionNumbers()
+        .length;
+
+}
+
+
+/* =========================================================
+   PART NAVIGATION
+========================================================= */
+
+function nextPart() {
+
+    saveAllVisibleAnswers();
+
+    if (!currentTest) return;
+
+    if (
+        currentPartIndex <
+        currentTest.parts.length - 1
+    ) {
+
+        currentPartIndex++;
+
+        renderCurrentPart();
+
+        scrollTestPanelsToTop();
+
+    } else {
+
+        confirmSubmitTest();
+
+    }
+
+}
+
+
+function previousPart() {
+
+    saveAllVisibleAnswers();
+
+    if (!currentTest) return;
+
+    if (
+        currentPartIndex > 0
+    ) {
+
+        currentPartIndex--;
+
+        renderCurrentPart();
+
+        scrollTestPanelsToTop();
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE PART BUTTONS
+========================================================= */
+
+function updatePartButtons() {
+
+    const previous =
+        document.getElementById(
+            "previousPartButton"
+        );
+
+    const next =
+        document.getElementById(
+            "nextPartButton"
+        );
+
+    if (previous) {
+
+        previous.disabled =
+            currentPartIndex === 0;
+
+    }
+
+    if (next) {
+
+        const isLast =
+            currentPartIndex ===
+            currentTest.parts.length - 1;
+
+        next.textContent =
+            isLast
+                ? "Submit Test"
+                : "Next →";
+
+    }
+
+}
+
+
+/* =========================================================
+   SCROLL PANELS TOP
+========================================================= */
+
+function scrollTestPanelsToTop() {
+
+    const passage =
+        document.getElementById(
+            "passagePanel"
+        );
+
+    const questions =
+        document.getElementById(
+            "questionPanel"
+        );
+
+    if (passage) {
+
+        passage.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+    if (questions) {
+
+        questions.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   CONFIRM SUBMIT
+========================================================= */
+
+function confirmSubmitTest() {
+
+    if (
+        testSubmitted
+    ) {
+
+        return;
+
+    }
+
+    saveAllVisibleAnswers();
+
+    const title =
+        document.getElementById(
+            "confirmTitle"
+        );
+
+    const message =
+        document.getElementById(
+            "confirmMessage"
+        );
+
+    if (title) {
+
+        title.textContent =
+            "Submit Test?";
+
+    }
+
+    if (message) {
+
+        const answered =
+            Object.values(
+                studentAnswers
+            )
+                .filter(
+                    value =>
+                        String(value)
+                            .trim() !== ""
+                )
+                .length;
+
+        const total =
+            countTotalQuestions();
+
+        message.textContent =
+            `You have answered ${answered} of ${total} questions. Are you sure you want to submit?`;
+
+    }
+
+    openConfirmModal();
+
+}
+
+
+/* =========================================================
+   CONFIRM EXIT
+========================================================= */
+
+function confirmExitTest() {
+
+    if (!testStarted) {
+
+        showDashboard();
+
+        return;
+
+    }
+
+    const title =
+        document.getElementById(
+            "confirmTitle"
+        );
+
+    const message =
+        document.getElementById(
+            "confirmMessage"
+        );
+
+    if (title) {
+
+        title.textContent =
+            "Exit Test?";
+
+    }
+
+    if (message) {
+
+        message.textContent =
+            "Your current test session will be left. Are you sure you want to exit?";
+
+    }
+
+    const submitButton =
+        document.getElementById(
+            "confirmSubmitButton"
+        );
+
+    if (submitButton) {
+
+        submitButton.textContent =
+            "Exit";
+
+        submitButton.onclick =
+            () => {
+
+                closeConfirmModal();
+
+                stopTimer();
+
+                showDashboard();
+
+            };
+
+    }
+
+    openConfirmModal();
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openConfirmModal() {
+
+    const modal =
+        document.getElementById(
+            "confirmModal"
+        );
+
+    if (modal) {
+
+        modal.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+function closeConfirmModal() {
+
+    const modal =
+        document.getElementById(
+            "confirmModal"
+        );
+
+    if (modal) {
+
+        modal.classList.add(
+            "hidden"
+        );
+
+    }
+
+    const submitButton =
+        document.getElementById(
+            "confirmSubmitButton"
+        );
+
+    if (submitButton) {
+
+        submitButton.textContent =
+            "Submit";
+
+        submitButton.onclick =
+            () => {
+
+                closeConfirmModal();
+
+                submitTest();
+
+            };
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTO SUBMIT
+========================================================= */
+
+function autoSubmitTest() {
+
+    if (
+        testSubmitted
+    ) {
+
+        return;
+
+    }
+
+    showToast(
+        "Time is up. Your test is being submitted.",
+        "error"
+    );
+
+    submitTest();
+
+}
+
+
+/* =========================================================
+   SUBMIT TEST
+========================================================= */
+
+async function submitTest() {
+
+    if (
+        testSubmitted
+    ) {
+
+        return;
+
+    }
+
+    saveAllVisibleAnswers();
+
+    testSubmitted = true;
+
+    testStarted = false;
+
+    stopTimer();
+
+    testElapsedSeconds =
+        calculateTimeUsed();
+
+    setLoading(
+        true,
+        "Checking your answers..."
+    );
+
+    try {
+
+        scoreData =
+            calculateScore();
+
+        await saveResultToAPI(
+            scoreData
+        );
+
+        clearCurrentTestAnswers();
+
+        renderResult(
+            scoreData
+        );
+
+        showScreen(
+            "resultScreen"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        /*
+           Even if saving to Google Sheets fails,
+           show the local result.
+        */
+
+        scoreData =
+            calculateScore();
+
+        renderResult(
+            scoreData
+        );
+
+        showScreen(
+            "resultScreen"
+        );
+
+        showToast(
+            "Result calculated, but saving to the server failed.",
+            "error"
+        );
+
+    } finally {
+
+        setLoading(false);
+
+    }
+
+}
+
+
+/* =========================================================
+   CALCULATE TIME USED
+========================================================= */
+
+function calculateTimeUsed() {
+
+    if (!testStartTime) {
+
+        return testElapsedSeconds;
+
+    }
+
+    const duration =
+        Number(
+            currentTest.duration ||
+            CONFIG.DEFAULT_DURATION
+        ) * 60;
+
+    const elapsed =
+        Math.floor(
+            (
+                Date.now() -
+                testStartTime
+            ) / 1000
+        );
+
+    return Math.min(
+        duration,
+        Math.max(
+            0,
+            elapsed
+        )
+    );
+
+}
+
+
+/* =========================================================
+   SCORE CALCULATION
+========================================================= */
+
+function calculateScore() {
+
+    let totalScore = 0;
+
+    let totalQuestions =
+        countTotalQuestions();
+
+    const partScores = [];
+
+    currentTest.parts.forEach(
+        part => {
+
+            let partScore = 0;
+
+            /*
+               Normal questions
+            */
+
+            (part.questionGroups || [])
+                .forEach(
+                    group => {
+
+                        /*
+                           =====================================
+                           SPECIAL:
+                           multiple_choice_multiple
+
+                           Example:
+
+                           Q27 correct = A
+                           Q28 correct = D
+
+                           Student:
+
+                           Q27 = D
+                           Q28 = A
+
+                           should still receive 2/2.
+                           =====================================
+                        */
+
+                        if (
+                            group.type ===
+                            "multiple_choice_multiple"
+                        ) {
+
+                            const questions =
+                                group.questions ||
+                                [];
+
+                            const correctAnswers =
+                                questions
+                                    .map(
+                                        question =>
+                                            normalizeAnswer(
+                                                question.answer
+                                            )
+                                    )
+                                    .filter(
+                                        answer =>
+                                            answer !== ""
+                                    )
+                                    .sort();
+
+                            const studentGroupAnswers =
+                                questions
+                                    .map(
+                                        question =>
+                                            normalizeAnswer(
+                                                studentAnswers[
+                                                    question.number
+                                                ]
+                                            )
+                                    )
+                                    .filter(
+                                        answer =>
+                                            answer !== ""
+                                    )
+                                    .sort();
+
+                            /*
+                               Compare the sets.
+
+                               A,D == D,A
+                            */
+
+                            if (
+                                correctAnswers.length ===
+                                studentGroupAnswers.length &&
+                                arraysEqual(
+                                    correctAnswers,
+                                    studentGroupAnswers
+                                )
+                            ) {
+
+                                partScore +=
+                                    questions.length;
+
+                            }
+
+                            return;
+
+                        }
+
+
+                        /*
+                           =====================================
+                           NORMAL QUESTIONS
+                           =====================================
+                        */
+
+                        (group.questions || [])
+                            .forEach(
+                                question => {
+
+                                    const correct =
+                                        question.answer;
+
+                                    const student =
+                                        studentAnswers[
+                                            question.number
+                                        ];
+
+                                    if (
+                                        answersMatch(
+                                            student,
+                                            correct
+                                        )
+                                    ) {
+
+                                        partScore++;
+
+                                    }
+
+                                }
+                            );
+
+
+                        /*
+                           =====================================
+                           SUMMARY BLANKS
+                           =====================================
+                        */
+
+                        (group.blanks || [])
+                            .forEach(
+                                blank => {
+
+                                    const correct =
+                                        blank.answer;
+
+                                    const student =
+                                        studentAnswers[
+                                            blank.number
+                                        ];
+
+                                    if (
+                                        answersMatch(
+                                            student,
+                                            correct
+                                        )
+                                    ) {
+
+                                        partScore++;
+
+                                    }
+
+                                }
+                            );
+
+                    }
+                );
+
+
+            partScores.push(
+                partScore
+            );
+
+            totalScore +=
+                partScore;
+
+        }
+    );
+
+
+    const band =
+        calculateIELTSBand(
+            totalScore
+        );
+
+
+    return {
+
+        totalScore,
+
+        totalQuestions,
+
+        band,
+
+        partScores,
+
+        timeUsed:
+            testElapsedSeconds
+
+    };
+
+}
+
+
+/* =========================================================
+   ANSWER MATCH
+========================================================= */
+
+function answersMatch(
+    student,
+    correct
+) {
+
+    if (
+        student === undefined ||
+        student === null ||
+        correct === undefined ||
+        correct === null
+    ) {
+
+        return false;
+
+    }
+
+    const studentNormalized =
+        normalizeAnswer(
+            student
+        );
+
+    const correctNormalized =
+        normalizeAnswer(
+            correct
+        );
+
+    return (
+        studentNormalized !== "" &&
+        studentNormalized ===
+        correctNormalized
+    );
+
+}
+
+
+/* =========================================================
+   NORMALIZE ANSWER
+========================================================= */
+
+function normalizeAnswer(
+    value
+) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+    return String(value)
+        .trim()
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .toLowerCase();
+
+}
+
+
+/* =========================================================
+   ARRAY EQUAL
+========================================================= */
+
+function arraysEqual(
+    a,
+    b
+) {
+
+    if (
+        a.length !==
+        b.length
+    ) {
+
+        return false;
+
+    }
+
+    for (
+        let i = 0;
+        i < a.length;
+        i++
+    ) {
+
+        if (
+            a[i] !== b[i]
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+
+
+/* =========================================================
+   IELTS BAND
+========================================================= */
+
+function calculateIELTSBand(
+    score
+) {
+
+    if (score >= 39) return 9.0;
+    if (score >= 37) return 8.5;
+    if (score >= 35) return 8.0;
+    if (score >= 33) return 7.5;
+    if (score >= 30) return 7.0;
+    if (score >= 27) return 6.5;
+    if (score >= 23) return 6.0;
+    if (score >= 19) return 5.5;
+    if (score >= 15) return 5.0;
+    if (score >= 13) return 4.5;
+    if (score >= 10) return 4.0;
+    if (score >= 8) return 3.5;
+    if (score >= 6) return 3.0;
+    if (score >= 4) return 2.5;
+    if (score >= 2) return 2.0;
+    if (score >= 1) return 1.0;
+
+    return 0.0;
+
+}
+
+
+/* =========================================================
+   SAVE RESULT TO GOOGLE APPS SCRIPT
+========================================================= */
+
+async function saveResultToAPI(
+    result
+) {
+
+    if (!currentUser) {
+
+        throw new Error(
+            "No logged-in student."
+        );
+
+    }
+
+    const username =
+        currentUser.username ||
+        currentUser.Username ||
+        "";
+
+    const studentID =
+        currentUser.studentID ||
+        currentUser.StudentID ||
+        currentUser.id ||
+        currentUser.ID ||
+        "";
+
+    const partScores =
+        result.partScores || [];
+
+    const payload = {
+
+        studentID,
+
+        username,
+
+        testName:
+            currentTest.title ||
+            `IELTS Reading Test ${currentTestNumber}`,
+
+        part1:
+            partScores[0] || 0,
+
+        part2:
+            partScores[1] || 0,
+
+        part3:
+            partScores[2] || 0,
+
+        part4:
+            partScores[3] || 0,
+
+        totalScore:
+            result.totalScore,
+
+        totalQuestions:
+            result.totalQuestions,
+
+        band:
+            result.band,
+
+        timeUsed:
+            formatTime(
+                result.timeUsed
+            ),
+
+        submittedAt:
+            new Date().toISOString()
+
+    };
+
+
+    const response =
+        await apiRequest(
+            "saveResult",
+            payload
+        );
+
+    if (
+        !response ||
+        response.success !== true
+    ) {
+
+        throw new Error(
+            response?.message ||
+            "Could not save result."
+        );
+
+    }
+
+    return response;
+
+}
+
+
+/* =========================================================
+   RESULT SCREEN
+========================================================= */
+
+function renderResult(
+    result
+) {
+
+    const testName =
+        document.getElementById(
+            "resultTestName"
+        );
+
+    const score =
+        document.getElementById(
+            "resultScore"
+        );
+
+    const band =
+        document.getElementById(
+            "resultBand"
+        );
+
+    const totalQuestions =
+        document.getElementById(
+            "resultTotalQuestions"
+        );
+
+    const correct =
+        document.getElementById(
+            "resultCorrect"
+        );
+
+    const timeUsed =
+        document.getElementById(
+            "resultTimeUsed"
+        );
+
+    if (testName) {
+
+        testName.textContent =
+            currentTest.title ||
+            `IELTS Reading Test ${currentTestNumber}`;
+
+    }
+
+    if (score) {
+
+        score.textContent =
+            `${result.totalScore} / ${result.totalQuestions}`;
+
+    }
+
+    if (band) {
+
+        band.textContent =
+            Number(result.band)
+                .toFixed(1);
+
+    }
+
+    if (totalQuestions) {
+
+        totalQuestions.textContent =
+            result.totalQuestions;
+
+    }
+
+    if (correct) {
+
+        correct.textContent =
+            result.totalScore;
+
+    }
+
+    if (timeUsed) {
+
+        timeUsed.textContent =
+            formatTime(
+                result.timeUsed
+            );
+
+    }
+
+
+    renderPartScores(
+        result.partScores
+    );
+
+}
+
+
+/* =========================================================
+   PART SCORES
+========================================================= */
+
+function renderPartScores(
+    scores
+) {
+
+    const container =
+        document.getElementById(
+            "partScores"
+        );
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const totalParts =
+        currentTest?.parts?.length ||
+        0;
+
+    for (
+        let i = 0;
+        i < Math.max(
+            4,
+            totalParts
+        );
+        i++
+    ) {
+
+        const score =
+            scores?.[i] || 0;
+
+        const part =
+            currentTest?.parts?.[i];
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "part-score";
+
+        div.innerHTML = `
+            <span>
+                ${part
+                    ? `Part ${i + 1}`
+                    : `Part ${i + 1}`}
+            </span>
+
+            <strong>
+                ${score}
+            </strong>
+        `;
+
+        container.appendChild(
+            div
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLEAR ANSWERS
+========================================================= */
+
+function clearCurrentTestAnswers() {
+
+    if (!currentTestNumber) return;
+
+    localStorage.removeItem(
+        `ieltsAnswers_${currentTestNumber}`
+    );
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+async function loadHistory() {
+
+    const container =
+        document.getElementById(
+            "historyContainer"
+        );
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="history-loading">
+            Loading score history...
         </div>
+    `;
 
-        <div class="dashboard-actions">
+    try {
 
-          <button
-            data-action="dashboard"
-            class="secondary-button"
-          >
-            Dashboard
-          </button>
+        const username =
+            currentUser?.username ||
+            currentUser?.Username ||
+            "";
 
-          <button
-            data-action="logout"
-            class="secondary-button"
-          >
-            Logout
-          </button>
+        const studentID =
+            currentUser?.studentID ||
+            currentUser?.StudentID ||
+            currentUser?.id ||
+            "";
 
-        </div>
+        const response =
+            await apiRequest(
+                "getHistory",
+                {
+                    username,
+                    studentID
+                }
+            );
 
-      </header>
+        if (
+            !response ||
+            response.success !== true
+        ) {
+
+            throw new Error(
+                response?.message ||
+                "Could not load history."
+            );
+
+        }
+
+        const history =
+            response.results ||
+            response.history ||
+            response.data ||
+            [];
+
+        renderHistory(
+            history
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="history-empty">
+                Unable to load score history.
+            </div>
+        `;
+
+    }
+
+}
 
 
-      <div class="history-summary">
+/* =========================================================
+   RENDER HISTORY
+========================================================= */
 
-        <div class="summary-card">
-          <span>Tests Completed</span>
-          <strong>${totalTests}</strong>
-        </div>
+function renderHistory(
+    history
+) {
 
-        <div class="summary-card">
-          <span>Average Score</span>
-          <strong>${averageScore}</strong>
-        </div>
+    const container =
+        document.getElementById(
+            "historyContainer"
+        );
 
-        <div class="summary-card">
-          <span>Average Band</span>
-          <strong>${averageBand}</strong>
-        </div>
+    if (!container) return;
 
-      </div>
+    if (
+        !Array.isArray(history) ||
+        history.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="history-empty">
+                No test results yet.
+            </div>
+        `;
+
+        return;
+
+    }
 
 
-      <div class="history-table-container">
+    const rows =
+        history.map(
+            result => {
 
-        ${
-          sorted.length
-            ? `
-              <table class="history-table">
+                const testName =
+                    result.TestName ||
+                    result.testName ||
+                    "-";
+
+                const totalScore =
+                    result.TotalScore ??
+                    result.totalScore ??
+                    0;
+
+                const totalQuestions =
+                    result.TotalQuestions ??
+                    result.totalQuestions ??
+                    0;
+
+                const band =
+                    result.Band ??
+                    result.band ??
+                    0;
+
+                const timeUsed =
+                    result.TimeUsed ||
+                    result.timeUsed ||
+                    "-";
+
+                const timestamp =
+                    result.Timestamp ||
+                    result.timestamp ||
+                    result.SubmittedAt ||
+                    result.submittedAt ||
+                    "";
+
+                return `
+                    <tr>
+                        <td>
+                            ${escapeHTML(
+                                testName
+                            )}
+                        </td>
+
+                        <td>
+                            ${totalScore}
+                            /
+                            ${totalQuestions}
+                        </td>
+
+                        <td>
+                            <span class="history-band">
+                                ${Number(
+                                    band
+                                ).toFixed(1)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                timeUsed
+                            )}
+                        </td>
+
+                        <td>
+                            ${formatDate(
+                                timestamp
+                            )}
+                        </td>
+                    </tr>
+                `;
+
+            }
+        )
+        .join("");
+
+
+    container.innerHTML = `
+        <div style="overflow-x:auto;">
+            <table class="history-table">
 
                 <thead>
-
-                  <tr>
-                    <th>Date</th>
-                    <th>Test</th>
-                    <th>Part 1</th>
-                    <th>Part 2</th>
-                    <th>Part 3</th>
-                    <th>Part 4</th>
-                    <th>Total</th>
-                    <th>Band</th>
-                    <th>Time</th>
-                  </tr>
-
+                    <tr>
+                        <th>Test</th>
+                        <th>Score</th>
+                        <th>Band</th>
+                        <th>Time</th>
+                        <th>Date</th>
+                    </tr>
                 </thead>
 
                 <tbody>
-
-                  ${sorted
-                    .map(
-                      result => `
-                        <tr>
-
-                          <td>
-                            ${formatDate(
-                              result.timestamp
-                            )}
-                          </td>
-
-                          <td>
-                            ${escapeHTML(
-                              result.testName
-                            )}
-                          </td>
-
-                          <td>
-                            ${result.part1}
-                          </td>
-
-                          <td>
-                            ${result.part2}
-                          </td>
-
-                          <td>
-                            ${result.part3}
-                          </td>
-
-                          <td>
-                            ${result.part4}
-                          </td>
-
-                          <td>
-                            <strong>
-                              ${result.totalScore}/${result.totalQuestions || 40}
-                            </strong>
-                          </td>
-
-                          <td>
-                            <strong>
-                              ${Number(
-                                result.band
-                              ).toFixed(1)}
-                            </strong>
-                          </td>
-
-                          <td>
-                            ${escapeHTML(
-                              result.timeUsed || "-"
-                            )}
-                          </td>
-
-                        </tr>
-                      `
-                    )
-                    .join("")}
-
+                    ${rows}
                 </tbody>
 
-              </table>
-            `
-            : `
-              <div class="empty-history">
-                No completed tests yet.
-              </div>
-            `
-        }
-
-      </div>
-
-    </div>
-  `;
+            </table>
+        </div>
+    `;
 
 }
 
 
-/* ============================================================
+/* =========================================================
    API REQUEST
-   ============================================================ */
+========================================================= */
 
 async function apiRequest(
-  action,
-  data = {}
+    action,
+    data = {}
 ) {
 
-  const payload = {
-    action: action,
-    ...data
-  };
+    /*
+       First try POST.
+    */
+
+    try {
+
+        const response =
+            await fetch(
+                CONFIG.API_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            action,
+                            ...data
+                        })
+                }
+            );
+
+        const text =
+            await response.text();
+
+        let json;
+
+        try {
+
+            json =
+                JSON.parse(text);
+
+        } catch {
+
+            throw new Error(
+                "The API returned an invalid response."
+            );
+
+        }
+
+        if (json) {
+
+            return json;
+
+        }
+
+    } catch (postError) {
+
+        console.warn(
+            "POST API request failed. Trying GET...",
+            postError
+        );
+
+    }
 
 
-  /*
-   * First try POST.
-   */
+    /*
+       GET fallback.
+    */
 
-  try {
+    const params =
+        new URLSearchParams();
+
+    params.set(
+        "action",
+        action
+    );
+
+    Object.keys(data)
+        .forEach(
+            key => {
+
+                const value =
+                    data[key];
+
+                if (
+                    value !== undefined &&
+                    value !== null
+                ) {
+
+                    params.set(
+                        key,
+                        typeof value ===
+                        "object"
+                            ? JSON.stringify(
+                                value
+                            )
+                            : String(value)
+                    );
+
+                }
+
+            }
+        );
+
 
     const response =
-      await fetch(
-        API_URL,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-
-          body:
-            JSON.stringify(
-              payload
-            )
-        }
-      );
+        await fetch(
+            `${CONFIG.API_URL}?${params.toString()}`,
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
 
     const text =
-      await response.text();
+        await response.text();
+
+    try {
+
+        return JSON.parse(
+            text
+        );
+
+    } catch {
+
+        throw new Error(
+            "The API returned an invalid response."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SCREEN CONTROL
+========================================================= */
+
+function showScreen(
+    screenId
+) {
+
+    const screens =
+        document.querySelectorAll(
+            ".screen"
+        );
+
+    screens.forEach(
+        screen => {
+
+            screen.classList.add(
+                "hidden"
+            );
+
+        }
+    );
+
+    const target =
+        document.getElementById(
+            screenId
+        );
+
+    if (target) {
+
+        target.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function setLoading(
+    visible,
+    message = "Loading..."
+) {
+
+    const overlay =
+        document.getElementById(
+            "loadingOverlay"
+        );
+
+    const text =
+        document.getElementById(
+            "loadingText"
+        );
+
+    if (!overlay) return;
 
     if (text) {
 
-      try {
+        text.textContent =
+            message;
 
-        return JSON.parse(
-          text
+    }
+
+    if (visible) {
+
+        overlay.classList.remove(
+            "hidden"
         );
 
-      } catch {
+    } else {
 
-        return {
-          success:
-            response.ok,
-
-          message:
-            text
-        };
-
-      }
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      "POST API request failed:",
-      error
-    );
-
-  }
-
-
-  /*
-   * Fallback to GET.
-   */
-
-  const query =
-    new URLSearchParams();
-
-  Object.entries(
-    payload
-  ).forEach(
-    ([key, value]) => {
-
-      if (
-        value === undefined ||
-        value === null
-      ) {
-        return;
-      }
-
-      if (
-        typeof value === "object"
-      ) {
-
-        query.set(
-          key,
-          JSON.stringify(
-            value
-          )
+        overlay.classList.add(
+            "hidden"
         );
 
-      } else {
+    }
 
-        query.set(
-          key,
-          String(value)
+}
+
+
+/* =========================================================
+   LOGIN MESSAGE
+========================================================= */
+
+function showLoginMessage(
+    message,
+    type = ""
+) {
+
+    const element =
+        document.getElementById(
+            "loginMessage"
         );
 
-      }
+    if (!element) return;
+
+    element.textContent =
+        message || "";
+
+    element.className =
+        "message";
+
+    if (type === "error") {
+
+        element.style.color =
+            "#c62828";
+
+    } else if (
+        type === "success"
+    ) {
+
+        element.style.color =
+            "#16803c";
+
+    } else {
+
+        element.style.color =
+            "";
 
     }
-  );
-
-
-  const response =
-    await fetch(
-      `${API_URL}?${query.toString()}`,
-      {
-        method: "GET",
-        cache: "no-cache"
-      }
-    );
-
-  const text =
-    await response.text();
-
-  try {
-
-    return JSON.parse(
-      text
-    );
-
-  } catch {
-
-    return {
-      success:
-        response.ok,
-
-      message:
-        text
-    };
-
-  }
 
 }
 
 
-/* ============================================================
-   NORMALIZE HISTORY RESULTS
-   ============================================================ */
+/* =========================================================
+   TOAST
+========================================================= */
 
-function normalizeResults(
-  response
+function showToast(
+    message,
+    type = ""
 ) {
 
-  if (!response) {
-    return [];
-  }
+    const toast =
+        document.getElementById(
+            "toast"
+        );
 
-  if (Array.isArray(response)) {
-    return response.map(
-      normalizeResult
-    );
-  }
+    const text =
+        document.getElementById(
+            "toastMessage"
+        );
 
-  if (
-    Array.isArray(
-      response.results
-    )
-  ) {
+    if (!toast) return;
 
-    return response.results.map(
-      normalizeResult
-    );
+    if (text) {
 
-  }
-
-  if (
-    Array.isArray(
-      response.data
-    )
-  ) {
-
-    return response.data.map(
-      normalizeResult
-    );
-
-  }
-
-  return [];
-
-}
-
-
-function normalizeResult(
-  result
-) {
-
-  return {
-
-    resultId:
-      result.resultId ??
-      result.ResultID ??
-      "",
-
-    timestamp:
-      result.timestamp ??
-      result.Timestamp ??
-      "",
-
-    studentId:
-      result.studentId ??
-      result.StudentID ??
-      "",
-
-    username:
-      result.username ??
-      result.Username ??
-      "",
-
-    testName:
-      result.testName ??
-      result.TestName ??
-      "",
-
-    part1:
-      Number(
-        result.part1 ??
-        result.Part1 ??
-        0
-      ),
-
-    part2:
-      Number(
-        result.part2 ??
-        result.Part2 ??
-        0
-      ),
-
-    part3:
-      Number(
-        result.part3 ??
-        result.Part3 ??
-        0
-      ),
-
-    part4:
-      Number(
-        result.part4 ??
-        result.Part4 ??
-        0
-      ),
-
-    totalScore:
-      Number(
-        result.totalScore ??
-        result.TotalScore ??
-        0
-      ),
-
-    totalQuestions:
-      Number(
-        result.totalQuestions ??
-        result.TotalQuestions ??
-        40
-      ),
-
-    band:
-      Number(
-        result.band ??
-        result.Band ??
-        0
-      ),
-
-    timeUsed:
-      result.timeUsed ??
-      result.TimeUsed ??
-      "",
-
-    submittedAt:
-      result.submittedAt ??
-      result.SubmittedAt ??
-      ""
-
-  };
-
-}
-
-
-/* ============================================================
-   QUESTION HELPERS
-   ============================================================ */
-
-function getAllQuestions(
-  test
-) {
-
-  if (!test) return [];
-
-  const result = [];
-
-  test.parts.forEach(
-    part => {
-
-      part.questionGroups.forEach(
-        group => {
-
-          group.questions.forEach(
-            question => {
-
-              result.push({
-                ...question,
-                partNumber:
-                  part.partNumber,
-
-                type:
-                  group.type
-              });
-
-            }
-          );
-
-        }
-      );
+        text.textContent =
+            message;
 
     }
-  );
 
-  return result;
+    toast.className =
+        "toast";
 
-}
+    if (type) {
 
-
-function getQuestionsFromPart(
-  part
-) {
-
-  const result = [];
-
-  part.questionGroups.forEach(
-    group => {
-
-      group.questions.forEach(
-        question => {
-
-          result.push({
-            ...question,
-            type:
-              group.type
-          });
-
-        }
-      );
+        toast.classList.add(
+            type
+        );
 
     }
-  );
 
-  return result;
-
-}
-
-
-function countQuestions(
-  test
-) {
-
-  return getAllQuestions(
-    test
-  ).length;
-
-}
-
-
-function countUnansweredQuestions() {
-
-  const questions =
-    getAllQuestions(
-      currentTest
+    toast.classList.remove(
+        "hidden"
     );
 
-  return questions.filter(
-    question =>
-      !hasAnswer(
-        studentAnswers[
-          question.number
-        ]
-      )
-  ).length;
-
-}
-
-
-function hasAnswer(
-  answer
-) {
-
-  if (
-    answer === undefined ||
-    answer === null
-  ) {
-    return false;
-  }
-
-  if (
-    Array.isArray(answer)
-  ) {
-    return answer.length > 0;
-  }
-
-  return (
-    String(answer).trim() !== ""
-  );
-
-}
-
-
-function partContainsQuestion(
-  part,
-  number
-) {
-
-  return getQuestionsFromPart(
-    part
-  ).some(
-    question =>
-      Number(
-        question.number
-      ) === Number(number)
-  );
-
-}
-
-
-/* ============================================================
-   TEST NUMBER
-   ============================================================ */
-
-function extractTestNumber(
-  testName
-) {
-
-  if (!testName) return null;
-
-  const match =
-    String(testName).match(
-      /(\d+)/
+    clearTimeout(
+        vocabularyPopupTimeout
     );
 
-  return match
-    ? Number(match[1])
-    : null;
+    vocabularyPopupTimeout =
+        setTimeout(
+            () => {
+
+                toast.classList.add(
+                    "hidden"
+                );
+
+            },
+            3500
+        );
 
 }
 
 
-/* ============================================================
-   RESULT ID
-   ============================================================ */
+/* =========================================================
+   FORMAT TIME
+========================================================= */
 
-function generateResultID() {
-
-  const random =
-    Math.random()
-      .toString(36)
-      .substring(2, 8)
-      .toUpperCase();
-
-  return `R-${Date.now()}-${random}`;
-
-}
-
-
-/* ============================================================
-   LOADING SCREEN
-   ============================================================ */
-
-function showLoadingScreen(
-  message = "Loading..."
+function formatTime(
+    seconds
 ) {
 
-  const app =
-    document.querySelector(
-      "#app"
+    seconds =
+        Math.max(
+            0,
+            Number(seconds) || 0
+        );
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+    const remaining =
+        seconds % 60;
+
+    return `
+        ${String(minutes).padStart(2, "0")}:
+        ${String(remaining).padStart(2, "0")}
+    `.replace(
+        /\s/g,
+        ""
     );
-
-  if (!app) return;
-
-  app.innerHTML = `
-
-    <div class="loading-page">
-
-      <div class="loading-spinner"></div>
-
-      <p>
-        ${escapeHTML(message)}
-      </p>
-
-    </div>
-  `;
 
 }
 
 
-/* ============================================================
-   ERROR SCREEN
-   ============================================================ */
-
-function showErrorScreen(
-  message
-) {
-
-  const app =
-    document.querySelector(
-      "#app"
-    );
-
-  if (!app) return;
-
-  app.innerHTML = `
-
-    <div class="error-page">
-
-      <div class="error-card">
-
-        <h2>
-          Something went wrong
-        </h2>
-
-        <p>
-          ${escapeHTML(message)}
-        </p>
-
-        <button
-          data-action="dashboard"
-          class="primary-button"
-        >
-          Back to Dashboard
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-}
-
-
-/* ============================================================
-   MESSAGE
-   ============================================================ */
-
-function showMessage(
-  message,
-  type = "info"
-) {
-
-  const container =
-    document.querySelector(
-      "#loginMessage"
-    );
-
-  if (!container) {
-
-    alert(message);
-
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="${type}-message">
-      ${escapeHTML(message)}
-    </div>
-  `;
-
-}
-
-
-/* ============================================================
-   LOADING STATE
-   ============================================================ */
-
-function setLoading(
-  loading
-) {
-
-  const button =
-    document.querySelector(
-      "#loginForm .primary-button"
-    );
-
-  if (!button) return;
-
-  button.disabled =
-    loading;
-
-  button.textContent =
-    loading
-      ? "Logging in..."
-      : "Login";
-
-}
-
-
-/* ============================================================
-   DATE FORMAT
-   ============================================================ */
+/* =========================================================
+   FORMAT DATE
+========================================================= */
 
 function formatDate(
-  value
+    value
 ) {
 
-  if (!value) return "-";
+    if (!value) return "-";
 
-  const date =
-    new Date(value);
+    const date =
+        new Date(value);
 
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return escapeHTML(
-      String(value)
-    );
-  }
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
 
-  return date.toLocaleDateString(
-    undefined,
-    {
-      year: "numeric",
-      month: "short",
-      day: "numeric"
+        return String(value);
+
     }
-  );
+
+    return date.toLocaleDateString(
+        undefined,
+        {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        }
+    );
 
 }
 
 
-/* ============================================================
-   HTML SECURITY HELPERS
-   ============================================================ */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHTML(
-  value
+    value
 ) {
 
-  if (
-    value === undefined ||
-    value === null
-  ) {
-    return "";
-  }
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+    return String(value ?? "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
+
+/* =========================================================
+   ESCAPE ATTRIBUTE
+========================================================= */
 
 function escapeAttribute(
-  value
-) {
-
-  return escapeHTML(
     value
-  );
-
-}
-
-
-function escapeRegExp(
-  value
 ) {
 
-  return String(value)
-    .replace(
-      /[.*+?^${}()|[\]\\]/g,
-      "\\$&"
+    return escapeHTML(
+        value
     );
 
 }
 
 
-/* ============================================================
-   EXPORTS
-   ============================================================ */
+/* =========================================================
+   ESCAPE REGEX
+========================================================= */
+
+function escapeRegExp(
+    value
+) {
+
+    return String(value)
+        .replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
+}
+
+
+/* =========================================================
+   EXPORT FOR DEBUGGING
+========================================================= */
 
 window.IELTSReading = {
 
-  login,
-  logout,
+    openTest,
 
-  openTest,
+    startTest,
 
-  showDashboard,
-  showHistory,
+    submitTest,
 
-  submitTest,
+    calculateScore,
 
-  calculateBand,
+    showDashboard,
 
-  calculateScore,
+    logout,
 
-  loadVocabulary
+    getCurrentTest: () =>
+        currentTest,
+
+    getAnswers: () =>
+        studentAnswers
 
 };

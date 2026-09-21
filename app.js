@@ -1,25 +1,35 @@
 /* =========================================================
    IELTS READING PRACTICE WEBSITE
    COMPLETE app.js
-========================================================= */
+   ========================================================= */
+
+
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
 
 const CONFIG = {
+
     API_URL:
         "https://script.google.com/macros/s/AKfycbzkYktZQFtycRgG3K6Hi6MsvUtP8RsqOq6QxB598FVYefGmpe_oS3R518GZ0821bNbYtw/exec",
 
-    TEST_FOLDER: "./tests/",
+    TEST_FOLDER:
+        "./tests/",
 
-    VOCABULARY_FILE: "./data/vocabulary.json",
+    VOCABULARY_FILE:
+        "./data/vocabulary.json",
 
-    TEST_COUNT: 20,
+    TEST_COUNT:
+        20,
 
-    DEFAULT_DURATION: 60
+    DEFAULT_DURATION:
+        60
 };
 
 
 /* =========================================================
    GLOBAL STATE
-========================================================= */
+   ========================================================= */
 
 let currentUser = null;
 
@@ -50,7 +60,7 @@ let scoreData = null;
 
 /* =========================================================
    DOM READY
-========================================================= */
+   ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -58,40 +68,24 @@ document.addEventListener(
 
         setupGlobalEvents();
 
-        /*
-         * Vocabulary is OPTIONAL.
-         *
-         * If vocabulary.json doesn't exist,
-         * the website continues normally.
-         */
-
         await loadVocabulary();
 
         restoreLogin();
+
     }
 );
 
 
 /* =========================================================
-   GLOBAL EVENT SETUP
-========================================================= */
+   GLOBAL EVENTS
+   ========================================================= */
 
 function setupGlobalEvents() {
 
-    /*
-     * Login
-     */
-
     const loginForm =
-        document.querySelector(
-            "#loginForm"
-        ) ||
-        document.querySelector(
-            'form[action*="login"]'
-        ) ||
-        document.querySelector(
-            "form"
-        );
+        document.querySelector("#loginForm") ||
+        document.querySelector('form[action*="login"]') ||
+        document.querySelector("form");
 
     if (loginForm) {
 
@@ -101,10 +95,6 @@ function setupGlobalEvents() {
         );
     }
 
-
-    /*
-     * Buttons
-     */
 
     addClick(
         "logoutButton",
@@ -151,9 +141,9 @@ function setupGlobalEvents() {
         function () {
 
             if (currentTest) {
-
                 startTest();
             }
+
         }
     );
 
@@ -183,10 +173,6 @@ function setupGlobalEvents() {
     );
 
 
-    /*
-     * Click outside vocabulary popup
-     */
-
     document.addEventListener(
         "click",
         function (event) {
@@ -196,7 +182,6 @@ function setupGlobalEvents() {
                     ".vocabulary-word"
                 )
             ) {
-
                 return;
             }
 
@@ -208,13 +193,13 @@ function setupGlobalEvents() {
             if (
                 popup &&
                 popup.style.display !== "none" &&
-                !popup.contains(
-                    event.target
-                )
+                !popup.contains(event.target)
             ) {
 
                 closeVocabularyPopup();
+
             }
+
         }
     );
 }
@@ -222,7 +207,7 @@ function setupGlobalEvents() {
 
 /* =========================================================
    ADD CLICK HELPER
-========================================================= */
+   ========================================================= */
 
 function addClick(
     id,
@@ -230,9 +215,7 @@ function addClick(
 ) {
 
     const element =
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
     if (element) {
 
@@ -245,14 +228,10 @@ function addClick(
 
 
 /* =========================================================
-   FIND LOGIN INPUT
-========================================================= */
+   FIND USERNAME INPUT
+   ========================================================= */
 
 function findUsernameInput() {
-
-    /*
-     * Try all common IDs/names.
-     */
 
     const selectors = [
 
@@ -279,6 +258,7 @@ function findUsernameInput() {
         'input[autocomplete="username"]',
 
         'input[type="text"]'
+
     ];
 
 
@@ -292,11 +272,9 @@ function findUsernameInput() {
             );
 
         if (element) {
-
             return element;
         }
     }
-
 
     return null;
 }
@@ -304,7 +282,7 @@ function findUsernameInput() {
 
 /* =========================================================
    FIND PASSWORD INPUT
-========================================================= */
+   ========================================================= */
 
 function findPasswordInput() {
 
@@ -327,6 +305,7 @@ function findPasswordInput() {
         'input[type="password"]',
 
         'input[autocomplete="current-password"]'
+
     ];
 
 
@@ -340,11 +319,9 @@ function findPasswordInput() {
             );
 
         if (element) {
-
             return element;
         }
     }
-
 
     return null;
 }
@@ -352,11 +329,9 @@ function findPasswordInput() {
 
 /* =========================================================
    LOGIN
-========================================================= */
+   ========================================================= */
 
-async function handleLogin(
-    event
-) {
+async function handleLogin(event) {
 
     if (event) {
 
@@ -366,30 +341,11 @@ async function handleLogin(
     }
 
 
-    /*
-     * Find fields robustly.
-     */
-
     const usernameInput =
         findUsernameInput();
 
     const passwordInput =
         findPasswordInput();
-
-
-    /*
-     * IMPORTANT DEBUG INFORMATION
-     */
-
-    console.log(
-        "Username input:",
-        usernameInput
-    );
-
-    console.log(
-        "Password input:",
-        passwordInput
-    );
 
 
     const username =
@@ -408,23 +364,6 @@ async function handleLogin(
             : "";
 
 
-    console.log(
-        "Login username:",
-        username
-    );
-
-    console.log(
-        "Login password entered:",
-        password
-            ? "YES"
-            : "NO"
-    );
-
-
-    /*
-     * Username validation
-     */
-
     if (!username) {
 
         showLoginMessage(
@@ -435,10 +374,6 @@ async function handleLogin(
         return;
     }
 
-
-    /*
-     * Password validation
-     */
 
     if (!password) {
 
@@ -459,10 +394,6 @@ async function handleLogin(
 
     try {
 
-        /*
-         * Send login request.
-         */
-
         const response =
             await apiRequest(
                 "login",
@@ -474,12 +405,6 @@ async function handleLogin(
                         password
                 }
             );
-
-
-        console.log(
-            "LOGIN API RESPONSE:",
-            response
-        );
 
 
         if (
@@ -494,10 +419,6 @@ async function handleLogin(
         }
 
 
-        /*
-         * Save returned student object.
-         */
-
         currentUser =
             response.student ||
             response.user ||
@@ -505,39 +426,21 @@ async function handleLogin(
             null;
 
 
-        /*
-         * If Apps Script doesn't return
-         * the full student object,
-         * still create one.
-         */
-
         if (!currentUser) {
 
             currentUser = {
-
                 username:
                     username
             };
         }
 
 
-        /*
-         * Make absolutely sure username
-         * is available.
-         */
-
-        if (
-            !currentUser.username
-        ) {
+        if (!currentUser.username) {
 
             currentUser.username =
                 username;
         }
 
-
-        /*
-         * Store login.
-         */
 
         localStorage.setItem(
             "ieltsReadingUser",
@@ -573,16 +476,15 @@ async function handleLogin(
 
     } finally {
 
-        setLoading(
-            false
-        );
+        setLoading(false);
+
     }
 }
 
 
 /* =========================================================
    RESTORE LOGIN
-========================================================= */
+   ========================================================= */
 
 function restoreLogin() {
 
@@ -630,7 +532,7 @@ function restoreLogin() {
 
 /* =========================================================
    LOGOUT
-========================================================= */
+   ========================================================= */
 
 function logout() {
 
@@ -648,6 +550,7 @@ function logout() {
         "ieltsReadingUser"
     );
 
+
     showScreen(
         "loginScreen"
     );
@@ -661,13 +564,10 @@ function logout() {
 
 
     if (username) {
-
         username.value = "";
     }
 
-
     if (password) {
-
         password.value = "";
     }
 
@@ -681,7 +581,7 @@ function logout() {
 
 /* =========================================================
    DASHBOARD
-========================================================= */
+   ========================================================= */
 
 async function showDashboard() {
 
@@ -691,9 +591,11 @@ async function showDashboard() {
 
     testSubmitted = false;
 
+
     showScreen(
         "dashboardScreen"
     );
+
 
     updateDashboardUser();
 
@@ -705,7 +607,7 @@ async function showDashboard() {
 
 /* =========================================================
    UPDATE DASHBOARD USER
-========================================================= */
+   ========================================================= */
 
 function updateDashboardUser() {
 
@@ -720,6 +622,7 @@ function updateDashboardUser() {
         "welcomeUsername",
 
         "currentUsername"
+
     ];
 
 
@@ -731,7 +634,6 @@ function updateDashboardUser() {
             document.getElementById(
                 id
             );
-
 
         if (element) {
 
@@ -745,7 +647,7 @@ function updateDashboardUser() {
 
 /* =========================================================
    TEST CARDS
-========================================================= */
+   ========================================================= */
 
 function renderTestCards() {
 
@@ -756,7 +658,6 @@ function renderTestCards() {
 
 
     if (!box) {
-
         return;
     }
 
@@ -814,6 +715,7 @@ function renderTestCards() {
             function () {
 
                 openTest(i);
+
             }
         );
 
@@ -827,7 +729,7 @@ function renderTestCards() {
 
 /* =========================================================
    OPEN TEST
-========================================================= */
+   ========================================================= */
 
 async function openTest(
     testNumber
@@ -867,9 +769,7 @@ async function openTest(
             await response.json();
 
 
-        validateTest(
-            data
-        );
+        validateTest(data);
 
 
         currentTest =
@@ -883,8 +783,10 @@ async function openTest(
         studentAnswers = {};
 
 
-        currentPartIndex = 0;
+        loadSavedAnswers();
 
+
+        currentPartIndex = 0;
 
         testSubmitted = false;
 
@@ -908,26 +810,21 @@ async function openTest(
 
     } finally {
 
-        setLoading(
-            false
-        );
+        setLoading(false);
+
     }
 }
 
 
 /* =========================================================
    VALIDATE TEST
-========================================================= */
+   ========================================================= */
 
-function validateTest(
-    test
-) {
+function validateTest(test) {
 
     if (
         !test ||
-        !Array.isArray(
-            test.parts
-        ) ||
+        !Array.isArray(test.parts) ||
         !test.parts.length
     ) {
 
@@ -938,14 +835,9 @@ function validateTest(
 
 
     test.parts.forEach(
-        function (
-            part,
-            index
-        ) {
+        function(part, index) {
 
-            if (
-                !part.passage
-            ) {
+            if (!part.passage) {
 
                 throw new Error(
                     `Part ${index + 1} is missing passage.`
@@ -962,6 +854,24 @@ function validateTest(
                 part.questionGroups =
                     [];
             }
+
+
+            part.questionGroups.forEach(
+                function(group) {
+
+                    if (
+                        !Array.isArray(
+                            group.questions
+                        )
+                    ) {
+
+                        group.questions =
+                            [];
+                    }
+
+                }
+            );
+
         }
     );
 }
@@ -969,7 +879,7 @@ function validateTest(
 
 /* =========================================================
    INTRODUCTION
-========================================================= */
+   ========================================================= */
 
 function showTestIntroduction() {
 
@@ -1013,26 +923,31 @@ function showTestIntroduction() {
 
 /* =========================================================
    START TEST
-========================================================= */
+   ========================================================= */
 
 function startTest() {
 
     if (!currentTest) {
-
         return;
     }
 
 
+    /*
+     * IMPORTANT:
+     * Clear current in-memory answers,
+     * then restore saved answers for this test.
+     */
+
     studentAnswers = {};
+
+    loadSavedAnswers();
 
 
     currentPartIndex = 0;
 
-
     testStarted = true;
 
     testSubmitted = false;
-
 
     testStartTime =
         Date.now();
@@ -1044,8 +959,7 @@ function startTest() {
                 currentTest.duration
             ) ||
             CONFIG.DEFAULT_DURATION
-        ) *
-        60;
+        ) * 60;
 
 
     testElapsedSeconds = 0;
@@ -1058,29 +972,26 @@ function startTest() {
 
     renderCurrentPart();
 
-
     startTimer();
 }
 
 
 /* =========================================================
    TIMER
-========================================================= */
+   ========================================================= */
 
 function startTimer() {
 
     stopTimer();
-
 
     updateTimerDisplay();
 
 
     timerInterval =
         setInterval(
-            function () {
+            function() {
 
                 remainingSeconds--;
-
 
                 updateTimerDisplay();
 
@@ -1091,11 +1002,10 @@ function startTimer() {
 
                     remainingSeconds = 0;
 
-
                     stopTimer();
 
-
                     autoSubmitTest();
+
                 }
 
             },
@@ -1112,7 +1022,6 @@ function stopTimer() {
             timerInterval
         );
 
-
         timerInterval = null;
     }
 }
@@ -1127,6 +1036,7 @@ function updateTimerDisplay() {
         "timerDisplay",
 
         "testTimer"
+
     ];
 
 
@@ -1155,12 +1065,11 @@ function updateTimerDisplay() {
 
 /* =========================================================
    CURRENT PART
-========================================================= */
+   ========================================================= */
 
 function renderCurrentPart() {
 
     if (!currentTest) {
-
         return;
     }
 
@@ -1169,6 +1078,11 @@ function renderCurrentPart() {
         currentTest.parts[
             currentPartIndex
         ];
+
+
+    if (!part) {
+        return;
+    }
 
 
     setText(
@@ -1231,9 +1145,7 @@ function renderCurrentPart() {
 
     renderQuestionNavigator();
 
-
     updatePartButtons();
-
 
     scrollTestPanelsToTop();
 }
@@ -1241,11 +1153,9 @@ function renderCurrentPart() {
 
 /* =========================================================
    QUESTION RANGE
-========================================================= */
+   ========================================================= */
 
-function questionRangeForPart(
-    part
-) {
+function questionRangeForPart(part) {
 
     const numbers = [];
 
@@ -1253,30 +1163,39 @@ function questionRangeForPart(
     (
         part.questionGroups ||
         []
-    )
-    .forEach(
-        function (group) {
+    ).forEach(
+        function(group) {
 
             (
                 group.questions ||
                 []
-            )
-            .forEach(
-                function (question) {
+            ).forEach(
+                function(question) {
 
-                    numbers.push(
+                    const number =
                         Number(
                             question.number
+                        );
+
+                    if (
+                        Number.isFinite(
+                            number
                         )
-                    );
+                    ) {
+
+                        numbers.push(
+                            number
+                        );
+                    }
+
                 }
             );
+
         }
     );
 
 
     if (!numbers.length) {
-
         return "";
     }
 
@@ -1289,11 +1208,9 @@ function questionRangeForPart(
 
 /* =========================================================
    PASSAGE
-========================================================= */
+   ========================================================= */
 
-function renderPassage(
-    passage
-) {
+function renderPassage(passage) {
 
     const box =
         document.getElementById(
@@ -1302,7 +1219,6 @@ function renderPassage(
 
 
     if (!box) {
-
         return;
     }
 
@@ -1313,7 +1229,7 @@ function renderPassage(
             []
         )
         .map(
-            function (paragraph) {
+            function(paragraph) {
 
                 return `
 
@@ -1334,6 +1250,7 @@ function renderPassage(
                     </p>
 
                 `;
+
             }
         )
         .join("");
@@ -1344,21 +1261,22 @@ function renderPassage(
             ".vocabulary-word"
         )
         .forEach(
-            function (element) {
+            function(element) {
 
                 element.addEventListener(
                     "click",
-                    function (event) {
+                    function(event) {
 
                         event.stopPropagation();
-
 
                         showVocabularyPopup(
                             element.dataset.word,
                             element
                         );
+
                     }
                 );
+
             }
         );
 }
@@ -1366,52 +1284,35 @@ function renderPassage(
 
 /* =========================================================
    VOCABULARY HIGHLIGHT
-========================================================= */
+   ========================================================= */
 
-function highlightVocabulary(
-    text
-) {
-
-    /*
-     * If vocabulary.json doesn't exist,
-     * simply return normal text.
-     */
+function highlightVocabulary(text) {
 
     if (
         !vocabulary ||
-        !Object.keys(
-            vocabulary
-        ).length
+        !Object.keys(vocabulary).length
     ) {
 
-        return escapeHTML(
-            text
-        );
+        return escapeHTML(text);
     }
 
 
     let result =
-        escapeHTML(
-            text
-        );
+        escapeHTML(text);
 
 
     const words =
-        Object.keys(
-            vocabulary
-        )
-        .sort(
-            function (
-                a,
-                b
-            ) {
+        Object.keys(vocabulary)
+            .sort(
+                function(a, b) {
 
-                return (
-                    b.length -
-                    a.length
-                );
-            }
-        );
+                    return (
+                        b.length -
+                        a.length
+                    );
+
+                }
+            );
 
 
     for (
@@ -1428,7 +1329,7 @@ function highlightVocabulary(
         result =
             result.replace(
                 regex,
-                function (match) {
+                function(match) {
 
                     return `
 
@@ -1440,6 +1341,7 @@ function highlightVocabulary(
                         </span>
 
                     `;
+
                 }
             );
     }
@@ -1450,18 +1352,10 @@ function highlightVocabulary(
 
 
 /* =========================================================
-   VOCABULARY FILE
-========================================================= */
+   LOAD VOCABULARY
+   ========================================================= */
 
 async function loadVocabulary() {
-
-    /*
-     * IMPORTANT:
-     *
-     * vocabulary.json does NOT have to exist.
-     *
-     * No error is shown to the student.
-     */
 
     vocabulary = {};
 
@@ -1480,10 +1374,6 @@ async function loadVocabulary() {
 
         if (!response.ok) {
 
-            console.info(
-                "Vocabulary file not found. Vocabulary feature disabled."
-            );
-
             return;
         }
 
@@ -1500,14 +1390,9 @@ async function loadVocabulary() {
 
     } catch (error) {
 
-        /*
-         * Do NOT show an error.
-         */
-
         console.info(
-            "Vocabulary file is not available yet. Continuing without vocabulary."
+            "Vocabulary unavailable."
         );
-
 
         vocabulary = {};
     }
@@ -1516,7 +1401,7 @@ async function loadVocabulary() {
 
 /* =========================================================
    VOCABULARY POPUP
-========================================================= */
+   ========================================================= */
 
 function showVocabularyPopup(
     word,
@@ -1525,34 +1410,27 @@ function showVocabularyPopup(
 
     if (
         !vocabulary ||
-        !Object.keys(
-            vocabulary
-        ).length
+        !Object.keys(vocabulary).length
     ) {
-
         return;
     }
 
 
     const key =
-        Object.keys(
-            vocabulary
-        )
-        .find(
-            function (item) {
+        Object.keys(vocabulary)
+            .find(
+                function(item) {
 
-                return (
-                    item.toLowerCase() ===
-                    String(
-                        word
-                    ).toLowerCase()
-                );
-            }
-        );
+                    return (
+                        item.toLowerCase() ===
+                        String(word).toLowerCase()
+                    );
+
+                }
+            );
 
 
     if (!key) {
-
         return;
     }
 
@@ -1569,7 +1447,6 @@ function showVocabularyPopup(
 
 
     if (!popup) {
-
         return;
     }
 
@@ -1597,10 +1474,6 @@ function showVocabularyPopup(
     popup.style.display =
         "block";
 
-
-    /*
-     * Keep popup inside viewport.
-     */
 
     popup.style.left =
         "50%";
@@ -1631,11 +1504,9 @@ function closeVocabularyPopup() {
 
 /* =========================================================
    RENDER QUESTIONS
-========================================================= */
+   ========================================================= */
 
-function renderQuestions(
-    part
-) {
+function renderQuestions(part) {
 
     const box =
         document.getElementById(
@@ -1644,7 +1515,6 @@ function renderQuestions(
 
 
     if (!box) {
-
         return;
     }
 
@@ -1655,9 +1525,8 @@ function renderQuestions(
     (
         part.questionGroups ||
         []
-    )
-    .forEach(
-        function (group) {
+    ).forEach(
+        function(group) {
 
             const wrapper =
                 document.createElement(
@@ -1683,14 +1552,17 @@ function renderQuestions(
 
                 </h3>
 
-                <p class="question-instructions">
-
-                    ${escapeHTML(
-                        group.instructions ||
-                        ""
-                    )}
-
-                </p>
+                ${
+                    group.instructions
+                        ? `
+                            <p class="question-instructions">
+                                ${escapeHTML(
+                                    group.instructions
+                                )}
+                            </p>
+                        `
+                        : ""
+                }
 
             `;
 
@@ -1707,7 +1579,9 @@ function renderQuestions(
 
 
             switch (
-                group.type
+                normalizeQuestionType(
+                    group.type
+                )
             ) {
 
                 case "true_false_not_given":
@@ -1816,12 +1690,14 @@ function renderQuestions(
                         content,
                         group
                     );
+
             }
 
 
             box.appendChild(
                 wrapper
             );
+
         }
     );
 
@@ -1831,8 +1707,30 @@ function renderQuestions(
 
 
 /* =========================================================
-   TRUE FALSE NOT GIVEN
-========================================================= */
+   NORMALIZE QUESTION TYPE
+   ========================================================= */
+
+function normalizeQuestionType(type) {
+
+    return String(
+        type || ""
+    )
+    .trim()
+    .toLowerCase()
+    .replace(
+        /-/g,
+        "_"
+    )
+    .replace(
+        /\s+/g,
+        "_"
+    );
+}
+
+
+/* =========================================================
+   TRUE / FALSE / NOT GIVEN
+   ========================================================= */
 
 function renderTrueFalseNotGiven(
     box,
@@ -1842,9 +1740,8 @@ function renderTrueFalseNotGiven(
     (
         group.questions ||
         []
-    )
-    .forEach(
-        function (question) {
+    ).forEach(
+        function(question) {
 
             box.appendChild(
                 createQuestionItem(
@@ -1856,14 +1753,15 @@ function renderTrueFalseNotGiven(
                     ]
                 )
             );
+
         }
     );
 }
 
 
 /* =========================================================
-   YES NO NOT GIVEN
-========================================================= */
+   YES / NO / NOT GIVEN
+   ========================================================= */
 
 function renderYesNoNotGiven(
     box,
@@ -1873,9 +1771,8 @@ function renderYesNoNotGiven(
     (
         group.questions ||
         []
-    )
-    .forEach(
-        function (question) {
+    ).forEach(
+        function(question) {
 
             box.appendChild(
                 createQuestionItem(
@@ -1887,6 +1784,7 @@ function renderYesNoNotGiven(
                     ]
                 )
             );
+
         }
     );
 }
@@ -1894,7 +1792,7 @@ function renderYesNoNotGiven(
 
 /* =========================================================
    FILL BLANK
-========================================================= */
+   ========================================================= */
 
 function renderFillBlank(
     box,
@@ -1904,9 +1802,8 @@ function renderFillBlank(
     (
         group.questions ||
         []
-    )
-    .forEach(
-        function (question) {
+    ).forEach(
+        function(question) {
 
             const item =
                 createQuestionItem(
@@ -1926,6 +1823,8 @@ function renderFillBlank(
                     type="text"
                     class="answer-input"
                     data-question-number="${question.number}"
+                    autocomplete="off"
+                    spellcheck="false"
                     placeholder="Type your answer"
                 >
 
@@ -1940,6 +1839,7 @@ function renderFillBlank(
             box.appendChild(
                 item
             );
+
         }
     );
 }
@@ -1947,7 +1847,7 @@ function renderFillBlank(
 
 /* =========================================================
    SUMMARY COMPLETION
-========================================================= */
+   ========================================================= */
 
 function renderSummaryCompletion(
     box,
@@ -1964,30 +1864,100 @@ function renderSummaryCompletion(
         "summary-box";
 
 
-    let text =
-        group.summary ||
-        group.text ||
-        "";
-
-
     const questions =
         group.questions ||
         [];
 
 
-    let index = 0;
+    let text =
+        group.summary ||
+        group.text ||
+        group.passageText ||
+        "";
 
 
-    text =
-        escapeHTML(
-            text
-        )
-        .replace(
-            /_{2,}/g,
-            function () {
+    let html =
+        escapeHTML(text);
+
+
+    /*
+     * -------------------------------------------------------
+     * FORMAT 1
+     * {{23}}
+     * {23}
+     * [23]
+     * -------------------------------------------------------
+     */
+
+    html =
+        html.replace(
+            /\{\{(\d+)\}\}|\{(\d+)\}|\[(\d+)\]/g,
+            function(
+                match,
+                a,
+                b,
+                c
+            ) {
+
+                const number =
+                    Number(
+                        a ||
+                        b ||
+                        c
+                    );
+
 
                 const question =
-                    questions[index++];
+                    questions.find(
+                        function(q) {
+
+                            return (
+                                Number(
+                                    q.number
+                                ) ===
+                                number
+                            );
+
+                        }
+                    );
+
+
+                if (!question) {
+                    return match;
+                }
+
+
+                return createSummaryInput(
+                    question.number
+                );
+
+            }
+        );
+
+
+    /*
+     * -------------------------------------------------------
+     * FORMAT 2
+     * ______
+     * ________
+     * -------------------------------------------------------
+     */
+
+    let blankIndex = 0;
+
+
+    html =
+        html.replace(
+            /_{2,}/g,
+            function() {
+
+                const question =
+                    questions[
+                        blankIndex
+                    ];
+
+
+                blankIndex++;
 
 
                 if (!question) {
@@ -1996,21 +1966,94 @@ function renderSummaryCompletion(
                 }
 
 
-                return `
+                return createSummaryInput(
+                    question.number
+                );
 
-                    <input
-                        type="text"
-                        class="summary-answer-input"
-                        data-question-number="${question.number}"
-                    >
-
-                `;
             }
         );
 
 
     summary.innerHTML =
-        text;
+        html;
+
+
+    /*
+     * -------------------------------------------------------
+     * FALLBACK
+     *
+     * If there were no placeholders at all,
+     * create answer boxes below the summary.
+     * -------------------------------------------------------
+     */
+
+    const existingInputs =
+        summary.querySelectorAll(
+            "[data-question-number]"
+        );
+
+
+    if (
+        existingInputs.length === 0 &&
+        questions.length > 0
+    ) {
+
+        const answerArea =
+            document.createElement(
+                "div"
+            );
+
+
+        answerArea.className =
+            "summary-answer-area";
+
+
+        questions.forEach(
+            function(question) {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "summary-answer-row";
+
+
+                row.innerHTML = `
+
+                    <label>
+
+                        <strong>
+                            ${question.number}.
+                        </strong>
+
+                        <input
+                            type="text"
+                            class="summary-answer-input"
+                            data-question-number="${question.number}"
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+
+                    </label>
+
+                `;
+
+
+                answerArea.appendChild(
+                    row
+                );
+
+            }
+        );
+
+
+        summary.appendChild(
+            answerArea
+        );
+    }
 
 
     attachInputListener(
@@ -2025,8 +2068,31 @@ function renderSummaryCompletion(
 
 
 /* =========================================================
+   CREATE SUMMARY INPUT
+   ========================================================= */
+
+function createSummaryInput(
+    questionNumber
+) {
+
+    return `
+
+        <input
+            type="text"
+            class="summary-answer-input"
+            data-question-number="${questionNumber}"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Answer for question ${questionNumber}"
+        >
+
+    `;
+}
+
+
+/* =========================================================
    MULTIPLE CHOICE
-========================================================= */
+   ========================================================= */
 
 function renderMultipleChoice(
     box,
@@ -2036,9 +2102,8 @@ function renderMultipleChoice(
     (
         group.questions ||
         []
-    )
-    .forEach(
-        function (question) {
+    ).forEach(
+        function(question) {
 
             const item =
                 createQuestionItem(
@@ -2052,211 +2117,15 @@ function renderMultipleChoice(
                 );
 
 
-            control.innerHTML =
-                createSelectOptions(
-                    question.options ||
-                    group.options ||
-                    []
-                );
-
-
-            const select =
-                control.querySelector(
-                    "select"
-                );
-
-
-            if (select) {
-
-                select.dataset.questionNumber =
-                    question.number;
-
-
-                select.addEventListener(
-                    "change",
-                    handleAnswerChange
-                );
-            }
-
-
-            box.appendChild(
-                item
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   MULTIPLE CHOICE MULTIPLE
-========================================================= */
-
-function renderMultipleChoiceMultiple(
-    box,
-    group
-) {
-
-    /*
-     * IMPORTANT:
-     *
-     * Q27 = one select
-     * Q28 = one select
-     *
-     * Example:
-     *
-     * Q27 -> A
-     * Q28 -> D
-     *
-     * A/D and D/A are accepted.
-     */
-
-    (
-        group.questions ||
-        []
-    )
-    .forEach(
-        function (question) {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-
-            const control =
-                item.querySelector(
-                    ".question-control"
-                );
-
-
-            control.innerHTML =
-                createSelectOptions(
-                    group.options ||
-                    question.options ||
-                    []
-                );
-
-
-            const select =
-                control.querySelector(
-                    "select"
-                );
-
-
-            if (select) {
-
-                select.dataset.questionNumber =
-                    question.number;
-
-
-                select.addEventListener(
-                    "change",
-                    handleAnswerChange
-                );
-            }
-
-
-            box.appendChild(
-                item
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   MATCHING HEADINGS
-========================================================= */
-
-function renderMatchingHeadings(
-    box,
-    group
-) {
-
-    const options =
-        group.options ||
-        group.headings ||
-        [];
-
-
-    renderMatchingSelects(
-        box,
-        group,
-        options
-    );
-}
-
-
-/* =========================================================
-   MATCHING INFORMATION
-========================================================= */
-
-function renderMatchingInformation(
-    box,
-    group
-) {
-
-    const options =
-        group.options ||
-        getParagraphLetters();
-
-
-    renderMatchingSelects(
-        box,
-        group,
-        options
-    );
-}
-
-
-/* =========================================================
-   MATCHING FEATURES
-========================================================= */
-
-function renderMatchingFeatures(
-    box,
-    group
-) {
-
-    const options =
-        group.options ||
-        [];
-
-
-    renderMatchingSelects(
-        box,
-        group,
-        options
-    );
-}
-
-
-/* =========================================================
-   GENERIC MATCHING
-========================================================= */
-
-function renderMatchingSelects(
-    box,
-    group,
-    options
-) {
-
-    (
-        group.questions ||
-        []
-    )
-    .forEach(
-        function (question) {
-
-            const item =
-                createQuestionItem(
-                    question
-                );
-
-
-            const control =
-                item.querySelector(
-                    ".question-control"
+            const options =
+                getQuestionOptions(
+                    question,
+                    group,
+                    [
+                        "options",
+                        "choices",
+                        "answerOptions"
+                    ]
                 );
 
 
@@ -2288,6 +2157,272 @@ function renderMatchingSelects(
             box.appendChild(
                 item
             );
+
+        }
+    );
+}
+
+
+/* =========================================================
+   MULTIPLE CHOICE MULTIPLE
+   ========================================================= */
+
+function renderMultipleChoiceMultiple(
+    box,
+    group
+) {
+
+    (
+        group.questions ||
+        []
+    ).forEach(
+        function(question) {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+
+            const control =
+                item.querySelector(
+                    ".question-control"
+                );
+
+
+            const options =
+                getQuestionOptions(
+                    question,
+                    group,
+                    [
+                        "options",
+                        "choices",
+                        "answerOptions"
+                    ]
+                );
+
+
+            control.innerHTML =
+                createSelectOptions(
+                    options
+                );
+
+
+            const select =
+                control.querySelector(
+                    "select"
+                );
+
+
+            if (select) {
+
+                select.dataset.questionNumber =
+                    question.number;
+
+
+                select.addEventListener(
+                    "change",
+                    handleAnswerChange
+                );
+            }
+
+
+            box.appendChild(
+                item
+            );
+
+        }
+    );
+}
+
+
+/* =========================================================
+   MATCHING HEADINGS
+   ========================================================= */
+
+function renderMatchingHeadings(
+    box,
+    group
+) {
+
+    const options =
+        getQuestionOptions(
+            null,
+            group,
+            [
+                "options",
+                "choices",
+                "answerOptions",
+                "headings"
+            ]
+        );
+
+
+    renderMatchingSelects(
+        box,
+        group,
+        options
+    );
+}
+
+
+/* =========================================================
+   MATCHING INFORMATION
+   ========================================================= */
+
+function renderMatchingInformation(
+    box,
+    group
+) {
+
+    let options =
+        getQuestionOptions(
+            null,
+            group,
+            [
+                "options",
+                "choices",
+                "answerOptions",
+                "paragraphs",
+                "letters"
+            ]
+        );
+
+
+    /*
+     * If JSON does not contain options,
+     * use paragraph IDs automatically.
+     */
+
+    if (!options.length) {
+
+        options =
+            getParagraphLetters();
+    }
+
+
+    renderMatchingSelects(
+        box,
+        group,
+        options
+    );
+}
+
+
+/* =========================================================
+   MATCHING FEATURES
+   ========================================================= */
+
+function renderMatchingFeatures(
+    box,
+    group
+) {
+
+    const options =
+        getQuestionOptions(
+            null,
+            group,
+            [
+                "options",
+                "choices",
+                "answerOptions",
+                "features",
+                "letters"
+            ]
+        );
+
+
+    renderMatchingSelects(
+        box,
+        group,
+        options
+    );
+}
+
+
+/* =========================================================
+   GENERIC MATCHING SELECTS
+   ========================================================= */
+
+function renderMatchingSelects(
+    box,
+    group,
+    groupOptions
+) {
+
+    (
+        group.questions ||
+        []
+    ).forEach(
+        function(question) {
+
+            const item =
+                createQuestionItem(
+                    question
+                );
+
+
+            const control =
+                item.querySelector(
+                    ".question-control"
+                );
+
+
+            /*
+             * Question-specific options
+             * have priority.
+             */
+
+            const questionOptions =
+                getQuestionOptions(
+                    question,
+                    null,
+                    [
+                        "options",
+                        "choices",
+                        "answerOptions",
+                        "headings",
+                        "features",
+                        "letters"
+                    ]
+                );
+
+
+            const options =
+                questionOptions.length
+                    ? questionOptions
+                    : groupOptions;
+
+
+            control.innerHTML =
+                createSelectOptions(
+                    options
+                );
+
+
+            const select =
+                control.querySelector(
+                    "select"
+                );
+
+
+            if (select) {
+
+                select.dataset.questionNumber =
+                    question.number;
+
+
+                select.addEventListener(
+                    "change",
+                    handleAnswerChange
+                );
+            }
+
+
+            box.appendChild(
+                item
+            );
+
         }
     );
 }
@@ -2295,7 +2430,7 @@ function renderMatchingSelects(
 
 /* =========================================================
    ANSWER BOX
-========================================================= */
+   ========================================================= */
 
 function renderAnswerBox(
     box,
@@ -2305,9 +2440,8 @@ function renderAnswerBox(
     (
         group.questions ||
         []
-    )
-    .forEach(
-        function (question) {
+    ).forEach(
+        function(question) {
 
             const item =
                 createQuestionItem(
@@ -2327,6 +2461,8 @@ function renderAnswerBox(
                     type="text"
                     class="answer-input"
                     data-question-number="${question.number}"
+                    autocomplete="off"
+                    spellcheck="false"
                 >
 
             `;
@@ -2340,6 +2476,7 @@ function renderAnswerBox(
             box.appendChild(
                 item
             );
+
         }
     );
 }
@@ -2347,19 +2484,24 @@ function renderAnswerBox(
 
 /* =========================================================
    UNSUPPORTED GROUP
-========================================================= */
+   ========================================================= */
 
 function renderUnsupportedGroup(
     box,
     group
 ) {
 
+    console.warn(
+        "Unsupported question type:",
+        group.type
+    );
+
+
     (
         group.questions ||
         []
-    )
-    .forEach(
-        function (question) {
+    ).forEach(
+        function(question) {
 
             const item =
                 createQuestionItem(
@@ -2379,6 +2521,8 @@ function renderUnsupportedGroup(
                     type="text"
                     class="answer-input"
                     data-question-number="${question.number}"
+                    autocomplete="off"
+                    spellcheck="false"
                 >
 
             `;
@@ -2392,14 +2536,15 @@ function renderUnsupportedGroup(
             box.appendChild(
                 item
             );
+
         }
     );
 }
 
 
 /* =========================================================
-   CREATE QUESTION
-========================================================= */
+   CREATE QUESTION ITEM
+   ========================================================= */
 
 function createQuestionItem(
     question,
@@ -2430,6 +2575,7 @@ function createQuestionItem(
 
             ${escapeHTML(
                 question.text ||
+                question.question ||
                 ""
             )}
 
@@ -2447,12 +2593,21 @@ function createQuestionItem(
         );
 
 
-    if (options) {
+    if (
+        Array.isArray(options) &&
+        options.length
+    ) {
 
         control.innerHTML =
             options
                 .map(
-                    function (option) {
+                    function(option) {
+
+                        const normalized =
+                            normalizeOption(
+                                option
+                            );
+
 
                         return `
 
@@ -2461,17 +2616,22 @@ function createQuestionItem(
                                 <input
                                     type="radio"
                                     name="q${question.number}"
-                                    value="${escapeAttribute(option)}"
+                                    value="${escapeAttribute(
+                                        normalized.value
+                                    )}"
                                     data-question-number="${question.number}"
                                 >
 
                                 <span>
-                                    ${escapeHTML(option)}
+                                    ${escapeHTML(
+                                        normalized.text
+                                    )}
                                 </span>
 
                             </label>
 
                         `;
+
                     }
                 )
                 .join("");
@@ -2482,12 +2642,13 @@ function createQuestionItem(
                 "input"
             )
             .forEach(
-                function (input) {
+                function(input) {
 
                     input.addEventListener(
                         "change",
                         handleAnswerChange
                     );
+
                 }
             );
     }
@@ -2498,8 +2659,296 @@ function createQuestionItem(
 
 
 /* =========================================================
-   SELECT OPTIONS
-========================================================= */
+   GET QUESTION OPTIONS
+   ========================================================= */
+
+function getQuestionOptions(
+    question,
+    group,
+    keys = []
+) {
+
+    const found = [];
+
+
+    /*
+     * -------------------------------------------------------
+     * Question-level options
+     * -------------------------------------------------------
+     */
+
+    if (question) {
+
+        for (
+            const key of keys
+        ) {
+
+            if (
+                Array.isArray(
+                    question[key]
+                ) &&
+                question[key].length
+            ) {
+
+                return question[key];
+            }
+        }
+
+
+        const questionFallbacks = [
+
+            "optionList",
+
+            "answerChoices",
+
+            "items",
+
+            "choicesList"
+
+        ];
+
+
+        for (
+            const key of questionFallbacks
+        ) {
+
+            if (
+                Array.isArray(
+                    question[key]
+                ) &&
+                question[key].length
+            ) {
+
+                return question[key];
+            }
+        }
+
+    }
+
+
+    /*
+     * -------------------------------------------------------
+     * Group-level options
+     * -------------------------------------------------------
+     */
+
+    if (group) {
+
+        for (
+            const key of keys
+        ) {
+
+            if (
+                Array.isArray(
+                    group[key]
+                ) &&
+                group[key].length
+            ) {
+
+                return group[key];
+            }
+        }
+
+
+        const groupFallbacks = [
+
+            "optionList",
+
+            "answerChoices",
+
+            "items",
+
+            "choicesList"
+
+        ];
+
+
+        for (
+            const key of groupFallbacks
+        ) {
+
+            if (
+                Array.isArray(
+                    group[key]
+                ) &&
+                group[key].length
+            ) {
+
+                return group[key];
+            }
+        }
+
+    }
+
+
+    /*
+     * -------------------------------------------------------
+     * Collect options from questions.
+     * -------------------------------------------------------
+     */
+
+    if (group?.questions) {
+
+        group.questions.forEach(
+            function(q) {
+
+                const allKeys = [
+                    ...keys,
+
+                    "optionList",
+
+                    "answerChoices",
+
+                    "items",
+
+                    "choicesList"
+                ];
+
+
+                allKeys.forEach(
+                    function(key) {
+
+                        if (
+                            Array.isArray(
+                                q[key]
+                            )
+                        ) {
+
+                            q[key].forEach(
+                                function(option) {
+
+                                    const alreadyExists =
+                                        found.some(
+                                            existing =>
+                                                JSON.stringify(
+                                                    existing
+                                                ) ===
+                                                JSON.stringify(
+                                                    option
+                                                )
+                                        );
+
+
+                                    if (
+                                        !alreadyExists
+                                    ) {
+
+                                        found.push(
+                                            option
+                                        );
+                                    }
+
+                                }
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+    }
+
+
+    return found;
+}
+
+
+/* =========================================================
+   NORMALIZE OPTION
+   ========================================================= */
+
+function normalizeOption(
+    option
+) {
+
+    if (
+        option === null ||
+        option === undefined
+    ) {
+
+        return {
+            value: "",
+            text: ""
+        };
+    }
+
+
+    if (
+        typeof option ===
+        "string" ||
+        typeof option ===
+        "number"
+    ) {
+
+        return {
+
+            value:
+                String(option),
+
+            text:
+                String(option)
+
+        };
+    }
+
+
+    if (
+        typeof option ===
+        "object"
+    ) {
+
+        const value =
+            option.letter ??
+            option.value ??
+            option.id ??
+            option.key ??
+            option.code ??
+            option.text ??
+            option.label ??
+            option.name ??
+            "";
+
+
+        const text =
+            option.text ??
+            option.label ??
+            option.name ??
+            option.title ??
+            option.value ??
+            option.letter ??
+            option.id ??
+            option.key ??
+            option.code ??
+            "";
+
+
+        return {
+
+            value:
+                String(value),
+
+            text:
+                String(text)
+
+        };
+    }
+
+
+    return {
+
+        value: "",
+
+        text: ""
+
+    };
+}
+
+
+/* =========================================================
+   CREATE SELECT OPTIONS
+   ========================================================= */
 
 function createSelectOptions(
     options
@@ -2512,68 +2961,60 @@ function createSelectOptions(
         >
 
             <option value="">
-                Select...
+                - Select -
             </option>
 
     `;
 
 
-    (
-        options ||
-        []
-    )
-    .forEach(
-        function (option) {
+    if (
+        !Array.isArray(options)
+    ) {
 
-            let value = "";
+        options = [];
+    }
 
-            let text = "";
+
+    options.forEach(
+        function(option) {
+
+            const normalized =
+                normalizeOption(
+                    option
+                );
 
 
             if (
-                typeof option ===
-                "object"
+                !normalized.value &&
+                !normalized.text
             ) {
 
-                value =
-                    option.letter ??
-                    option.value ??
-                    option.id ??
-                    option.text ??
-                    "";
-
-                text =
-                    option.text ??
-                    option.label ??
-                    option.value ??
-                    option.letter ??
-                    "";
-
-            } else {
-
-                value =
-                    option;
-
-                text =
-                    option;
+                return;
             }
 
 
             html += `
 
                 <option
-                    value="${escapeAttribute(value)}"
+                    value="${escapeAttribute(
+                        normalized.value
+                    )}"
                 >
-                    ${escapeHTML(text)}
+                    ${escapeHTML(
+                        normalized.text
+                    )}
                 </option>
 
             `;
+
         }
     );
 
 
     html += `
+
         </select>
+
     `;
 
 
@@ -2583,7 +3024,7 @@ function createSelectOptions(
 
 /* =========================================================
    INPUT LISTENER
-========================================================= */
+   ========================================================= */
 
 function attachInputListener(
     container
@@ -2594,12 +3035,18 @@ function attachInputListener(
             "input"
         )
         .forEach(
-            function (input) {
+            function(input) {
 
                 input.addEventListener(
                     "input",
                     handleAnswerChange
                 );
+
+                input.addEventListener(
+                    "change",
+                    handleAnswerChange
+                );
+
             }
         );
 }
@@ -2607,7 +3054,7 @@ function attachInputListener(
 
 /* =========================================================
    ANSWER CHANGE
-========================================================= */
+   ========================================================= */
 
 function handleAnswerChange(
     event
@@ -2624,7 +3071,6 @@ function handleAnswerChange(
 
 
     if (!number) {
-
         return;
     }
 
@@ -2642,6 +3088,7 @@ function handleAnswerChange(
                 element.value;
         }
 
+
     } else {
 
         studentAnswers[number] =
@@ -2651,14 +3098,13 @@ function handleAnswerChange(
 
     saveAnswersToStorage();
 
-
     updateQuestionNavigator();
 }
 
 
 /* =========================================================
    SAVE VISIBLE ANSWERS
-========================================================= */
+   ========================================================= */
 
 function saveAllVisibleAnswers() {
 
@@ -2667,7 +3113,7 @@ function saveAllVisibleAnswers() {
             "[data-question-number]"
         )
         .forEach(
-            function (element) {
+            function(element) {
 
                 const number =
                     Number(
@@ -2676,7 +3122,6 @@ function saveAllVisibleAnswers() {
 
 
                 if (!number) {
-
                     return;
                 }
 
@@ -2694,6 +3139,7 @@ function saveAllVisibleAnswers() {
                             element.value;
                     }
 
+
                 } else if (
                     element.tagName ===
                     "SELECT" ||
@@ -2701,15 +3147,11 @@ function saveAllVisibleAnswers() {
                     "INPUT"
                 ) {
 
-                    if (
-                        element.value !==
-                        ""
-                    ) {
+                    studentAnswers[number] =
+                        element.value;
 
-                        studentAnswers[number] =
-                            element.value;
-                    }
                 }
+
             }
         );
 
@@ -2720,7 +3162,7 @@ function saveAllVisibleAnswers() {
 
 /* =========================================================
    RESTORE ANSWERS
-========================================================= */
+   ========================================================= */
 
 function restoreAnswers() {
 
@@ -2729,7 +3171,7 @@ function restoreAnswers() {
             "[data-question-number]"
         )
         .forEach(
-            function (element) {
+            function(element) {
 
                 const number =
                     Number(
@@ -2738,9 +3180,7 @@ function restoreAnswers() {
 
 
                 const value =
-                    studentAnswers[
-                        number
-                    ];
+                    studentAnswers[number];
 
 
                 if (
@@ -2757,14 +3197,21 @@ function restoreAnswers() {
                 ) {
 
                     element.checked =
-                        element.value ===
-                        value;
+                        normalizeAnswer(
+                            element.value
+                        ) ===
+                        normalizeAnswer(
+                            value
+                        );
+
 
                 } else {
 
                     element.value =
                         value;
+
                 }
+
             }
         );
 
@@ -2775,26 +3222,20 @@ function restoreAnswers() {
 
 /* =========================================================
    LOCAL ANSWER STORAGE
-========================================================= */
+   ========================================================= */
 
 function saveAnswersToStorage() {
 
-    if (
-        !currentTestNumber
-    ) {
-
+    if (!currentTestNumber) {
         return;
     }
 
 
     try {
 
-        const key =
-            getAnswerStorageKey();
-
-
         localStorage.setItem(
-            key,
+            getAnswerStorageKey(),
+
             JSON.stringify(
                 studentAnswers
             )
@@ -2826,13 +3267,30 @@ function loadSavedAnswers() {
 
         if (raw) {
 
-            studentAnswers =
+            const saved =
                 JSON.parse(
                     raw
-                ) || {};
+                );
+
+
+            if (
+                saved &&
+                typeof saved ===
+                "object"
+            ) {
+
+                studentAnswers =
+                    saved;
+            }
+
         }
 
     } catch (error) {
+
+        console.warn(
+            "Could not load saved answers:",
+            error
+        );
 
         studentAnswers = {};
     }
@@ -2859,7 +3317,7 @@ function getAnswerStorageKey() {
 
 /* =========================================================
    QUESTION NAVIGATOR
-========================================================= */
+   ========================================================= */
 
 function renderQuestionNavigator() {
 
@@ -2870,7 +3328,6 @@ function renderQuestionNavigator() {
 
 
     if (!nav) {
-
         return;
     }
 
@@ -2878,11 +3335,12 @@ function renderQuestionNavigator() {
     nav.innerHTML =
         getAllQuestionNumbers()
             .map(
-                function (number) {
+                function(number) {
 
                     return `
 
                         <button
+                            type="button"
                             class="question-nav-item"
                             data-question-nav="${number}"
                         >
@@ -2890,6 +3348,7 @@ function renderQuestionNavigator() {
                         </button>
 
                     `;
+
                 }
             )
             .join("");
@@ -2900,19 +3359,21 @@ function renderQuestionNavigator() {
             "button"
         )
         .forEach(
-            function (button) {
+            function(button) {
 
                 button.addEventListener(
                     "click",
-                    function () {
+                    function() {
 
                         jumpToQuestion(
                             Number(
                                 button.dataset.questionNav
                             )
                         );
+
                     }
                 );
+
             }
         );
 
@@ -2930,7 +3391,6 @@ function updateQuestionNavigator() {
 
 
     if (!nav) {
-
         return;
     }
 
@@ -2940,7 +3400,7 @@ function updateQuestionNavigator() {
             "[data-question-nav]"
         )
         .forEach(
-            function (button) {
+            function(button) {
 
                 const number =
                     Number(
@@ -2954,6 +3414,7 @@ function updateQuestionNavigator() {
                         number
                     )
                 );
+
             }
         );
 }
@@ -2964,16 +3425,13 @@ function isQuestionAnswered(
 ) {
 
     const value =
-        studentAnswers[
-            number
-        ];
+        studentAnswers[number];
 
 
     return (
         value !== undefined &&
-        String(
-            value
-        ).trim() !== ""
+        value !== null &&
+        String(value).trim() !== ""
     );
 }
 
@@ -2988,22 +3446,35 @@ function jumpToQuestion(
         );
 
 
-    if (element) {
-
-        element.scrollIntoView({
-            behavior:
-                "smooth",
-
-            block:
-                "center"
-        });
+    if (!element) {
+        return;
     }
+
+
+    const question =
+        element.closest(
+            ".question"
+        );
+
+
+    (
+        question ||
+        element
+    ).scrollIntoView({
+
+        behavior:
+            "smooth",
+
+        block:
+            "center"
+
+    });
 }
 
 
 /* =========================================================
-   GET QUESTION NUMBERS
-========================================================= */
+   GET ALL QUESTION NUMBERS
+   ========================================================= */
 
 function getAllQuestionNumbers() {
 
@@ -3013,44 +3484,57 @@ function getAllQuestionNumbers() {
     (
         currentTest?.parts ||
         []
-    )
-    .forEach(
-        function (part) {
+    ).forEach(
+        function(part) {
 
             (
                 part.questionGroups ||
                 []
-            )
-            .forEach(
-                function (group) {
+            ).forEach(
+                function(group) {
 
                     (
                         group.questions ||
                         []
-                    )
-                    .forEach(
-                        function (question) {
+                    ).forEach(
+                        function(question) {
 
-                            numbers.push(
+                            const number =
                                 Number(
                                     question.number
+                                );
+
+
+                            if (
+                                Number.isFinite(
+                                    number
                                 )
-                            );
+                            ) {
+
+                                numbers.push(
+                                    number
+                                );
+                            }
+
                         }
                     );
+
                 }
             );
+
         }
     );
 
 
-    return numbers.sort(
-        function (
-            a,
-            b
-        ) {
+    return [
+        ...new Set(
+            numbers
+        )
+    ].sort(
+        function(a, b) {
 
             return a - b;
+
         }
     );
 }
@@ -3065,7 +3549,7 @@ function countTotalQuestions() {
 
 /* =========================================================
    PART NAVIGATION
-========================================================= */
+   ========================================================= */
 
 function nextPart() {
 
@@ -3079,12 +3563,13 @@ function nextPart() {
 
         currentPartIndex++;
 
-
         renderCurrentPart();
+
 
     } else {
 
         confirmSubmitTest();
+
     }
 }
 
@@ -3099,7 +3584,6 @@ function previousPart() {
     ) {
 
         currentPartIndex--;
-
 
         renderCurrentPart();
     }
@@ -3142,7 +3626,7 @@ function updatePartButtons() {
 
 /* =========================================================
    SCROLL
-========================================================= */
+   ========================================================= */
 
 function scrollTestPanelsToTop() {
 
@@ -3151,7 +3635,7 @@ function scrollTestPanelsToTop() {
         "questionsPanel"
     ]
     .forEach(
-        function (id) {
+        function(id) {
 
             const element =
                 document.getElementById(
@@ -3163,6 +3647,7 @@ function scrollTestPanelsToTop() {
 
                 element.scrollTop = 0;
             }
+
         }
     );
 }
@@ -3170,12 +3655,11 @@ function scrollTestPanelsToTop() {
 
 /* =========================================================
    SUBMIT CONFIRMATION
-========================================================= */
+   ========================================================= */
 
 function confirmSubmitTest() {
 
     if (testSubmitted) {
-
         return;
     }
 
@@ -3212,6 +3696,10 @@ function confirmExitTest() {
 }
 
 
+/* =========================================================
+   CONFIRM MODAL
+   ========================================================= */
+
 function openConfirmModal() {
 
     const modal =
@@ -3246,12 +3734,11 @@ function closeConfirmModal() {
 
 /* =========================================================
    AUTO SUBMIT
-========================================================= */
+   ========================================================= */
 
 function autoSubmitTest() {
 
     if (testSubmitted) {
-
         return;
     }
 
@@ -3267,24 +3754,20 @@ function autoSubmitTest() {
 
 /* =========================================================
    SUBMIT TEST
-========================================================= */
+   ========================================================= */
 
 async function submitTest() {
 
     if (testSubmitted) {
-
         return;
     }
 
 
     saveAllVisibleAnswers();
 
-
     closeConfirmModal();
 
-
     stopTimer();
-
 
     testSubmitted = true;
 
@@ -3302,19 +3785,17 @@ async function submitTest() {
 
     renderResult();
 
-
     clearCurrentTestAnswers();
 }
 
 
 /* =========================================================
    CALCULATE TIME
-========================================================= */
+   ========================================================= */
 
 function calculateTimeUsed() {
 
     if (!testStartTime) {
-
         return 0;
     }
 
@@ -3332,13 +3813,12 @@ function calculateTimeUsed() {
 
 
 /* =========================================================
-   SCORE
-========================================================= */
+   CALCULATE SCORE
+   ========================================================= */
 
 function calculateScore() {
 
     let total = 0;
-
 
     const partScores = [];
 
@@ -3346,9 +3826,8 @@ function calculateScore() {
     (
         currentTest.parts ||
         []
-    )
-    .forEach(
-        function (part) {
+    ).forEach(
+        function(part) {
 
             let partScore = 0;
 
@@ -3356,9 +3835,8 @@ function calculateScore() {
             (
                 part.questionGroups ||
                 []
-            )
-            .forEach(
-                function (group) {
+            ).forEach(
+                function(group) {
 
                     const questions =
                         group.questions ||
@@ -3366,109 +3844,32 @@ function calculateScore() {
 
 
                     /*
-                     * SPECIAL CASE:
-                     *
-                     * multiple_choice_multiple
-                     *
-                     * Example:
-                     *
-                     * Correct:
-                     * Q27 = A
-                     * Q28 = D
-                     *
-                     * Student:
-                     * Q27 = D
-                     * Q28 = A
-                     *
-                     * This is ALSO correct.
+                     * Normal scoring.
                      */
 
-                    if (
-                        group.type ===
-                        "multiple_choice_multiple"
-                    ) {
+                    questions.forEach(
+                        function(question) {
 
-                        const correct =
-                            questions
-                                .map(
-                                    function (
-                                        question
-                                    ) {
+                            const given =
+                                studentAnswers[
+                                    question.number
+                                ];
 
-                                        return String(
-                                            question.answer ??
-                                            ""
-                                        )
-                                        .trim()
-                                        .toUpperCase();
-                                    }
+
+                            if (
+                                answersMatch(
+                                    given,
+                                    question.answer
                                 )
-                                .filter(
-                                    Boolean
-                                )
-                                .sort();
-
-
-                        const given =
-                            questions
-                                .map(
-                                    function (
-                                        question
-                                    ) {
-
-                                        return String(
-                                            studentAnswers[
-                                                question.number
-                                            ] ??
-                                            ""
-                                        )
-                                        .trim()
-                                        .toUpperCase();
-                                    }
-                                )
-                                .filter(
-                                    Boolean
-                                )
-                                .sort();
-
-
-                        if (
-                            correct.length ===
-                            questions.length &&
-
-                            arraysEqual(
-                                correct,
-                                given
-                            )
-                        ) {
-
-                            partScore +=
-                                questions.length;
-                        }
-
-
-                    } else {
-
-                        questions.forEach(
-                            function (
-                                question
                             ) {
 
-                                if (
-                                    answersMatch(
-                                        studentAnswers[
-                                            question.number
-                                        ],
+                                partScore++;
 
-                                        question.answer
-                                    )
-                                ) {
-
-                                    partScore++;
-                                }
                             }
-                        );
-                    }
+
+                        }
+                    );
+
                 }
             );
 
@@ -3480,6 +3881,7 @@ function calculateScore() {
 
             total +=
                 partScore;
+
         }
     );
 
@@ -3504,13 +3906,14 @@ function calculateScore() {
             formatTime(
                 testElapsedSeconds
             )
+
     };
 }
 
 
 /* =========================================================
    ANSWER MATCH
-========================================================= */
+   ========================================================= */
 
 function answersMatch(
     given,
@@ -3528,11 +3931,10 @@ function answersMatch(
     }
 
 
-    const normalizedGiven =
-        normalizeAnswer(
-            given
-        );
-
+    /*
+     * If the correct answer is an array,
+     * accept any listed valid answer.
+     */
 
     if (
         Array.isArray(
@@ -3541,21 +3943,38 @@ function answersMatch(
     ) {
 
         return correct.some(
-            function (answer) {
+            function(answer) {
 
                 return (
                     normalizeAnswer(
-                        answer
+                        given
                     ) ===
-                    normalizedGiven
+                    normalizeAnswer(
+                        answer
+                    )
                 );
+
             }
         );
     }
 
 
+    /*
+     * Some JSON may use:
+     *
+     * {
+     *   answer: "A",
+     *   acceptedAnswers: [...]
+     * }
+     *
+     * handled elsewhere if needed.
+     */
+
+
     return (
-        normalizedGiven ===
+        normalizeAnswer(
+            given
+        ) ===
         normalizeAnswer(
             correct
         )
@@ -3565,7 +3984,7 @@ function answersMatch(
 
 /* =========================================================
    NORMALIZE ANSWER
-========================================================= */
+   ========================================================= */
 
 function normalizeAnswer(
     value
@@ -3584,37 +4003,8 @@ function normalizeAnswer(
 
 
 /* =========================================================
-   ARRAY EQUAL
-========================================================= */
-
-function arraysEqual(
-    a,
-    b
-) {
-
-    return (
-        a.length ===
-        b.length &&
-
-        a.every(
-            function (
-                value,
-                index
-            ) {
-
-                return (
-                    value ===
-                    b[index]
-                );
-            }
-        )
-    );
-}
-
-
-/* =========================================================
    IELTS BAND
-========================================================= */
+   ========================================================= */
 
 function calculateIELTSBand(
     score
@@ -3673,13 +4063,12 @@ function calculateIELTSBand(
 
 
 /* =========================================================
-   SAVE RESULT
-========================================================= */
+   SAVE RESULT TO API
+   ========================================================= */
 
 async function saveResultToAPI() {
 
     if (!currentUser) {
-
         return;
     }
 
@@ -3740,6 +4129,7 @@ async function saveResultToAPI() {
 
         submittedAt:
             new Date().toISOString()
+
     };
 
 
@@ -3781,7 +4171,7 @@ async function saveResultToAPI() {
 
 /* =========================================================
    RESULT SCREEN
-========================================================= */
+   ========================================================= */
 
 function renderResult() {
 
@@ -3829,7 +4219,7 @@ function renderResult() {
 
 /* =========================================================
    PART SCORES
-========================================================= */
+   ========================================================= */
 
 function renderPartScores() {
 
@@ -3840,7 +4230,6 @@ function renderPartScores() {
 
 
     if (!box) {
-
         return;
     }
 
@@ -3848,7 +4237,7 @@ function renderPartScores() {
     box.innerHTML =
         scoreData.partScores
             .map(
-                function (
+                function(
                     score,
                     index
                 ) {
@@ -3868,6 +4257,7 @@ function renderPartScores() {
                         </div>
 
                     `;
+
                 }
             )
             .join("");
@@ -3876,7 +4266,7 @@ function renderPartScores() {
 
 /* =========================================================
    CLEAR ANSWERS
-========================================================= */
+   ========================================================= */
 
 function clearCurrentTestAnswers() {
 
@@ -3889,6 +4279,7 @@ function clearCurrentTestAnswers() {
     } catch (error) {
 
         console.warn(
+            "Could not clear saved answers:",
             error
         );
     }
@@ -3900,12 +4291,11 @@ function clearCurrentTestAnswers() {
 
 /* =========================================================
    HISTORY
-========================================================= */
+   ========================================================= */
 
 async function loadHistory() {
 
     if (!currentUser) {
-
         return;
     }
 
@@ -3917,7 +4307,6 @@ async function loadHistory() {
 
 
     if (!body) {
-
         return;
     }
 
@@ -3937,20 +4326,16 @@ async function loadHistory() {
             await apiRequest(
                 "getHistory",
                 {
+
                     username:
                         currentUser.username ||
                         "",
 
                     studentId:
                         studentId
+
                 }
             );
-
-
-        console.log(
-            "HISTORY RESPONSE:",
-            response
-        );
 
 
         if (
@@ -3987,7 +4372,7 @@ async function loadHistory() {
 
 /* =========================================================
    RENDER HISTORY
-========================================================= */
+   ========================================================= */
 
 function renderHistory(
     history
@@ -4006,7 +4391,6 @@ function renderHistory(
 
 
     if (!body) {
-
         return;
     }
 
@@ -4040,9 +4424,7 @@ function renderHistory(
     body.innerHTML =
         history
             .map(
-                function (
-                    result
-                ) {
+                function(result) {
 
                     return `
 
@@ -4095,6 +4477,7 @@ function renderHistory(
                         </tr>
 
                     `;
+
                 }
             )
             .join("");
@@ -4103,7 +4486,7 @@ function renderHistory(
 
 /* =========================================================
    API REQUEST
-========================================================= */
+   ========================================================= */
 
 async function apiRequest(
     action,
@@ -4112,24 +4495,15 @@ async function apiRequest(
 
     console.log(
         "API REQUEST:",
-        {
-            action:
-                action,
-
-            data:
-                data
-        }
+        action,
+        data
     );
 
 
     /*
      * =====================================================
-     * METHOD 1 — GET
+     * GET REQUEST
      * =====================================================
-     *
-     * Google Apps Script is much more reliable with
-     * simple GET requests from GitHub Pages because
-     * cross-origin POST requests can trigger CORS issues.
      */
 
     try {
@@ -4144,10 +4518,6 @@ async function apiRequest(
         );
 
 
-        /*
-         * Send the complete data object.
-         */
-
         params.set(
             "data",
             JSON.stringify(
@@ -4158,12 +4528,6 @@ async function apiRequest(
 
         const getUrl =
             `${CONFIG.API_URL}?${params.toString()}`;
-
-
-        console.log(
-            "API GET:",
-            getUrl
-        );
 
 
         const response =
@@ -4181,12 +4545,6 @@ async function apiRequest(
 
         const text =
             await response.text();
-
-
-        console.log(
-            "API GET RESPONSE:",
-            text
-        );
 
 
         let json;
@@ -4208,13 +4566,11 @@ async function apiRequest(
 
 
         /*
-         * If API understands the request,
-         * return it immediately.
+         * Return normal API response.
          */
 
         if (
             json &&
-            json.success !== false &&
             json.message !==
                 "Unknown action"
         ) {
@@ -4222,11 +4578,6 @@ async function apiRequest(
             return json;
         }
 
-
-        /*
-         * If server explicitly says unknown action,
-         * try POST below.
-         */
 
     } catch (getError) {
 
@@ -4239,7 +4590,7 @@ async function apiRequest(
 
     /*
      * =====================================================
-     * METHOD 2 — POST JSON
+     * POST FALLBACK
      * =====================================================
      */
 
@@ -4252,19 +4603,15 @@ async function apiRequest(
 
             data:
                 data || {}
+
         };
-
-
-        console.log(
-            "API POST BODY:",
-            body
-        );
 
 
         const response =
             await fetch(
                 CONFIG.API_URL,
                 {
+
                     method:
                         "POST",
 
@@ -4272,24 +4619,20 @@ async function apiRequest(
 
                         "Content-Type":
                             "text/plain;charset=utf-8"
+
                     },
 
                     body:
                         JSON.stringify(
                             body
                         )
+
                 }
             );
 
 
         const text =
             await response.text();
-
-
-        console.log(
-            "API POST RESPONSE:",
-            text
-        );
 
 
         let json;
@@ -4328,7 +4671,7 @@ async function apiRequest(
 
 /* =========================================================
    SCREEN
-========================================================= */
+   ========================================================= */
 
 function showScreen(
     id
@@ -4339,10 +4682,11 @@ function showScreen(
             ".screen"
         )
         .forEach(
-            function (element) {
+            function(element) {
 
                 element.style.display =
                     "none";
+
             }
         );
 
@@ -4381,7 +4725,7 @@ function showScreen(
 
 /* =========================================================
    LOADING
-========================================================= */
+   ========================================================= */
 
 function setLoading(
     show,
@@ -4419,7 +4763,7 @@ function setLoading(
 
 /* =========================================================
    LOGIN MESSAGE
-========================================================= */
+   ========================================================= */
 
 function showLoginMessage(
     message,
@@ -4433,6 +4777,7 @@ function showLoginMessage(
         "loginError",
 
         "errorMessage"
+
     ];
 
 
@@ -4459,7 +4804,6 @@ function showLoginMessage(
 
 
     if (!element) {
-
         return;
     }
 
@@ -4481,7 +4825,7 @@ function showLoginMessage(
 
 /* =========================================================
    TOAST
-========================================================= */
+   ========================================================= */
 
 function showToast(
     message
@@ -4494,7 +4838,6 @@ function showToast(
 
 
     if (!element) {
-
         return;
     }
 
@@ -4508,7 +4851,7 @@ function showToast(
 
 
     setTimeout(
-        function () {
+        function() {
 
             element.style.display =
                 "none";
@@ -4521,7 +4864,7 @@ function showToast(
 
 /* =========================================================
    FORMAT TIME
-========================================================= */
+   ========================================================= */
 
 function formatTime(
     seconds
@@ -4607,14 +4950,13 @@ function formatTime(
 
 /* =========================================================
    FORMAT DATE
-========================================================= */
+   ========================================================= */
 
 function formatDate(
     value
 ) {
 
     if (!value) {
-
         return "";
     }
 
@@ -4643,37 +4985,53 @@ function formatDate(
 
 /* =========================================================
    GET PARAGRAPH LETTERS
-========================================================= */
+   ========================================================= */
 
 function getParagraphLetters() {
 
-    return (
-        currentTest
-            ?.parts
-            ?.[
-                currentPartIndex
-            ]
-            ?.passage
-            ?.paragraphs
-            ?.map(
-                function (
-                    paragraph
-                ) {
+    const part =
+        currentTest?.parts?.[
+            currentPartIndex
+        ];
 
-                    return paragraph.id;
+
+    const paragraphs =
+        part?.passage?.paragraphs ||
+        [];
+
+
+    const letters =
+        paragraphs
+            .map(
+                function(paragraph) {
+
+                    return (
+                        paragraph.id ||
+                        ""
+                    ).trim();
+
                 }
             )
             .filter(
                 Boolean
-            ) ||
-        []
-    );
+            );
+
+
+    /*
+     * Return unique paragraph IDs.
+     */
+
+    return [
+        ...new Set(
+            letters
+        )
+    ];
 }
 
 
 /* =========================================================
    SET TEXT
-========================================================= */
+   ========================================================= */
 
 function setText(
     id,
@@ -4696,7 +5054,7 @@ function setText(
 
 /* =========================================================
    ESCAPE HTML
-========================================================= */
+   ========================================================= */
 
 function escapeHTML(
     value
@@ -4730,7 +5088,7 @@ function escapeHTML(
 
 /* =========================================================
    ESCAPE ATTRIBUTE
-========================================================= */
+   ========================================================= */
 
 function escapeAttribute(
     value
@@ -4744,7 +5102,7 @@ function escapeAttribute(
 
 /* =========================================================
    ESCAPE REGEX
-========================================================= */
+   ========================================================= */
 
 function escapeRegExp(
     value
@@ -4762,7 +5120,7 @@ function escapeRegExp(
 
 /* =========================================================
    DEBUG EXPORT
-========================================================= */
+   ========================================================= */
 
 window.IELTSReading = {
 
@@ -4785,20 +5143,29 @@ window.IELTSReading = {
         logout,
 
     getCurrentTest:
-        function () {
+        function() {
 
             return currentTest;
+
         },
 
     getAnswers:
-        function () {
+        function() {
 
             return studentAnswers;
+
         },
 
     getCurrentUser:
-        function () {
+        function() {
 
             return currentUser;
+
         }
+
 };
+
+
+/* =========================================================
+   END OF app.js
+   ========================================================= */
